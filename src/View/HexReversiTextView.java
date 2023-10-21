@@ -4,10 +4,10 @@ import java.util.Objects;
 
 import Model.ReversiModel;
 
-public class HexReversiTextualView implements TextView {
+public class HexReversiTextView implements TextView {
   private final ReversiModel model;
 
-  public HexReversiTextualView(ReversiModel model) {
+  public HexReversiTextView(ReversiModel model) {
     this.model = Objects.requireNonNull(model);
   }
 

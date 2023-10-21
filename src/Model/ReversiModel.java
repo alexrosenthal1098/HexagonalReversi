@@ -3,7 +3,6 @@ package Model;
 import Player.ReversiPlayer;
 import Tile.ReversiTile;
 
-import java.util.Arrays;
 
 /**
  * An interface that defines the methods necessary to play the game Reversi.

@@ -16,15 +16,15 @@ public final class PlayerCreator {
    */
   public static ReversiPlayer create(PlayerType playerType, Color color)
           throws IllegalArgumentException {
-    if (playerType == null || color == null) {
+    if (playerType == null || color == null) { // check if either argument is null and throw error
       throw new IllegalArgumentException("Player type or color cannot be null.");
     }
-    switch (playerType) {
-      case PLAYER_HUMAN:
-        return new HumanPlayer(color);
+    switch (playerType) { // switch over the player type
+      case PLAYER_HUMAN: // if the player type is human
+        return new HumanPlayer(color); // create a human player with the given color
       case PLAYER_AI: // TO BE IMPLEMENTED LATER
-      default:
-        throw new IllegalArgumentException("Player type is unrecognized.");
+      default: // if the default case is reached, the player type provided is not supported
+        throw new IllegalArgumentException("Player type is not supported.");
     }
   }
 }
