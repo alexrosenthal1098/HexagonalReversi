@@ -1,7 +1,6 @@
 package Tile;
 
 import java.awt.*;
-import java.util.Objects;
 
 
 /**
@@ -22,8 +21,8 @@ public class PointyTopHexagon implements ReversiTile {
     if (coordinates == null) {
       throw new IllegalArgumentException("Cannot create a tile with null coordinates.");
     }
-    this.q = coordinates.x;
-    this.r = coordinates.y;
+    this.q = coordinates.x; // get the x coordinate from the point and set q field
+    this.r = coordinates.y; // get the y coordinate from the point and set r field
   }
 
   /**
@@ -31,18 +30,27 @@ public class PointyTopHexagon implements ReversiTile {
    * @param hex The hexagon to copy.
    */
   public PointyTopHexagon(PointyTopHexagon hex) {
-    this.q = hex.getCoordinates().x; //
-    this.r = hex.getCoordinates().y;
+    this.q = hex.getCoordinates().x; // get the x coordinate of the given hexagon and set q field
+    this.r = hex.getCoordinates().y; // get the y coordinate of the given hexagon and set r field
   }
 
   @Override
   public Polygon buildTile(Point center, int sideLength) throws IllegalArgumentException {
-    // TODO: add 6 points to a polygon to make hexagon with the given side length
     // ensure the center point is not null and side length is positive
     if (center == null || sideLength <= 0) {
       throw new IllegalArgumentException("Center cannot be null and side length must be positive");
     }
-    return new Polygon();
+
+    Polygon hexagon = new Polygon(); // create a new polygon
+
+    for (int sideNum = 0; sideNum < 6; sideNum++) { // iterate over the number of sides (6)
+      // calculate x and y position (math was found on the internet)
+      int xPos = (int) (center.x + sideLength * Math.cos(sideNum * 2 * Math.PI / 6));
+      int yPos = (int) (center.y + sideLength * Math.sin(sideNum * 2 * Math.PI / 6));
+      hexagon.addPoint(xPos, yPos); // add the point for each side to the polygon
+    }
+
+    return hexagon; // return the polygon
   }
 
   @Override

@@ -10,6 +10,10 @@ import Player.ReversiPlayer;
 import Tile.PointyTopHexagon;
 import Tile.ReversiTile;
 
+/**
+ * A version of the game Reversi that is played on hexagonal tiles. The tiles are arranged
+ * in a grid-like pattern that creates the shape of a larger hexagon.
+ */
 public class HexagonalReversi implements ReversiModel {
   // The Point uses axial coordinates as described on the page linked in the instructions
   // The x value of the point is the q value of the tile, which is like a diagonal column
@@ -22,6 +26,13 @@ public class HexagonalReversi implements ReversiModel {
   private final ReversiPlayer player2; // The player who moves second and uses white discs
   private ReversiPlayer currentPlayer; // A reference to the player whose move it currently is
 
+  /**
+   * A constructor that specifies the type of each player and the
+   * side length of the board.
+   * @param player1 The player type of the player who moves first and uses the black discs.
+   * @param player2 The player type of the player who moves second and uses the white discs.
+   * @param sideLength The side length, in hexagons, of each edge of the board.
+   */
   public HexagonalReversi(PlayerType player1, PlayerType player2, int sideLength) {
     if (player1 == null || player2 == null) { // check if either player is null
       throw new IllegalArgumentException("Player types cannot be null.");
@@ -70,7 +81,6 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public boolean isMovePossible(int row, int col) throws IllegalArgumentException {
-    // TODO: implement method
 
     return false;
   }
@@ -116,10 +126,16 @@ public class HexagonalReversi implements ReversiModel {
     return this.tileColors.get(this.tiles.get(new Point(row, col)));
   }
 
+  /**
+   * Returns a map that represents the coordinate location of each hexagonal tile
+   * in the board. The location of the tiles are specified using axial coordinates, with
+   * the first tile's coordinates being (0, 0).
+   * @return A map of Point to ReversiTile.
+   */
   @Override
-  public HashMap<Point, ReversiTile> getTiles() {
+  public Map<Point, ReversiTile> getTiles() {
     // create deep copy of the tiles map
-    HashMap<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
+    Map<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
     for (Point point: this.tiles.keySet()) { // iterate over all the keys
       // create a copy of the hexagon tile and put it with the corresponding copy of the point
       clone.put(point, new PointyTopHexagon(this.tiles.get(point)));
@@ -128,9 +144,9 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public HashMap<ReversiTile, Color> getTileColors() {
+  public Map<ReversiTile, Color> getTileColors() {
     // create deep copy of the tileColors map
-    HashMap<ReversiTile, Color> clone = new HashMap<>(); // create a new hashmap
+    Map<ReversiTile, Color> clone = new HashMap<>(); // create a new hashmap
     for (PointyTopHexagon tile: this.tileColors.keySet()) { // iterate over all the keys
       // create a copy of the color and put it with the corresponding copy of the tile
       clone.put(new PointyTopHexagon(tile), new Color(this.tileColors.get(tile).getRGB()));
