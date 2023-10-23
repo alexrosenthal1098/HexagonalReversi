@@ -6,39 +6,33 @@ import java.util.Objects;
 
 /**
  * A class that represents a pointy-top shaped hexagon tile for the
- * game Reversi.
+ * game Reversi. The position of this tile is given by its axial coordinates.
  */
 public class PointyTopHexagon implements ReversiTile {
-  private final int q; // the
-  private final int r;
-  private Color color; // the color disk that currently occupies this tile
-  // if this field is null, then there is no disk on this tile
+  // q and r come from the axial coordinate system described
+  // in the website linked on the instructions page
+  private final int q; // the q coordinate of this tile
+  private final int r; // the r coordinate of this tile
 
   /**
    * A constructor for a PointyTopHexagon that receives a point. Used to initialize the state
    * of the board in a Reversi game before players have made moves.
    */
   public PointyTopHexagon(Point coordinates) {
+    if (coordinates == null) {
+      throw new IllegalArgumentException("Cannot create a tile with null coordinates.");
+    }
     this.q = coordinates.x;
     this.r = coordinates.y;
   }
 
   /**
    * A constructor that creates a copy of the given PointyTopHexagon.
-   * @param hex The object to copy.
+   * @param hex The hexagon to copy.
    */
   public PointyTopHexagon(PointyTopHexagon hex) {
-    this.q = hex.getCoordinates().x;
+    this.q = hex.getCoordinates().x; //
     this.r = hex.getCoordinates().y;
-    this.color = hex.getDiscColor();
-  }
-
-  @Override
-  public Color getDiscColor() {
-    if (this.color == null) {
-      return null;
-    }
-    return new Color(this.color.getRGB()); // return a copy of the color
   }
 
   @Override
@@ -52,29 +46,7 @@ public class PointyTopHexagon implements ReversiTile {
   }
 
   @Override
-  public void changeColor(Color color) {
-    // ensure given color is not null and set this color
-    this.color = Objects.requireNonNull(color);
-  }
-
-  @Override
   public Point getCoordinates() {
-    return new Point(this.q, this.r);
-  }
-
-  @Override
-  public String toString() {
-    if (this.color == null) { // if this tile is unoccupied (color is null)
-      return "_";
-    }
-    else if (this.color.equals(Color.BLACK)) { // if the color is black
-      return "X";
-    }
-    else if (this.color.equals(Color.WHITE)) { // if the color is white
-      return "O";
-    }
-    else { // if the color is not null, black, or white, throw an exception
-      throw new IllegalStateException("The color that occupies this tile is unrecognized");
-    }
+    return new Point(this.q, this.r); // create a copy of the coordinates to avoid mutation
   }
 }

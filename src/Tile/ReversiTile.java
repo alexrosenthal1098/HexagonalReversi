@@ -14,20 +14,6 @@ import Player.ReversiPlayer;
  */
 public interface ReversiTile {
   /**
-   * Get the color of the disc that occupies this tile,
-   * or a completely transparent Color if the tile is empty.
-   * @return The color of the disk.
-   */
-  Color getDiscColor();
-
-  /**
-   * Changes the color of the disk that occupies this tile.
-   * @param color A color of disk that occupies this tile.
-   * @throws IllegalArgumentException if the given color is null.
-   */
-  void changeColor(Color color) throws IllegalArgumentException;
-
-  /**
    * Returns a regular polygon with the given side length that is
    * centered around the given point. This polygon represents the shape of the tile.
    * @param center A point that represents the center of this tile.
@@ -43,7 +29,4 @@ public interface ReversiTile {
    * @return A Point representing the hex's coordinates on the board.
    */
   Point getCoordinates();
-
-  @Override
-  String toString();
 }

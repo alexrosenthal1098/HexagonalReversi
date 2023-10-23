@@ -11,11 +11,13 @@ import Tile.PointyTopHexagon;
 import Tile.ReversiTile;
 
 public class HexagonalReversi implements ReversiModel {
-  // this design was sourced from the link provided on the instructions page
-  // The Point uses axial coordinates as described on the linked page
+  // The Point uses axial coordinates as described on the page linked in the instructions
   // The x value of the point is the q value of the tile, which is like a diagonal column
   // The y value of the point is the r value of the tile, which is a horizontal row
-  private final Map<Point, PointyTopHexagon> tiles; // A map representation of a hexagonal grid
+
+  // A map that represents the board using each hexagon's axial coordinates
+  private final Map<Point, PointyTopHexagon> tiles;
+  private final Map<PointyTopHexagon, Color> tileColors; // A map of each tile to its disc color
   private final ReversiPlayer player1; // The player who moves first and uses black discs
   private final ReversiPlayer player2; // The player who moves second and uses white discs
   private ReversiPlayer currentPlayer; // A reference to the player whose move it currently is
@@ -32,10 +34,9 @@ public class HexagonalReversi implements ReversiModel {
     this.player2 = PlayerCreator.create(player2); // set player 2 using its type
     this.currentPlayer = this.player1; // set the current player to player 1 (they go first)
 
-    // initialize the size of the board using simple equation for number of rows and columns
-    // in a hex grid
-    this.tiles = new HashMap<Point, PointyTopHexagon>();
-    this.initTiles(sideLength); // initialize the state of the board
+    this.tiles = new HashMap<Point, PointyTopHexagon>(); // create a hashmap to store the tiles
+    this.tileColors = new HashMap<PointyTopHexagon, Color>(); // create a hashmap for tile colors
+    this.initBoard(sideLength); // initialize the state of the board
   }
 
   @Override
@@ -49,7 +50,6 @@ public class HexagonalReversi implements ReversiModel {
 
     // change the tile of the color that was moved at depending on who the current player is
     // using referential equality because currentPlayer simply refers to either player
-    tile.changeColor(this.currentPlayer == this.player1 ? Color.BLACK : Color.WHITE);
 
     // use a helper method and pass in row, col and update every tile by going in all possible directions
 
@@ -113,16 +113,27 @@ public class HexagonalReversi implements ReversiModel {
     if (tile == null) {
       throw new IllegalArgumentException("Invalid coordinates");
     }
-    return tile.getDiscColor();
+    return this.tileColors.get(this.tiles.get(new Point(row, col)));
   }
 
   @Override
   public HashMap<Point, ReversiTile> getTiles() {
-    // create deep copy of the tiles
+    // create deep copy of the tiles map
     HashMap<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
     for (Point point: this.tiles.keySet()) { // iterate over all the keys
-      // create a new hexagon tile and put it with the corresponding key
+      // create a copy of the hexagon tile and put it with the corresponding copy of the point
       clone.put(point, new PointyTopHexagon(this.tiles.get(point)));
+    }
+    return clone; // return the copy of tiles
+  }
+
+  @Override
+  public HashMap<ReversiTile, Color> getTileColors() {
+    // create deep copy of the tileColors map
+    HashMap<ReversiTile, Color> clone = new HashMap<>(); // create a new hashmap
+    for (PointyTopHexagon tile: this.tileColors.keySet()) { // iterate over all the keys
+      // create a copy of the color and put it with the corresponding copy of the tile
+      clone.put(new PointyTopHexagon(tile), new Color(this.tileColors.get(tile).getRGB()));
     }
     return clone; // return the copy of tiles
   }
@@ -132,7 +143,7 @@ public class HexagonalReversi implements ReversiModel {
   //          HELPER METHODS
 
   // initializes the state of the board using the given side length of the hexagon
-  void initTiles(int side) {
+  void initBoard(int side) {
     // this code is adapted from the "Movement Range" section of the page linked in the instructions
     // the "N" value is the number of tiles away from the center a tile can be, which in our case
     // is the side length of the hex grid - 1
@@ -146,21 +157,25 @@ public class HexagonalReversi implements ReversiModel {
       }
     }
     // at the points surrounding the center of the grid (which are hard coded)
-    // place 3 black and white disks
-    this.tiles.get(new Point(0, -1)).changeColor(Color.BLACK);
-    this.tiles.get(new Point(1, -1)).changeColor(Color.WHITE);
-    this.tiles.get(new Point(1, 0)).changeColor(Color.BLACK);
-    this.tiles.get(new Point(0, 1)).changeColor(Color.WHITE);
-    this.tiles.get(new Point(-1, 1)).changeColor(Color.BLACK);
-    this.tiles.get(new Point(-1, 0)).changeColor(Color.WHITE);
+    // change the disk color to white or black
+    this.tileColors.put(this.tiles.get(new Point(0, -1)), Color.BLACK);
+    this.tileColors.put(this.tiles.get(new Point(1, -1)), Color.WHITE);
+    this.tileColors.put(this.tiles.get(new Point(1, 0)), Color.BLACK);
+    this.tileColors.put(this.tiles.get(new Point(0, 1)), Color.WHITE);
+    this.tileColors.put(this.tiles.get(new Point(-1, 1)), Color.BLACK);
+    this.tileColors.put(this.tiles.get(new Point(-1, 0)), Color.WHITE);
   }
 
   // returns the total number of tiles with the given disc color
   int tilesWithColor(Color color) {
-    int total = 0; // initialize total number of tiles
+    int total = 0; // initialize total number of tiles with the color
     for (PointyTopHexagon tile : this.tiles.values()) { // iterate over all tiles in the map
+      Color discColor = this.tileColors.get(tile); // get the disc color, which could be null
+      if (discColor == null) { // if the discColor is null
+        continue; // continue to the next tile
+      }
       // if the color matches add 1, if not add 0
-      total += tile.getDiscColor().equals(color) ? 1 : 0;
+      total += discColor.equals(color) ? 1 : 0;
     }
     return total; // return the total
   }

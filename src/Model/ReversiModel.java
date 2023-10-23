@@ -70,18 +70,25 @@ public interface ReversiModel {
   ReversiPlayer getCurrentPlayer();
 
   /**
-   * Returns the color of the disk that occupies the tile at the given x and y position.
+   * Returns the color of the disk that occupies the tile at the given x and y position,
+   * or null if there is no disk at that position.
    * @param x The x position to look at.
    * @param y The y position to look at.
-   * @return The color of the disk that occupies the tile.
+   * @return The color of the disk that occupies the tile, or null.
    * @throws IllegalArgumentException if the given x or y position are out of bounds,
    *                                  i.e. too small or too large.
    */
   Color getColorAt(int x, int y) throws IllegalArgumentException;
 
   /**
-   * Returns the two-dimensional array of tiles that represents the game board.
-   * @return A 2D array of Reversi tiles.
+   * Returns a map of points to tiles that represents the game board.
+   * @return A map of Point to ReversiTile.
    */
   Map<Point, ReversiTile> getTiles();
+
+  /**
+   * Returns a map of tiles to colors that represents the color disc at each tile.
+   * @return A map of ReversiTile to Color.
+   */
+  Map<ReversiTile, Color> getTileColors();
 }

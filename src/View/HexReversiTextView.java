@@ -33,7 +33,7 @@ public class HexReversiTextView implements TextView {
           continue; // continue onto the next coordinate
         }
         // if there is a tile at the location, append its toString and a space for padding
-        mapString.append(tile).append(" ");
+        mapString.append(tile).append(" "); // TODO make a helper that gets the toString from models color map
       }
       mapString.append("\n"); // append a new line once the end of the row is reached
     }
