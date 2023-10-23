@@ -1,5 +1,8 @@
 package Model;
 
+import java.awt.*;
+import java.util.Map;
+
 import Player.ReversiPlayer;
 import Tile.ReversiTile;
 
@@ -11,14 +14,14 @@ import Tile.ReversiTile;
  */
 public interface ReversiModel {
   /**
-   * Make the current player move at the tile given by its row and column number.
-   * @param row The row to move at.
-   * @param col The column to move at.
-   * @throws IllegalArgumentException if the given row or column number are out of bounds,
+   * Make the current player move at the tile given by its x and y position.
+   * @param x The x position to move at.
+   * @param y The y position to move at.
+   * @throws IllegalArgumentException if the given x or y position are out of bounds,
    *                                  i.e. too small or too large.
    * @throws IllegalStateException if the current player cannot make a move on that tile.
    */
-  void moveAt(int row, int col) throws IllegalArgumentException, IllegalStateException;
+  void moveAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Pass the current player's turn to the other player.
@@ -27,14 +30,14 @@ public interface ReversiModel {
 
   /**
    * Determines whether the player whose move it currently is can make a move at
-   * the tile given by its row and column number.
-   * @param row The row to look at.
-   * @param col The column to look at.
+   * the tile given by its x and y position.
+   * @param x The x position to look at.
+   * @param y The y position to look at.
    * @return True if the move is possible, false if it is not.
-   * @throws IllegalArgumentException if the given row or column number are out of bounds,
+   * @throws IllegalArgumentException if the given x or y position are out of bounds,
    *                                  i.e. too small or too large.
    */
-  boolean isMovePossible(int row, int col) throws IllegalArgumentException;
+  boolean isMovePossible(int x, int y) throws IllegalArgumentException;
 
   /**
    * Determines if the current player has any legal moves to play.
@@ -67,18 +70,18 @@ public interface ReversiModel {
   ReversiPlayer getCurrentPlayer();
 
   /**
-   * Returns the player that occupies the tile at the given row and column.
-   * @param row The row to look at.
-   * @param col The column to look at.
+   * Returns the player that occupies the tile at the given x and y position.
+   * @param x The x position to look at.
+   * @param y The y position to look at.
    * @return The ReversiPlayer that occupies the tile.
-   * @throws IllegalArgumentException if the given row or column number are out of bounds,
+   * @throws IllegalArgumentException if the given x or y position are out of bounds,
    *                                  i.e. too small or too large.
    */
-  ReversiPlayer getPlayerAt(int row, int col) throws IllegalArgumentException;
+  ReversiPlayer getPlayerAt(int x, int y) throws IllegalArgumentException;
 
   /**
    * Returns the two-dimensional array of tiles that represents the game board.
    * @return A 2D array of Reversi tiles.
    */
-  ReversiTile[][] getTiles();
+  Map<Point, ReversiTile> getTiles();
 }

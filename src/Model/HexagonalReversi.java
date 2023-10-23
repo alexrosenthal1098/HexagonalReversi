@@ -1,7 +1,8 @@
 package Model;
 
 import java.awt.*;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import Player.PlayerCreator;
 import Player.PlayerType;
@@ -10,10 +11,11 @@ import Tile.PointyTopHexagon;
 import Tile.ReversiTile;
 
 public class HexagonalReversi implements ReversiModel {
-  // A 2D array representation of a hexagonal grid map
-  // Moving across a row behaves normally and moves left to right visually,
-  // but moving down a column in the array moves diagonally, down to the right, visually
-  private final PointyTopHexagon[][] tiles;
+  // this design was sourced from the link provided on the instructions page
+  // The Point uses axial coordinates as described on the linked page
+  // The x value of the point is the q value of the tile, which is like a diagonal column
+  // The y value of the point is the r value of the tile, which is a horizontal row
+  private final Map<Point, PointyTopHexagon> tiles; // A map representation of a hexagonal grid
   private final ReversiPlayer player1; // The player who moves first and uses black discs
   private final ReversiPlayer player2; // The player who moves second and uses white discs
   private ReversiPlayer currentPlayer; // A reference to the player whose move it currently is
@@ -35,8 +37,9 @@ public class HexagonalReversi implements ReversiModel {
 
     // initialize the size of the board using simple equation for number of rows and columns
     // in a hex grid
-    this.tiles = new PointyTopHexagon[sideLength * 2 - 1][sideLength * 2 - 1];
-    // TODO: use private method like initTiles() for this ^^^
+    this.tiles = new HashMap<Point, PointyTopHexagon>();
+
+    this.initTiles(sideLength); // initialize the state of the board
   }
 
   @Override
@@ -103,13 +106,41 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public ReversiTile[][] getTiles() {
+  public HashMap<Point, ReversiTile> getTiles() {
     // create deep copy of the tiles
-    ReversiTile[][] tilesCopy = new ReversiTile[this.tiles.length][]; // create new outer array
-    for (int i = 0; i < tilesCopy.length; i++) { // iterate over the entries in the outer array
-      // copy the inner array at each index
-      tilesCopy[i] = Arrays.copyOf(this.tiles[i], this.tiles[i].length);
+    HashMap<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
+    for (Point point: this.tiles.keySet()) { // iterate over all the keys
+      // create a new hexagon tile and put it with the corresponding key
+      clone.put(point, new PointyTopHexagon(this.tiles.get(point)));
     }
-    return tilesCopy; // return the copied version
+    return clone; // return the copy of tiles
+  }
+
+
+
+  //          HELPER METHODS
+
+  // initializes the state of the board using the given side length of the hexagon
+  void initTiles(int side) {
+    // this code is adapted from the "Movement Range" section of the page linked in the instructions
+    // the "N" value is the number of tiles away from the center a tile can be, which in our case
+    // is the side length of the hex grid - 1
+    int N = side - 1;
+    for (int q = -side + 1; q <= N; q++) { // iterate over all q values
+      int rStart = Math.max(-N, -q - N); // calculate starting point of r values for this column
+      int rEnd = Math.min( N, -q + N); // calculate ending point of r values for this column
+      for (int r = rStart; r <= rEnd; r++) { // loop over r values from start to end point
+        // at the point (q, r) create a new hexagon that knows its own coordinates
+        this.tiles.put(new Point(q, r), new PointyTopHexagon(new Point(q, r)));
+      }
+    }
+    // at the points surrounding the center of the grid (which are hard coded)
+    // place 3 black and white disks
+    this.tiles.get(new Point(0, -1)).changeColor(Color.BLACK);
+    this.tiles.get(new Point(1, -1)).changeColor(Color.WHITE);
+    this.tiles.get(new Point(1, 0)).changeColor(Color.BLACK);
+    this.tiles.get(new Point(0, 1)).changeColor(Color.WHITE);
+    this.tiles.get(new Point(-1, 1)).changeColor(Color.BLACK);
+    this.tiles.get(new Point(-1, 0)).changeColor(Color.WHITE);
   }
 }

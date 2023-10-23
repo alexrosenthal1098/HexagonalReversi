@@ -11,4 +11,6 @@ public interface ReversiPlayer {
    * @return The color.
    */
   Color getColor();
+
+  // TODO something simple like int[] next move with 2 ints in it?
 }

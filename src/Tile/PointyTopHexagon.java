@@ -3,21 +3,43 @@ package Tile;
 import java.awt.*;
 import java.util.Objects;
 
-import Player.ReversiPlayer;
 
 /**
  * A class that represents a pointy-top shaped hexagon tile for the
  * game Reversi.
  */
 public class PointyTopHexagon implements ReversiTile {
-  private ReversiPlayer player; // the player that occupies this tile
-  // if this field is null, then no player occupies this tile and it has no disc on it
+  private final int q; // the
+  private final int r;
+  private Color color; // the color disk that currently occupies this tile
+  // if this field is null, then there is no disk on this tile
 
   /**
-   * An empty constructor for a PointyTopHexagon. Used to initialize the state
+   * A constructor for a PointyTopHexagon that receives a point. Used to initialize the state
    * of the board in a Reversi game before players have made moves.
    */
-  public PointyTopHexagon() { }
+  public PointyTopHexagon(Point coordinates) {
+    this.q = coordinates.x;
+    this.r = coordinates.y;
+  }
+
+  /**
+   * A constructor that creates a copy of the given PointyTopHexagon.
+   * @param hex The object to copy.
+   */
+  public PointyTopHexagon(PointyTopHexagon hex) {
+    this.q = hex.getCoordinates().x;
+    this.r = hex.getCoordinates().y;
+    this.color = hex.getDiscColor();
+  }
+
+  @Override
+  public Color getDiscColor() {
+    if (this.color == null) {
+      return null;
+    }
+    return new Color(this.color.getRGB()); // return a copy of the color
+  }
 
   @Override
   public Polygon buildTile(Point center, int sideLength) throws IllegalArgumentException {
@@ -30,25 +52,29 @@ public class PointyTopHexagon implements ReversiTile {
   }
 
   @Override
-  public void changePlayer(ReversiPlayer player) {
-    // ensure given player is not null and set this player
-    this.player = Objects.requireNonNull(player);
+  public void changeColor(Color color) {
+    // ensure given color is not null and set this color
+    this.color = Objects.requireNonNull(color);
+  }
+
+  @Override
+  public Point getCoordinates() {
+    return new Point(this.q, this.r);
   }
 
   @Override
   public String toString() {
-    if (this.player == null) { // if this tile is unoccupied (player is null)
+    if (this.color == null) { // if this tile is unoccupied (color is null)
       return "_";
     }
-    else if (this.player.getColor().equals(Color.BLACK)) { // if the players color is black
+    else if (this.color.equals(Color.BLACK)) { // if the color is black
       return "X";
     }
-    else if (this.player.getColor().equals(Color.WHITE)) { // if the players color is white
+    else if (this.color.equals(Color.WHITE)) { // if the color is white
       return "O";
     }
-    else { // if the color is not null, black, or white
-      throw new IllegalStateException("The player that occupies this tile" +
-              "has an unrecognized color"); // throw an error
+    else { // if the color is not null, black, or white, throw an exception
+      throw new IllegalStateException("The color that occupies this tile is unrecognized");
     }
   }
 }
