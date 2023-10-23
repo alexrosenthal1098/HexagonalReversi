@@ -19,6 +19,10 @@ public class ReversiExamples {
 
   @Test
   public void testView() {
+    this.model.moveAt(3, 0);
+    this.model.moveAt(4, 0);
+    this.model.moveAt(5, 0);
+
     Assert.assertEquals("", this.view.toString());
   }
 }

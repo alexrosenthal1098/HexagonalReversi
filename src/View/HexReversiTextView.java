@@ -27,7 +27,7 @@ public class HexReversiTextView implements TextView {
       for (int q = Math.min(-sideLength + 1, -sideLength + 1 - r);
            q <= Math.max(sideLength - 1, sideLength - 1 - r); q++) {
         // Get the tile at the current q, r from the map or null if there isn't one there
-        ReversiTile tile = this.model.getTiles().getOrDefault(new Point(q, r), null);
+        ReversiTile tile = this.model.getTiles().get(new Point(q, r));
         if (tile == null) { // if there is no tile at that location, append a space
           mapString.append(" ");
           continue; // continue onto the next coordinate

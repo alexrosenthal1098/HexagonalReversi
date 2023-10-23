@@ -27,24 +27,34 @@ public class HexagonalReversi implements ReversiModel {
     if (sideLength < 3) { // check if the side length is at least three
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
-    // set player 1 using its type and the color black
-    this.player1 = PlayerCreator.create(player1, Color.BLACK);
 
-    // set player 2 using its type and the color black
-    this.player2 = PlayerCreator.create(player2, Color.WHITE);
-
+    this.player1 = PlayerCreator.create(player1); // set player 1 using its type
+    this.player2 = PlayerCreator.create(player2); // set player 2 using its type
     this.currentPlayer = this.player1; // set the current player to player 1 (they go first)
 
     // initialize the size of the board using simple equation for number of rows and columns
     // in a hex grid
     this.tiles = new HashMap<Point, PointyTopHexagon>();
-
     this.initTiles(sideLength); // initialize the state of the board
   }
 
   @Override
   public void moveAt(int row, int col) throws IllegalArgumentException, IllegalStateException {
-    // TODO: implement method
+    // TODO make this actually check if the move is possible
+    ReversiTile tile = this.tiles.get(new Point(row, col));
+    if (tile == null) {
+      throw new IllegalArgumentException("Invalid coordinates");
+    }
+    // check if the move is valid
+
+    // change the tile of the color that was moved at depending on who the current player is
+    // using referential equality because currentPlayer simply refers to either player
+    tile.changeColor(this.currentPlayer == this.player1 ? Color.BLACK : Color.WHITE);
+
+    // use a helper method and pass in row, col and update every tile by going in all possible directions
+
+    // change to the other player, again checking using referential equality
+    this.currentPlayer = currentPlayer == this.player1 ? this.player2 : this.player1;
   }
 
   @Override
@@ -81,16 +91,14 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public int getPlayer1Score() {
-    // TODO: implement method
-    // can probably use a helper that you pass in the current player
-    return 0;
+    // use a helper to find tiles with player 1's color (black)
+    return this.tilesWithColor(Color.BLACK);
   }
 
   @Override
   public int getPlayer2Score() {
-    // TODO: implement method
-    // can probably use a helper that you pass in the current player
-    return 0;
+    // use a helper to find tiles with player 2's color (white)
+    return this.tilesWithColor(Color.WHITE);
   }
 
   @Override
@@ -100,9 +108,12 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public ReversiPlayer getPlayerAt(int row, int col) throws IllegalArgumentException {
-    // TODO: implement method
-    return null;
+  public Color getColorAt(int row, int col) throws IllegalArgumentException {
+    ReversiTile tile = this.tiles.get(new Point(row, col));
+    if (tile == null) {
+      throw new IllegalArgumentException("Invalid coordinates");
+    }
+    return tile.getDiscColor();
   }
 
   @Override
@@ -142,5 +153,15 @@ public class HexagonalReversi implements ReversiModel {
     this.tiles.get(new Point(0, 1)).changeColor(Color.WHITE);
     this.tiles.get(new Point(-1, 1)).changeColor(Color.BLACK);
     this.tiles.get(new Point(-1, 0)).changeColor(Color.WHITE);
+  }
+
+  // returns the total number of tiles with the given disc color
+  int tilesWithColor(Color color) {
+    int total = 0; // initialize total number of tiles
+    for (PointyTopHexagon tile : this.tiles.values()) { // iterate over all tiles in the map
+      // if the color matches add 1, if not add 0
+      total += tile.getDiscColor().equals(color) ? 1 : 0;
+    }
+    return total; // return the total
   }
 }

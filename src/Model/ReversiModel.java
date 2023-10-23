@@ -70,14 +70,14 @@ public interface ReversiModel {
   ReversiPlayer getCurrentPlayer();
 
   /**
-   * Returns the player that occupies the tile at the given x and y position.
+   * Returns the color of the disk that occupies the tile at the given x and y position.
    * @param x The x position to look at.
    * @param y The y position to look at.
-   * @return The ReversiPlayer that occupies the tile.
+   * @return The color of the disk that occupies the tile.
    * @throws IllegalArgumentException if the given x or y position are out of bounds,
    *                                  i.e. too small or too large.
    */
-  ReversiPlayer getPlayerAt(int x, int y) throws IllegalArgumentException;
+  Color getColorAt(int x, int y) throws IllegalArgumentException;
 
   /**
    * Returns the two-dimensional array of tiles that represents the game board.
