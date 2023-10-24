@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import Mocks.MockHexReversiModel;
 import Model.HexagonalReversi;
-import Model.ReversiModel;
 import Player.PlayerType;
 
 public class HexReversiTextViewTest {
