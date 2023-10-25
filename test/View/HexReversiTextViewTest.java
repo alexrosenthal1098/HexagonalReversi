@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import Mocks.MockHexReversiModel;
 import Model.HexagonalReversi;
-import Player.PlayerType;
 
 public class HexReversiTextViewTest {
 
@@ -17,8 +16,7 @@ public class HexReversiTextViewTest {
 
   @Test
   public void testConstructorValidModel() {
-    HexagonalReversi model = new HexagonalReversi(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 6);
+    HexagonalReversi model = new HexagonalReversi(6);
     TextView view = new HexReversiTextView(model);
   }
 
@@ -27,8 +25,7 @@ public class HexReversiTextViewTest {
   // tests for toString
   @Test
   public void testToStringStartingBoardOfLength6() {
-    HexagonalReversi model = new HexagonalReversi(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 6);
+    HexagonalReversi model = new HexagonalReversi(6);
     TextView view = new HexReversiTextView(model);
     Assert.assertEquals("" +
             "     _ _ _ _ _ _ \n" +
@@ -46,8 +43,7 @@ public class HexReversiTextViewTest {
 
   @Test
   public void testToStringStartingBoardOfLength3() {
-    HexagonalReversi model = new HexagonalReversi(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 3);
+    HexagonalReversi model = new HexagonalReversi(3);
     TextView view = new HexReversiTextView(model);
     Assert.assertEquals("" +
             "  _ _ _ \n" +
@@ -59,8 +55,7 @@ public class HexReversiTextViewTest {
 
   @Test
   public void testToStringStartingBoardOfLength15() {
-    HexagonalReversi model = new HexagonalReversi(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 10);
+    HexagonalReversi model = new HexagonalReversi(10);
     TextView view = new HexReversiTextView(model);
     Assert.assertEquals("" +
             "         _ _ _ _ _ _ _ _ _ _ \n" +
@@ -91,34 +86,33 @@ public class HexReversiTextViewTest {
   // test getModelSideLength
   @Test
   public void testGetModelSideLengthInvalidModel() {
-    HexagonalReversi mockModel = new MockHexReversiModel(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 6);
+    HexagonalReversi mockModel = new MockHexReversiModel(6);
     HexReversiTextView view = new HexReversiTextView(mockModel);
     Assert.assertThrows(IllegalStateException.class, () -> view.getModelSideLength());
   }
 
   @Test
   public void testGetModelSideLengthOfArea5() {
-    HexagonalReversi model = new HexagonalReversi(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 4);
+    HexagonalReversi model = new HexagonalReversi(4);
     HexReversiTextView view = new HexReversiTextView(model);
     Assert.assertEquals(4, view.getModelSideLength());
   }
 
   @Test
   public void testGetModelSideLength6() {
-    HexagonalReversi model = new HexagonalReversi(PlayerType.PLAYER_HUMAN,
-            PlayerType.PLAYER_HUMAN, 6);
+    HexagonalReversi model = new HexagonalReversi(6);
     HexReversiTextView view = new HexReversiTextView(model);
     Assert.assertEquals(6, view.getModelSideLength());
   }
 
 
 
+  /*
   // test tileToString
   @Test(expected = IllegalArgumentException.class)
   public void testTileToStringNullTile() {
 
   }
 
+   */
 }

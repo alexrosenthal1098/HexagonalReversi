@@ -8,8 +8,9 @@ import java.awt.*;
  * game Reversi. The position of this tile is given by its axial coordinates.
  */
 public class PointyTopHexagon implements ReversiTile {
-  private boolean occupied;
-  private Color discColor;
+  private boolean hasDisk;
+  private Color topColor;
+  private Color bottomColor;
 
   /**
    * An empty constructor for a PointyTopHexagon that is not occupied.
@@ -17,20 +18,21 @@ public class PointyTopHexagon implements ReversiTile {
    *  players have made any moves.
    */
   public PointyTopHexagon() {
-    this.occupied = false;
+    this.hasDisk = false;
   }
 
   /**
    * A copy constructor that creates a hexagonal tile with the given tiles disc.
    * @param tile The tile to copy.
    */
-  public PointyTopHexagon(ReversiTile tile) {
+  public PointyTopHexagon(PointyTopHexagon tile) {
     if (tile == null) { // check if the given tile is null
       throw new IllegalArgumentException("Cannot copy a null tile."); // if it is, throw exception
     }
-    this.occupied = tile.isOccupied(); // copy the occupied field
-    if (this.occupied) { // if this tile is occupied
-      this.discColor = tile.getDiscColor(); // copy the disc color
+    this.hasDisk = tile.hasDisk; // copy if the given tile has a disk
+    if (this.hasDisk) { // if the tile has a disk
+      this.topColor = new Color(tile.topColor.getRGB()); // copy the top color
+      this.bottomColor = new Color(tile.bottomColor.getRGB()); // copy the bottom color
     }
   }
 
@@ -54,26 +56,40 @@ public class PointyTopHexagon implements ReversiTile {
   }
 
   @Override
-  public void changeDiscColor(Color color) {
-    if (color == null) { // check if the color is null
-      // throw exception if it is
-      throw new IllegalArgumentException("Cannot change to null color.");
-    }
-    this.discColor = color; // set this color to the given one
-    this.occupied = true; // set the occupied state to true
+  public boolean hasDisk() {
+    return this.hasDisk;
   }
 
   @Override
-  public boolean isOccupied() {
-    return this.occupied; // simply return if this tile is occupied or not
+  public void placeDisk(Color topColor, Color bottomColor) throws IllegalArgumentException,
+          IllegalStateException {
+    if (topColor == null || bottomColor == null) { // if either color is null
+      throw new IllegalArgumentException("A disk cannot have null colors."); // throw exception
+    }
+    if (this.hasDisk) { // if this tile already has a disk
+      throw new IllegalStateException("This tile already has a disk."); // throw exception
+    }
+    this.topColor = new Color(topColor.getRGB()); // copy and set the top color
+    this.bottomColor = new Color(bottomColor.getRGB()); // copy and set the bottom color
+    this.hasDisk = true; // set has disk field to true
   }
 
   @Override
-  public Color getDiscColor() throws IllegalStateException {
-    if (!this.occupied) { // if this tile is not occupied
-      throw new IllegalStateException("This tile is not occupied."); // throw an error
+  public void flipDisk() throws IllegalStateException {
+    if (!this.hasDisk) { // if this tile has no disk
+      throw new IllegalStateException("This tile has no disk to flip."); // throw exception
     }
-    return new Color(this.discColor.getRGB()); // return a copy of the disc color
+    Color topColorCopy = new Color(this.topColor.getRGB()); // copy the top color
+    this.topColor = new Color(bottomColor.getRGB()); // set top color to copy of bottom color
+    // this avoids an aliasing bug
+    this.bottomColor = topColorCopy; // set the bottom color to the copy of the top color
   }
 
+  @Override
+  public Color getTopColor() throws IllegalStateException {
+    if (!this.hasDisk) { // if this tile has no disk
+      throw new IllegalStateException("This tile has no disk to flip."); // throw exception
+    }
+    return new Color(this.topColor.getRGB()); // return a copy of the top color
+  }
 }

@@ -1,16 +1,14 @@
 package Tile;
 
-import java.awt.*;
-
-import javax.swing.text.Position;
-
-import Player.ReversiPlayer;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Polygon;
 
 /**
  * A tile of a Reversi game board that can be occupied by a player's disk.
  * A tile is represented by a regular polygon, which is a shape with equal side lengths
- * and equal interior angles. Can be rendered both textually and visually
- * using java's GUI framework Swing.
+ * and equal interior angles.
+ * A disk has two colors, one on each side, and can be flipped.
  */
 public interface ReversiTile {
   /**
@@ -25,22 +23,31 @@ public interface ReversiTile {
   Polygon buildTile(Point center, int sideLength) throws IllegalArgumentException;
 
   /**
-   * Changes the color of the disc on this tile to the given color.
-   * @param color The color to change to.
-   * @throws IllegalArgumentException if the given color is null.
+   * Returns if this tile has a disk on it or not.
+   * @return True if the tile has a disk, false if it does not.
    */
-  void changeDiscColor(Color color) throws IllegalArgumentException;
+  boolean hasDisk();
 
   /**
-   * Returns if this tile is occupied by a player's disc or not.
-   * @return True if the tile is occupied, false if it isn't.
+   * Place a disk with given 2 colors onto this tile.
+   * @param topColor The color of the top of the disk when it is placed. (the color we see)
+   * @param bottomColor The color of the bottom of the disk. (the color we don't see)
+   * @throws IllegalArgumentException if either of the given colors are null.
+   * @throws IllegalStateException if the tile already has a disk placed on it.
    */
-  boolean isOccupied();
+  void placeDisk(Color topColor, Color bottomColor) throws IllegalArgumentException,
+          IllegalStateException;
 
   /**
-   * Returns the color of the disc that occupies this hexagon.
-   * @return The color of the disc on this tile.
-   * @throws IllegalStateException if there is no disc on this tile.
+   * Flips the disk that is on this tile.
+   * @throws IllegalStateException if the tile does not have a disk on it.
    */
-  Color getDiscColor() throws IllegalStateException;
+  void flipDisk() throws IllegalStateException;
+
+  /**
+   * Gets the top color of the disk on this tile.
+   * @return The color of the disk.
+   * @throws IllegalStateException if the disk does not have a tile on it.
+   */
+  Color getTopColor() throws IllegalStateException;
 }

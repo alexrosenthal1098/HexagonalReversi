@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Model.HexagonalReversi;
-import Player.PlayerType;
-import Player.ReversiPlayer;
 import Tile.PointyTopHexagon;
 import Tile.ReversiTile;
 
@@ -17,12 +15,10 @@ public class MockHexReversiModel extends HexagonalReversi {
 
   /**
    * A constructor for a mock hexagonal reversi model.
-   * @param player1 The player type of the player that moves first and uses the black discs.
-   * @param player2 The player type of the player that moves first and uses the black discs.
    * @param sideLength The side length of the board.
    */
-  public MockHexReversiModel(PlayerType player1, PlayerType player2, int sideLength) {
-    super(player1, player2, sideLength);
+  public MockHexReversiModel(int sideLength) {
+    super(sideLength);
   }
 
   @Override

@@ -37,13 +37,13 @@ public class HexReversiTextView implements TextView {
       // (this math was derived by looking at the formula to generate the HashMap)
       for (int q = Math.min(-sideLength + 1, -sideLength + 1 - r);
            q <= Math.min(sideLength - 1, sideLength - 1 - r); q++) {
-        // Get the tile at the current q, r from the map or null if there isn't one there
-        ReversiTile tile = this.model.getTiles().get(new Point(q, r));
-        if (tile == null) { // if there is no tile at that location, append a space
-          mapString.append(" ");
-          continue; // continue onto the next coordinate
+        // if the current point is not on the board
+        if (!this.model.getTiles().containsKey(new Point(q, r))) {
+          mapString.append(" "); // append a space
+          continue; // and continue to the next point
         }
-        // if there is a tile at the location, append its toString and a space for padding
+        // Now we know that the tile is on the board, get its string representation from a helper
+        // and append it and a space for padding
         mapString.append(this.tileToString(new Point(q, r))).append(" ");
       }
       mapString.append("\n"); // append a new line once the end of the row is reached
@@ -95,7 +95,7 @@ public class HexReversiTextView implements TextView {
     else if (tileColor.equals(Color.WHITE)) { // if the color is white
       return "O";
     }
-    else { // if the color is not null, black, or white, throw an exception
+    else { // if the color is not black, or white, throw an exception
       throw new IllegalStateException("The color that occupies this tile is unrecognized");
     }
   }

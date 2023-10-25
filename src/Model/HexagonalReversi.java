@@ -8,47 +8,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import Player.PlayerCreator;
-import Player.PlayerType;
-import Player.ReversiPlayer;
 import Tile.PointyTopHexagon;
 import Tile.ReversiTile;
 
 /**
- * A version of the game Reversi that is played on hexagonal tiles. The tiles are arranged
- * in a grid-like pattern that creates the shape of a larger hexagon.
+ * A version of the game Reversi that is played on hexagonal tiles using black and white disks.
+ * The tiles are arranged in a grid-like pattern that creates the shape of a larger hexagon.
+ * Player one moves first and uses the black side of the disks while player two, who moves second,
+ * uses the white side.
  */
 public class HexagonalReversi implements ReversiModel {
-  // The Point uses axial coordinates as described on the page linked in the instructions
-  // The x value of the point is the q value of the tile, which is like a diagonal column
-  // The y value of the point is the r value of the tile, which is a horizontal row
+  private final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
+  private final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
+
+  // The board uses axial coordinates as described on the page linked in the instructions
+  // The x value of a point is the q value of the tile, which is like a diagonal column
+  // The y value of a point is the r value of the tile, which is a horizontal row
 
   // A map that represents the board using each hexagon's axial coordinates
   private final Map<Point, PointyTopHexagon> tiles;
-  private final ReversiPlayer player1; // The player who moves first and uses black discs
-  private final ReversiPlayer player2; // The player who moves second and uses white discs
-  private ReversiPlayer currentPlayer; // A reference to the player whose move it currently is
+
+  private Color currentPlayer; // The disk color of the current player.
 
   /**
-   * A constructor that specifies the type of each player and the
-   * side length of the board.
-   * @param player1 The player type of the player who moves first and uses the black discs.
-   * @param player2 The player type of the player who moves second and uses the white discs.
+   * A constructor that specifies the side length of the board, in tiles.
    * @param sideLength The side length, in hexagons, of each edge of the board.
    */
-  public HexagonalReversi(PlayerType player1, PlayerType player2, int sideLength) {
-    if (player1 == null || player2 == null) { // check if either player is null
-      throw new IllegalArgumentException("Player types cannot be null.");
-    }
+  public HexagonalReversi(int sideLength) {
     if (sideLength < 3) { // check if the side length is at least three
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
-
-    this.player1 = PlayerCreator.create(player1); // set player 1 using its type
-    this.player2 = PlayerCreator.create(player2); // set player 2 using its type
-    this.currentPlayer = this.player1; // set the current player to player 1 (they go first)
-
-    this.tiles = new HashMap<Point, PointyTopHexagon>(); // create a hashmap to store the tiles
+    this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
+    this.tiles = new HashMap<>(); // create a hashmap to store the tiles
     this.initBoard(sideLength); // initialize the state of the board
   }
 
@@ -63,17 +54,14 @@ public class HexagonalReversi implements ReversiModel {
       throw new IllegalStateException("This move is not possible.");
     }
 
-    // get the current player's color
-    Color curPlayerColor = this.currentPlayer == this.player1 ? Color.BLACK : Color.WHITE;
-
-    // change the color of the tile that was moved at
-    this.tiles.get(new Point(row, col)).changeDiscColor(curPlayerColor);
+    // place a disk on the tile that was moved at with the current player's color face up
+    this.tiles.get(new Point(row, col)).placeDisk(this.currentPlayer, this.otherPlayerColor());
 
     for (Point direction : this.getDirections()) {
-      List<ReversiTile> tilesToChange = this.moveHelper(new Point(row, col),
+      List<ReversiTile> tilesToChange = this.tilesToFlip(new Point(row, col),
               direction.x, direction.y); // get the tiles that we need to change
       for (ReversiTile tile : tilesToChange) { // iterate over all tiles to change
-        tile.changeDiscColor(curPlayerColor); // change the disc color to the current player's color
+        tile.flipDisk(); // flip the disk on the tile to the current player's color
       }
     }
     this.passTurn(); // change the turn to the other player;
@@ -81,13 +69,7 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public void passTurn() {
-    // using referential equality because currentPlayer simply points to a ReversiPlayer object
-    if (this.currentPlayer == this.player1) { // if the current player is player 1
-      this.currentPlayer = this.player2; // switch to player 2
-    }
-    else { // if the current player is player 2
-      this.currentPlayer = this.player1; // switch to player 1
-    }
+    this.currentPlayer = this.otherPlayerColor(); // set the current player to the other player
   }
 
   @Override
@@ -97,28 +79,32 @@ public class HexagonalReversi implements ReversiModel {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
 
+    if (this.tiles.get(new Point(row, col)).hasDisk()) { // if the tile already has a disk
+      return false; // then the move is not possible, so return false
+    }
+
     for (Point delPoint : this.getDirections()) { // iterate over all directions to move in
-      // use moveHelper in all directions starting at the given point
-      List<ReversiTile> otherTiles = this.moveHelper(new Point(row, col), delPoint.x, delPoint.y);
-      if (!otherTiles.isEmpty()) { // if the returned list from moveHelper IS NOT empty
+      // find the tiles to flip in all directions starting at the given point
+      List<ReversiTile> otherTiles = this.tilesToFlip(new Point(row, col), delPoint.x, delPoint.y);
+      if (!otherTiles.isEmpty()) { // if the list of tiles to flip IS NOT empty
         return true; // then the move is possible, so return true
       }
     }
-    // if moveHelper was empty in all directions
+    // if there are no tiles to flip in all directions
     return false; // the move is not possible, return false
   }
 
   @Override
   public boolean anyMoves() {
     for (Point tilePoint : this.tiles.keySet()) { // iterate over all tile locations
-      if (!this.tiles.get(tilePoint).isOccupied()) { // if the tile is empty/not occupied
+      if (!this.tiles.get(tilePoint).hasDisk()) { // if the tile does not have a disk
         // check if a move is possible at that tile
-        if (this.isMovePossible(tilePoint.x, tilePoint.y)) {
-          return true; // the move is possible so return true
+        if (this.isMovePossible(tilePoint.x, tilePoint.y)) { // if the move is possible
+          return true; // return true
         }
         // if a move is not possible, continue on trying moves
       }
-      // if the tile has a color, then it is occupied and you can't move there, so keep trying
+      // if the tile has a disk then you can't move there, so keep trying
     }
     return false; // if all the moves are not possible, there are no moves so return false
   }
@@ -136,20 +122,19 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public int getPlayer1Score() {
-    // use a helper to find tiles with player 1's color (black)
-    return this.tilesWithColor(Color.BLACK);
+    // use a helper to find tiles with player one's disk color
+    return this.tilesWithColor(this.PLAYER_1_COLOR);
   }
 
   @Override
   public int getPlayer2Score() {
-    // use a helper to find tiles with player 2's color (white)
-    return this.tilesWithColor(Color.WHITE);
+    // use a helper to find tiles with player two's disk color
+    return this.tilesWithColor(this.PLAYER_2_COLOR);
   }
 
   @Override
-  public ReversiPlayer getCurrentPlayer() {
-    return this.currentPlayer; // return a reference to the current player
-    // player objects are immutable so no need to make a copy
+  public Color getCurrentPlayer() {
+    return new Color(this.currentPlayer.getRGB()); // copy and return the current player's color
   }
 
   @Override
@@ -160,13 +145,13 @@ public class HexagonalReversi implements ReversiModel {
     }
 
     ReversiTile tile = this.tiles.get(new Point(row, col)); // get the tile at that point
-    if (!tile.isOccupied()) { // if the tile is not occupied
+    if (!tile.hasDisk()) { // if the tile does not have a disk
       // throw an exception
-      throw new IllegalStateException("Cannot get a color from an unoccupied tile.");
+      throw new IllegalStateException("Cannot get a color from tile without a disk.");
     }
 
-    // if the tile is occupied, return its disc color
-    return tile.getDiscColor();
+    // if the tile does have a disk, return its disk color
+    return tile.getTopColor();
   }
 
   /**
@@ -205,53 +190,66 @@ public class HexagonalReversi implements ReversiModel {
       }
     }
     // at the points surrounding the center of the grid (which are hard coded)
-    // change the disk color to white or black
-    this.tiles.get(new Point(0, -1)).changeDiscColor(Color.BLACK);
-    this.tiles.get(new Point(1, -1)).changeDiscColor(Color.WHITE);
-    this.tiles.get(new Point(1, 0)).changeDiscColor(Color.BLACK);
-    this.tiles.get(new Point(0, 1)).changeDiscColor(Color.WHITE);
-    this.tiles.get(new Point(-1, 1)).changeDiscColor(Color.BLACK);
-    this.tiles.get(new Point(-1, 0)).changeDiscColor(Color.WHITE);
+    // place a disk, alternating which side is face up
+    this.tiles.get(new Point(0, -1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
+    this.tiles.get(new Point(1, -1)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
+    this.tiles.get(new Point(1, 0)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
+    this.tiles.get(new Point(0, 1)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
+    this.tiles.get(new Point(-1, 1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
+    this.tiles.get(new Point(-1, 0)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
   }
 
-  // returns the total number of tiles with the given disc color
+  // returns the color of the player whose turn it current is not
+  Color otherPlayerColor() {
+    // using referential equality because currentPlayer is simply a reference to either
+    // the player 1 or player 2 field, not a whole new object
+    if (this.currentPlayer == this.PLAYER_1_COLOR) { // if current player is player 1
+      return this.PLAYER_2_COLOR; // return player 2 color
+    }
+    else { // if current player is player 2
+      return this.PLAYER_1_COLOR; // return player 1 color
+    }
+  }
+
+  // returns the total number of tiles with the given disk color
   int tilesWithColor(Color color) {
     int total = 0; // initialize total number of tiles with the color
     for (PointyTopHexagon tile : this.tiles.values()) { // iterate over all tiles in the map
-      if (!tile.isOccupied()) { // if the tile is not occupied
+      if (!tile.hasDisk()) { // if the tile does not have a disk
         continue; // continue to the next tile
       }
-      // if the color matches add 1, if not add 0
-      total += tile.getDiscColor().equals(color) ? 1 : 0;
+      // if the top color matches add 1, if not add 0
+      total += tile.getTopColor().equals(color) ? 1 : 0;
     }
     return total; // return the total
   }
 
   // begin at the given starting point and move in the direction specified
   // by the change in q and change in r for each step.
-  // record and return all tiles with a disc of the player that is not the current turn
-  // stop once you've reached a tile that has the current player's disc, but don't return it
+  // record and return all tiles with a disk color of the player that is not the current turn
+  // stop once you've reached a tile that has the current player's disk, and return the list
+  // (NOT including the tile with the current player's color)
   // if you reach the end of the board or an empty tile before finding a tile with the current
   // player's color, return an empty list.
-  List<ReversiTile> moveHelper(Point start, int delQ, int delR) {
+  List<ReversiTile> tilesToFlip(Point start, int delQ, int delR) {
     Point curPoint = new Point(start); // copy the starting point to avoid mutating the argument
-    curPoint.move(delQ, delR); // move the current point in the given direction
-    // get the other player's color
-    Color otherPlayerColor = this.currentPlayer == this.player1 ? Color.WHITE : Color.BLACK;
+    curPoint.translate(delQ, delR); // move the current point in the given direction
+
     List<ReversiTile> foundTiles = new ArrayList<>(); // initialize list to hold recorded tiles
 
     while (this.tiles.containsKey(curPoint)) { // while the current point is still on the board
       ReversiTile tileAtPoint = this.tiles.get(curPoint); // get the tile at the current point
-      if (!tileAtPoint.isOccupied()) { // if the tile is not occupied
+      if (!tileAtPoint.hasDisk()) { // if the tile does not have a disk
         return new ArrayList<>(); // return an empty list
       }
-      // if the disc color at the current tile is equal to the other player's color
-      else if (tileAtPoint.getDiscColor().equals(otherPlayerColor)) {
+      // if the top disk color at the current tile is equal to the other player's color
+      else if (tileAtPoint.getTopColor().equals(this.otherPlayerColor())) {
         foundTiles.add(tileAtPoint); // record the tile at the current point
-        curPoint.move(delQ, delR); // and move the current point
+        curPoint.translate(delQ, delR); // and move the current point
+        continue;
       }
-      // if the current tile is occupied but does not have the other player's color,
-      // then it must have the current player's color
+      // if the current tile has a disk, but it isn't flipped to the other player's color,
+      // then it must be the current player's color
       return foundTiles; // so return the tiles we've found
 
     }
@@ -268,8 +266,8 @@ public class HexagonalReversi implements ReversiModel {
             new Point(0, -1), // up and left
             new Point(1, -1), // up and right
             new Point(1, 0), // right
-            new Point(0, -1), // down and right
-            new Point(-1, -1) // down and left
+            new Point(0, 1), // down and right
+            new Point(-1, 1) // down and left
     ));
   }
 

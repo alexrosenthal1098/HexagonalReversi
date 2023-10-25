@@ -1,9 +1,9 @@
 package Model;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.Map;
 
-import Player.ReversiPlayer;
 import Tile.ReversiTile;
 
 
@@ -65,10 +65,10 @@ public interface ReversiModel {
   int getPlayer2Score();
 
   /**
-   * Returns the player whose turn it currently is.
-   * @return A ReversiPlayer whose turn it is.
+   * Returns the color of the player whose turn it currently is.
+   * @return The color of the current player.
    */
-  ReversiPlayer getCurrentPlayer();
+  Color getCurrentPlayer();
 
   /**
    * Returns the color of the disk that occupies the tile at the given x and y position,
