@@ -25,8 +25,22 @@ public interface ReversiTile {
   Polygon buildTile(Point center, int sideLength) throws IllegalArgumentException;
 
   /**
-   * Returns the coordinates of this hexagon's position on the board.
-   * @return A Point representing the hex's coordinates on the board.
+   * Changes the color of the disc on this tile to the given color.
+   * @param color The color to change to.
+   * @throws IllegalArgumentException if the given color is null.
    */
-  Point getCoordinates();
+  void changeDiscColor(Color color) throws IllegalArgumentException;
+
+  /**
+   * Returns if this tile is occupied by a player's disc or not.
+   * @return True if the tile is occupied, false if it isn't.
+   */
+  boolean isOccupied();
+
+  /**
+   * Returns the color of the disc that occupies this hexagon.
+   * @return The color of the disc on this tile.
+   * @throws IllegalStateException if there is no disc on this tile.
+   */
+  Color getDiscColor() throws IllegalStateException;
 }

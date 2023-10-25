@@ -44,7 +44,7 @@ public class HexReversiTextView implements TextView {
           continue; // continue onto the next coordinate
         }
         // if there is a tile at the location, append its toString and a space for padding
-        mapString.append(this.tileToString(tile)).append(" ");
+        mapString.append(this.tileToString(new Point(q, r))).append(" ");
       }
       mapString.append("\n"); // append a new line once the end of the row is reached
     }
@@ -76,17 +76,20 @@ public class HexReversiTextView implements TextView {
   }
 
   // create a string representation of a tile, used as a helper for toString
-  String tileToString(ReversiTile tile) {
-    if (tile == null) {
-      throw new IllegalArgumentException("Cannot get a color from a null tile.");
+  String tileToString(Point tilePoint) {
+    if (tilePoint == null) {
+      throw new IllegalArgumentException("Cannot make a string from a null point.");
     }
-    // get the tile color from the model using the given tile's coordinates
-    Color tileColor = this.model.getColorAt(tile.getCoordinates().x, tile.getCoordinates().y);
 
-    if (tileColor == null) { // if the tile is unoccupied (color is null)
-      return "_";
+    Color tileColor; // initialize color of the disc at the tile at the given point
+    try { // try getting the color of the disc on the tile at the given point
+      tileColor = this.model.getColorAt(tilePoint.x, tilePoint.y);
     }
-    else if (tileColor.equals(Color.BLACK)) { // if the color is black
+    catch (IllegalStateException e) { // if an exception was thrown, the tile is unoccupied
+      return "_"; // so return underscore that represents empty tile
+    }
+
+    if (tileColor.equals(Color.BLACK)) { // if the color is black
       return "X";
     }
     else if (tileColor.equals(Color.WHITE)) { // if the color is white

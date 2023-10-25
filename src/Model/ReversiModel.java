@@ -14,7 +14,8 @@ import Tile.ReversiTile;
  */
 public interface ReversiModel {
   /**
-   * Make the current player move at the tile given by its x and y position.
+   * Make the current player move at the tile given by its x and y position, and
+   * move the turn to the other player.
    * @param x The x position to move at.
    * @param y The y position to move at.
    * @throws IllegalArgumentException if the given x or y position are out of bounds,
@@ -77,18 +78,14 @@ public interface ReversiModel {
    * @return The color of the disk that occupies the tile, or null.
    * @throws IllegalArgumentException if the given x or y position are out of bounds,
    *                                  i.e. too small or too large.
+   * @throws IllegalStateException if the disk at the given position is not occupied
+   *                               and thus has no color.
    */
-  Color getColorAt(int x, int y) throws IllegalArgumentException;
+  Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Returns a map of points to tiles that represents the game board.
    * @return A map of Point to ReversiTile.
    */
   Map<Point, ReversiTile> getTiles();
-
-  /**
-   * Returns a map of tiles to colors that represents the color disc at each tile.
-   * @return A map of ReversiTile to Color.
-   */
-  Map<ReversiTile, Color> getTileColors();
 }

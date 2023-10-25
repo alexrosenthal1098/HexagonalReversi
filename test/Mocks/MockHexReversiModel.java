@@ -36,9 +36,9 @@ public class MockHexReversiModel extends HexagonalReversi {
     Map<Point, ReversiTile> mockTiles = new HashMap<Point, ReversiTile>();
 
     // add random hexagons to the map
-    mockTiles.put(new Point(1, 1), new PointyTopHexagon(new Point(1, 1)));
-    mockTiles.put(new Point(2, 2), new PointyTopHexagon(new Point(2, 2)));
-    mockTiles.put(new Point(3, 3), new PointyTopHexagon(new Point(3, 3)));
+    mockTiles.put(new Point(1, 1), new PointyTopHexagon());
+    mockTiles.put(new Point(2, 2), new PointyTopHexagon());
+    mockTiles.put(new Point(3, 3), new PointyTopHexagon());
 
     return mockTiles; // return them mock map
   }

@@ -14,7 +14,7 @@ public class PointyTopHexagonTest {
 
   @Before
   public void setUp() {
-    this.hex = new PointyTopHexagon(new Point(0, 0));
+    this.hex = new PointyTopHexagon();
   }
 
   // tests for buildTile

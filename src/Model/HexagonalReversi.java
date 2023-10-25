@@ -1,7 +1,11 @@
 package Model;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import Player.PlayerCreator;
@@ -21,7 +25,6 @@ public class HexagonalReversi implements ReversiModel {
 
   // A map that represents the board using each hexagon's axial coordinates
   private final Map<Point, PointyTopHexagon> tiles;
-  private final Map<PointyTopHexagon, Color> tileColors; // A map of each tile to its disc color
   private final ReversiPlayer player1; // The player who moves first and uses black discs
   private final ReversiPlayer player2; // The player who moves second and uses white discs
   private ReversiPlayer currentPlayer; // A reference to the player whose move it currently is
@@ -46,26 +49,34 @@ public class HexagonalReversi implements ReversiModel {
     this.currentPlayer = this.player1; // set the current player to player 1 (they go first)
 
     this.tiles = new HashMap<Point, PointyTopHexagon>(); // create a hashmap to store the tiles
-    this.tileColors = new HashMap<PointyTopHexagon, Color>(); // create a hashmap for tile colors
     this.initBoard(sideLength); // initialize the state of the board
   }
 
   @Override
   public void moveAt(int row, int col) throws IllegalArgumentException, IllegalStateException {
-    // TODO make this actually check if the move is possible
-    ReversiTile tile = this.tiles.get(new Point(row, col));
-    if (tile == null) {
-      throw new IllegalArgumentException("Invalid coordinates");
+    // if the board does not contain the given coordinate
+    if (!this.tiles.containsKey(new Point(row, col))) {
+      throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
-    // check if the move is valid
 
-    // change the tile of the color that was moved at depending on who the current player is
-    // using referential equality because currentPlayer simply refers to either player
+    if (!this.isMovePossible(row, col)) { // if the move is not possible
+      throw new IllegalStateException("This move is not possible.");
+    }
 
-    // use a helper method and pass in row, col and update every tile by going in all possible directions
+    // get the current player's color
+    Color curPlayerColor = this.currentPlayer == this.player1 ? Color.BLACK : Color.WHITE;
 
-    // change to the other player, again checking using referential equality
-    this.currentPlayer = currentPlayer == this.player1 ? this.player2 : this.player1;
+    // change the color of the tile that was moved at
+    this.tiles.get(new Point(row, col)).changeDiscColor(curPlayerColor);
+
+    for (Point direction : this.getDirections()) {
+      List<ReversiTile> tilesToChange = this.moveHelper(new Point(row, col),
+              direction.x, direction.y); // get the tiles that we need to change
+      for (ReversiTile tile : tilesToChange) { // iterate over all tiles to change
+        tile.changeDiscColor(curPlayerColor); // change the disc color to the current player's color
+      }
+    }
+    this.passTurn(); // change the turn to the other player;
   }
 
   @Override
@@ -81,22 +92,46 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public boolean isMovePossible(int row, int col) throws IllegalArgumentException {
+    // if the board does not contain the given coordinate
+    if (!this.tiles.containsKey(new Point(row, col))) {
+      throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
+    }
 
-    return false;
+    for (Point delPoint : this.getDirections()) { // iterate over all directions to move in
+      // use moveHelper in all directions starting at the given point
+      List<ReversiTile> otherTiles = this.moveHelper(new Point(row, col), delPoint.x, delPoint.y);
+      if (!otherTiles.isEmpty()) { // if the returned list from moveHelper IS NOT empty
+        return true; // then the move is possible, so return true
+      }
+    }
+    // if moveHelper was empty in all directions
+    return false; // the move is not possible, return false
   }
 
   @Override
   public boolean anyMoves() {
-    // TODO: implement method
-
-    return false;
+    for (Point tilePoint : this.tiles.keySet()) { // iterate over all tile locations
+      if (!this.tiles.get(tilePoint).isOccupied()) { // if the tile is empty/not occupied
+        // check if a move is possible at that tile
+        if (this.isMovePossible(tilePoint.x, tilePoint.y)) {
+          return true; // the move is possible so return true
+        }
+        // if a move is not possible, continue on trying moves
+      }
+      // if the tile has a color, then it is occupied and you can't move there, so keep trying
+    }
+    return false; // if all the moves are not possible, there are no moves so return false
   }
 
   @Override
   public boolean isGameOver() {
-    // TODO: implement method
+    boolean curPlayerHasMoves = this.anyMoves(); // check if the current player has any moves
+    this.passTurn(); // pass the turn to the next player
+    boolean nextPlayerHasMoves = this.anyMoves(); // check if they have any moves
+    this.passTurn(); // pass the turn back to the first player to avoid messing up turns
 
-    return false;
+    // if neither player has any moves, return true
+    return !curPlayerHasMoves && !nextPlayerHasMoves;
   }
 
   @Override
@@ -118,12 +153,20 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public Color getColorAt(int row, int col) throws IllegalArgumentException {
-    ReversiTile tile = this.tiles.get(new Point(row, col));
-    if (tile == null) {
-      throw new IllegalArgumentException("Invalid coordinates");
+  public Color getColorAt(int row, int col) throws IllegalArgumentException, IllegalStateException {
+    // if the board does not contain the given coordinate
+    if (!this.tiles.containsKey(new Point(row, col))) {
+      throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
-    return this.tileColors.get(this.tiles.get(new Point(row, col)));
+
+    ReversiTile tile = this.tiles.get(new Point(row, col)); // get the tile at that point
+    if (!tile.isOccupied()) { // if the tile is not occupied
+      // throw an exception
+      throw new IllegalStateException("Cannot get a color from an unoccupied tile.");
+    }
+
+    // if the tile is occupied, return its disc color
+    return tile.getDiscColor();
   }
 
   /**
@@ -138,18 +181,7 @@ public class HexagonalReversi implements ReversiModel {
     Map<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
     for (Point point: this.tiles.keySet()) { // iterate over all the keys
       // create a copy of the hexagon tile and put it with the corresponding copy of the point
-      clone.put(point, new PointyTopHexagon(this.tiles.get(point)));
-    }
-    return clone; // return the copy of tiles
-  }
-
-  @Override
-  public Map<ReversiTile, Color> getTileColors() {
-    // create deep copy of the tileColors map
-    Map<ReversiTile, Color> clone = new HashMap<>(); // create a new hashmap
-    for (PointyTopHexagon tile: this.tileColors.keySet()) { // iterate over all the keys
-      // create a copy of the color and put it with the corresponding copy of the tile
-      clone.put(new PointyTopHexagon(tile), new Color(this.tileColors.get(tile).getRGB()));
+      clone.put(new Point(point), new PointyTopHexagon(this.tiles.get(point)));
     }
     return clone; // return the copy of tiles
   }
@@ -169,30 +201,76 @@ public class HexagonalReversi implements ReversiModel {
       int rEnd = Math.min( N, -q + N); // calculate ending point of r values for this column
       for (int r = rStart; r <= rEnd; r++) { // loop over r values from start to end point
         // at the point (q, r) create a new hexagon that knows its own coordinates
-        this.tiles.put(new Point(q, r), new PointyTopHexagon(new Point(q, r)));
+        this.tiles.put(new Point(q, r), new PointyTopHexagon());
       }
     }
     // at the points surrounding the center of the grid (which are hard coded)
     // change the disk color to white or black
-    this.tileColors.put(this.tiles.get(new Point(0, -1)), Color.BLACK);
-    this.tileColors.put(this.tiles.get(new Point(1, -1)), Color.WHITE);
-    this.tileColors.put(this.tiles.get(new Point(1, 0)), Color.BLACK);
-    this.tileColors.put(this.tiles.get(new Point(0, 1)), Color.WHITE);
-    this.tileColors.put(this.tiles.get(new Point(-1, 1)), Color.BLACK);
-    this.tileColors.put(this.tiles.get(new Point(-1, 0)), Color.WHITE);
+    this.tiles.get(new Point(0, -1)).changeDiscColor(Color.BLACK);
+    this.tiles.get(new Point(1, -1)).changeDiscColor(Color.WHITE);
+    this.tiles.get(new Point(1, 0)).changeDiscColor(Color.BLACK);
+    this.tiles.get(new Point(0, 1)).changeDiscColor(Color.WHITE);
+    this.tiles.get(new Point(-1, 1)).changeDiscColor(Color.BLACK);
+    this.tiles.get(new Point(-1, 0)).changeDiscColor(Color.WHITE);
   }
 
   // returns the total number of tiles with the given disc color
   int tilesWithColor(Color color) {
     int total = 0; // initialize total number of tiles with the color
     for (PointyTopHexagon tile : this.tiles.values()) { // iterate over all tiles in the map
-      Color discColor = this.tileColors.get(tile); // get the disc color, which could be null
-      if (discColor == null) { // if the discColor is null
+      if (!tile.isOccupied()) { // if the tile is not occupied
         continue; // continue to the next tile
       }
       // if the color matches add 1, if not add 0
-      total += discColor.equals(color) ? 1 : 0;
+      total += tile.getDiscColor().equals(color) ? 1 : 0;
     }
     return total; // return the total
   }
+
+  // begin at the given starting point and move in the direction specified
+  // by the change in q and change in r for each step.
+  // record and return all tiles with a disc of the player that is not the current turn
+  // stop once you've reached a tile that has the current player's disc, but don't return it
+  // if you reach the end of the board or an empty tile before finding a tile with the current
+  // player's color, return an empty list.
+  List<ReversiTile> moveHelper(Point start, int delQ, int delR) {
+    Point curPoint = new Point(start); // copy the starting point to avoid mutating the argument
+    curPoint.move(delQ, delR); // move the current point in the given direction
+    // get the other player's color
+    Color otherPlayerColor = this.currentPlayer == this.player1 ? Color.WHITE : Color.BLACK;
+    List<ReversiTile> foundTiles = new ArrayList<>(); // initialize list to hold recorded tiles
+
+    while (this.tiles.containsKey(curPoint)) { // while the current point is still on the board
+      ReversiTile tileAtPoint = this.tiles.get(curPoint); // get the tile at the current point
+      if (!tileAtPoint.isOccupied()) { // if the tile is not occupied
+        return new ArrayList<>(); // return an empty list
+      }
+      // if the disc color at the current tile is equal to the other player's color
+      else if (tileAtPoint.getDiscColor().equals(otherPlayerColor)) {
+        foundTiles.add(tileAtPoint); // record the tile at the current point
+        curPoint.move(delQ, delR); // and move the current point
+      }
+      // if the current tile is occupied but does not have the other player's color,
+      // then it must have the current player's color
+      return foundTiles; // so return the tiles we've found
+
+    }
+    // if we left the while loop that means we reached a point that is off the board
+    return new ArrayList<>(); // so return an empty list
+  }
+
+  // get a list representing all 6 directions that you can move in on the board
+  // a direction is represented by a point holding the change in q and change in r
+  // for a step in that direction
+  List<Point> getDirections() {
+    return new ArrayList<Point>(Arrays.asList(
+            new Point(-1, 0), // left
+            new Point(0, -1), // up and left
+            new Point(1, -1), // up and right
+            new Point(1, 0), // right
+            new Point(0, -1), // down and right
+            new Point(-1, -1) // down and left
+    ));
+  }
+
 }

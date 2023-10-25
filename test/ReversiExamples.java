@@ -19,6 +19,7 @@ public class ReversiExamples {
   @Test
   public void testView() {
     HexagonalReversi hexModel = new HexagonalReversi(PlayerType.PLAYER_HUMAN, PlayerType.PLAYER_HUMAN, 6);
+    this.view = new HexReversiTextView(hexModel);
     Assert.assertEquals("", this.view.toString());
   }
 }
