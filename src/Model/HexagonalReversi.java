@@ -19,7 +19,7 @@ import Tile.ReversiTile;
  * uses the white side. THe location of each tile is described using axial coordinates (q and r in
  * place of x and y respectively) where the center of the board is at the point (0, 0).
  */
-public class HexagonalReversi implements ReversiModel {
+public class HexagonalReversi implements ReversiModel, ViewReversiModel {
   private final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
   private final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
 

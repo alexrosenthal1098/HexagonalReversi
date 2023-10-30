@@ -3,15 +3,15 @@ The Player interface only provides one method: getNextMove
 A class that implements this interface is saying that they can play the game Reversi. The model
 is not aware of who is playing the game. It only cares about what moves are being made (or
 attempting to be made) so that it can enforce the rules of the game and update itself. Keep in mind
-that the interface does not force a player to perform the move on the model, but simply return what
+that the interface does not allow a player to modify the model. It only makes them return what
 move they have chosen to play. This allows for more flexibility in how the game is played because
 the choice of what to do with a player's move can be decided by another class (a controller).
 
-If you wanted to represent a human player, a class could implement this interface and then get
+If you wanted to represent a human player, a class could implement this interface and then return
 input from the user. Neither the interface nor the model cares how this happens, as it could be
 done many ways (e.g. the console, GUI, etc.). The user inputted move would then be returned by the
 getNextMove method.
 
 Alternatively, if you want to represent an AI player, a class would implement this interface and
-then use some sort of logic (again, we don't care about the details of this logic) to decide what
+then use some sort of strategy (again, we don't care about the details of the logic) to decide what
 move to play next.
