@@ -18,8 +18,8 @@ public interface ReversiModel {
    * move the turn to the other player.
    * @param x The x position to move at.
    * @param y The y position to move at.
-   * @throws IllegalArgumentException if the given x or y position are out of bounds,
-   *                                  i.e. too small or too large.
+   * @throws IllegalArgumentException if the given x or y position are outside
+   *                                  the bounds of the board.
    * @throws IllegalStateException if the current player cannot make a move on that tile.
    */
   void moveAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
@@ -35,8 +35,8 @@ public interface ReversiModel {
    * @param x The x position to look at.
    * @param y The y position to look at.
    * @return True if the move is possible, false if it is not.
-   * @throws IllegalArgumentException if the given x or y position are out of bounds,
-   *                                  i.e. too small or too large.
+   * @throws IllegalArgumentException if the given x or y position are outside
+   *                                  the bounds of the board.
    */
   boolean isMovePossible(int x, int y) throws IllegalArgumentException;
 
@@ -76,10 +76,9 @@ public interface ReversiModel {
    * @param x The x position to look at.
    * @param y The y position to look at.
    * @return The color of the disk that occupies the tile, or null.
-   * @throws IllegalArgumentException if the given x or y position are out of bounds,
-   *                                  i.e. too small or too large.
-   * @throws IllegalStateException if the disk at the given position is not occupied
-   *                               and thus has no color.
+   * @throws IllegalArgumentException if the given x or y position are outside
+   *                                  the bounds of the board.
+   * @throws IllegalStateException if the tile at the given position is not occupied.
    */
   Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
 

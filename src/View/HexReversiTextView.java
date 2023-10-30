@@ -85,7 +85,7 @@ public class HexReversiTextView implements TextView {
     try { // try getting the color of the disc on the tile at the given point
       tileColor = this.model.getColorAt(tilePoint.x, tilePoint.y);
     }
-    catch (IllegalStateException e) { // if an exception was thrown, the tile is unoccupied
+    catch (IllegalStateException e) { // if an exception was thrown, the tile has no disk
       return "_"; // so return underscore that represents empty tile
     }
 

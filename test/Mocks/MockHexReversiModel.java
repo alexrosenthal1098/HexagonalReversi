@@ -36,6 +36,11 @@ public class MockHexReversiModel extends HexagonalReversi {
     mockTiles.put(new Point(2, 2), new PointyTopHexagon());
     mockTiles.put(new Point(3, 3), new PointyTopHexagon());
 
+    // add a disk with unsupported colors to a tile
+    PointyTopHexagon tile = new PointyTopHexagon();
+    tile.placeDisk(Color.YELLOW, Color.CYAN);
+    mockTiles.put(new Point(0, 0), tile);
+
     return mockTiles; // return them mock map
   }
 }

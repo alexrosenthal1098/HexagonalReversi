@@ -6,6 +6,9 @@ import Model.HexagonalReversi;
 import Model.ReversiModel;
 import View.HexReversiTextView;
 
+/**
+ * A class that shows examples of how to play the game Reversi using this codebase.
+ */
 public class ReversiExamples {
   ReversiModel model;
   HexReversiTextView view;
