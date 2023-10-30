@@ -4,8 +4,8 @@ import java.awt.*;
 
 
 /**
- * A class that represents a pointy-top shaped hexagon tile for the
- * game Reversi. The position of this tile is given by its axial coordinates.
+ * A class that represents a pointy-top shaped hexagonal tile for the
+ * game Reversi. The tile can have a disk placed on it with one color on each side.
  */
 public class PointyTopHexagon implements ReversiTile {
   private boolean hasDisk;
@@ -45,10 +45,10 @@ public class PointyTopHexagon implements ReversiTile {
 
     Polygon hexagon = new Polygon(); // create a new polygon
 
-    for (int sideNum = 0; sideNum < 6; sideNum++) { // iterate over the number of sides (6)
+    for (int sideNum = 1; sideNum < 7; sideNum++) { // iterate over the number of sides (6)
       // calculate x and y position (math was found on the internet)
-      int xPos = (int) (center.x + sideLength * Math.cos(sideNum * 2 * Math.PI / 6));
-      int yPos = (int) (center.y + sideLength * Math.sin(sideNum * 2 * Math.PI / 6));
+      int xPos = (int) (center.x + sideLength * Math.cos((sideNum * Math.PI / 3) - (Math.PI / 6)));
+      int yPos = (int) (center.y + sideLength * Math.sin((sideNum * Math.PI / 3) - (Math.PI / 6)));
       hexagon.addPoint(xPos, yPos); // add the point for each side to the polygon
     }
 

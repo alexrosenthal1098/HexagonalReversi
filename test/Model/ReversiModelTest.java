@@ -4,7 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.Map;
 
 import Tile.ReversiTile;
@@ -407,9 +408,31 @@ public class ReversiModelTest {
   }
 
   @Test
-  public void testGetTilesHasCorrectSize2() {
+  public void testGetTilesCorrectSize2() {
     this.model = new HexagonalReversi(4);
     Assert.assertEquals(37, this.model.getTiles().keySet().size());
+    Assert.assertEquals(37, this.model.getTiles().values().size());
   }
 
+  @Test
+  public void testGetTilesCorrectTileLocations() {
+    Map<Point, ReversiTile> tiles = this.model.getTiles();
+    this.model = new HexagonalReversi(3);
+    for (int q = -2; q <= 2; q++) {
+      for (int r = Math.max(-2, -q - 2); r < Math.min(2, -q + 2); r++) {
+        Assert.assertTrue(tiles.containsKey(new Point(q, r)));
+      }
+    }
+  }
+
+  @Test
+  public void testGetTilesHasStartingDisks() {
+    Map<Point, ReversiTile> tiles = this.model.getTiles();
+    Assert.assertEquals(Color.BLACK, tiles.get(new Point(0, -1)).getTopColor());
+    Assert.assertEquals(Color.WHITE, tiles.get(new Point(1, -1)).getTopColor());
+    Assert.assertEquals(Color.BLACK, tiles.get(new Point(1, 0)).getTopColor());
+    Assert.assertEquals(Color.WHITE, tiles.get(new Point(0, 1)).getTopColor());
+    Assert.assertEquals(Color.BLACK, tiles.get(new Point(-1, 1)).getTopColor());
+    Assert.assertEquals(Color.WHITE, tiles.get(new Point(-1, 0)).getTopColor());
+  }
 }

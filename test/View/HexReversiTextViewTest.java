@@ -8,7 +8,6 @@ import java.awt.*;
 
 import Mocks.MockHexReversiModel;
 import Model.HexagonalReversi;
-import Tile.PointyTopHexagon;
 
 /**
  * A class that holds tests for the HexReversiTextView class.

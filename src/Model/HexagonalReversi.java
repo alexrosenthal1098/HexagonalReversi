@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import Tile.PointyTopHexagon;
 import Tile.ReversiTile;
@@ -15,7 +16,8 @@ import Tile.ReversiTile;
  * A version of the game Reversi that is played on hexagonal tiles using black and white disks.
  * The tiles are arranged in a grid-like pattern that creates the shape of a larger hexagon.
  * Player one moves first and uses the black side of the disks while player two, who moves second,
- * uses the white side.
+ * uses the white side. THe location of each tile is described using axial coordinates (q and r in
+ * place of x and y respectively) where the center of the board is at the point (0, 0).
  */
 public class HexagonalReversi implements ReversiModel {
   private final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
@@ -26,12 +28,16 @@ public class HexagonalReversi implements ReversiModel {
   // The y value of a point is the r value of the tile, which is a horizontal row
 
   // A map that represents the board using each hexagon's axial coordinates
+  // notice how the tiles can only be represented using hexagons!
   private final Map<Point, PointyTopHexagon> tiles;
 
   private Color currentPlayer; // The disk color of the current player.
 
+  // INVARIANT: currentPlayer equals PLAYER_1_COLOR or PLAYER_2_COLOR
+
   /**
    * A constructor that specifies the side length of the board, in tiles.
+   * The side length must be at least 3.
    * @param sideLength The side length, in hexagons, of each edge of the board.
    */
   public HexagonalReversi(int sideLength) {
@@ -39,26 +45,25 @@ public class HexagonalReversi implements ReversiModel {
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
-    this.tiles = new HashMap<>(); // create a hashmap to store the tiles
-    this.initBoard(sideLength); // initialize the state of the board
+    this.tiles = this.makeBoard(sideLength); // initialize the state of the board
   }
 
   @Override
-  public void moveAt(int row, int col) throws IllegalArgumentException, IllegalStateException {
+  public void moveAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
     // if the board does not contain the given coordinate
-    if (!this.tiles.containsKey(new Point(row, col))) {
+    if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
 
-    if (!this.isMovePossible(row, col)) { // if the move is not possible
+    if (!this.isMovePossible(q, r)) { // if the move is not possible
       throw new IllegalStateException("This move is not possible.");
     }
 
     // place a disk on the tile that was moved at with the current player's color face up
-    this.tiles.get(new Point(row, col)).placeDisk(this.currentPlayer, this.otherPlayerColor());
+    this.tiles.get(new Point(q, r)).placeDisk(this.currentPlayer, this.otherPlayerColor());
 
     for (Point direction : this.getDirections()) {
-      List<ReversiTile> tilesToChange = this.tilesToFlip(new Point(row, col),
+      List<ReversiTile> tilesToChange = this.tilesToFlip(new Point(q, r),
               direction.x, direction.y); // get the tiles that we need to change
       for (ReversiTile tile : tilesToChange) { // iterate over all tiles to change
         tile.flipDisk(); // flip the disk on the tile to the current player's color
@@ -73,19 +78,19 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public boolean isMovePossible(int row, int col) throws IllegalArgumentException {
+  public boolean isMovePossible(int q, int r) throws IllegalArgumentException {
     // if the board does not contain the given coordinate
-    if (!this.tiles.containsKey(new Point(row, col))) {
+    if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
 
-    if (this.tiles.get(new Point(row, col)).hasDisk()) { // if the tile already has a disk
+    if (this.tiles.get(new Point(q, r)).hasDisk()) { // if the tile already has a disk
       return false; // then the move is not possible, so return false
     }
 
     for (Point delPoint : this.getDirections()) { // iterate over all directions to move in
       // find the tiles to flip in all directions starting at the given point
-      List<ReversiTile> otherTiles = this.tilesToFlip(new Point(row, col), delPoint.x, delPoint.y);
+      List<ReversiTile> otherTiles = this.tilesToFlip(new Point(q, r), delPoint.x, delPoint.y);
       if (!otherTiles.isEmpty()) { // if the list of tiles to flip IS NOT empty
         return true; // then the move is possible, so return true
       }
@@ -138,13 +143,13 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public Color getColorAt(int row, int col) throws IllegalArgumentException, IllegalStateException {
+  public Color getColorAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
     // if the board does not contain the given coordinate
-    if (!this.tiles.containsKey(new Point(row, col))) {
+    if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
 
-    ReversiTile tile = this.tiles.get(new Point(row, col)); // get the tile at that point
+    ReversiTile tile = this.tiles.get(new Point(q, r)); // get the tile at that point
     if (!tile.hasDisk()) { // if the tile does not have a disk
       // throw an exception
       throw new IllegalStateException("Cannot get a color from tile without a disk.");
@@ -176,30 +181,35 @@ public class HexagonalReversi implements ReversiModel {
   //          HELPER METHODS
 
   // initializes the state of the board using the given side length of the hexagon
-  void initBoard(int side) {
+  // this method has the protected modifier in case a subclass wants to use a different board shape
+  protected Map<Point, PointyTopHexagon> makeBoard(int side) {
+    Map<Point, PointyTopHexagon> board = new HashMap<>(); // create the board
+
     // this code is adapted from the "Movement Range" section of the page linked in the instructions
     // the "N" value is the number of tiles away from the center a tile can be, which in our case
     // is the side length of the hex grid - 1
     int N = side - 1;
     for (int q = -side + 1; q <= N; q++) { // iterate over all q values
-      int rStart = Math.max(-N, -q - N); // calculate starting point of r values for this column
-      int rEnd = Math.min( N, -q + N); // calculate ending point of r values for this column
+      int rStart = Math.max(-N, -q - N); // calculate starting point of r values for this q column
+      int rEnd = Math.min( N, -q + N); // calculate ending point of r values for this q column
       for (int r = rStart; r <= rEnd; r++) { // loop over r values from start to end point
-        // at the point (q, r) create a new hexagon that knows its own coordinates
-        this.tiles.put(new Point(q, r), new PointyTopHexagon());
+        // at the point (q, r) create a new hexagon
+        board.put(new Point(q, r), new PointyTopHexagon());
       }
     }
     // at the points surrounding the center of the grid (which are hard coded)
     // place a disk, alternating which side is face up
-    this.tiles.get(new Point(0, -1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
-    this.tiles.get(new Point(1, -1)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
-    this.tiles.get(new Point(1, 0)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
-    this.tiles.get(new Point(0, 1)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
-    this.tiles.get(new Point(-1, 1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
-    this.tiles.get(new Point(-1, 0)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
+    board.get(new Point(0, -1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
+    board.get(new Point(1, -1)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
+    board.get(new Point(1, 0)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
+    board.get(new Point(0, 1)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
+    board.get(new Point(-1, 1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
+    board.get(new Point(-1, 0)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
+
+    return board; // return the board
   }
 
-  // returns the color of the player whose turn it current is not
+  // returns the color of the player whose turn it currently is not
   Color otherPlayerColor() {
     // using referential equality because currentPlayer is simply a reference to either
     // the player 1 or player 2 field, not a whole new object
@@ -213,6 +223,7 @@ public class HexagonalReversi implements ReversiModel {
 
   // returns the total number of tiles with the given disk color
   int tilesWithColor(Color color) {
+    Objects.requireNonNull(color);
     int total = 0; // initialize total number of tiles with the color
     for (PointyTopHexagon tile : this.tiles.values()) { // iterate over all tiles in the map
       if (!tile.hasDisk()) { // if the tile does not have a disk
@@ -232,6 +243,7 @@ public class HexagonalReversi implements ReversiModel {
   // if you reach the end of the board or an empty tile before finding a tile with the current
   // player's color, return an empty list.
   List<ReversiTile> tilesToFlip(Point start, int delQ, int delR) {
+    Objects.requireNonNull(start);
     Point curPoint = new Point(start); // copy the starting point to avoid mutating the argument
     curPoint.translate(delQ, delR); // move the current point in the given direction
 
@@ -261,7 +273,7 @@ public class HexagonalReversi implements ReversiModel {
   // a direction is represented by a point holding the change in q and change in r
   // for a step in that direction
   List<Point> getDirections() {
-    return new ArrayList<Point>(Arrays.asList(
+    return new ArrayList<>(Arrays.asList(
             new Point(-1, 0), // left
             new Point(0, -1), // up and left
             new Point(1, -1), // up and right

@@ -37,8 +37,8 @@ public class PointyTopHexagonTest {
   @Test
   public void testBuildTileSideLength10() {
     Polygon hexagon = this.hexTile.buildTile(new Point(100, 100), 10);
-    int[] xPoints = {110, 105, 95, 90, 95, 105};
-    int[] yPoints = {100, 108, 108, 100, 91, 91};
+    int[] xPoints = {108, 100, 91, 91, 100, 108};
+    int[] yPoints = {105, 110, 105, 95, 90, 95};
 
     Assert.assertArrayEquals(xPoints, Arrays.copyOfRange(hexagon.xpoints, 0, 6));
     Assert.assertArrayEquals(yPoints, Arrays.copyOfRange(hexagon.ypoints, 0, 6));
@@ -47,8 +47,8 @@ public class PointyTopHexagonTest {
   @Test
   public void testBuildTileSideLength50() {
     Polygon hexagon = this.hexTile.buildTile(new Point(200, 200), 50);
-    int[] xPoints = {250, 225, 175, 150, 174, 225};
-    int[] yPoints = {200, 243, 243, 200, 156, 156};
+    int[] xPoints = {243, 200, 156, 156, 200, 243};
+    int[] yPoints = {225, 250, 225, 175, 150, 174};
 
     Assert.assertArrayEquals(xPoints, Arrays.copyOfRange(hexagon.xpoints, 0, 6));
     Assert.assertArrayEquals(yPoints, Arrays.copyOfRange(hexagon.ypoints, 0, 6));
@@ -57,8 +57,8 @@ public class PointyTopHexagonTest {
   @Test
   public void testBuildTileNegativeCenter() {
     Polygon hexagon = this.hexTile.buildTile(new Point(-50, -50), 15);
-    int[] xPoints = {-35, -42, -57, -65, -57, -42};
-    int[] yPoints = {-50, -37, -37, -50, -62, -62};
+    int[] xPoints = {-37, -50, -62, -62, -50, -37};
+    int[] yPoints = {-42, -35, -42, -57, -65, -57};
 
     Assert.assertArrayEquals(xPoints, Arrays.copyOfRange(hexagon.xpoints, 0, 6));
     Assert.assertArrayEquals(yPoints, Arrays.copyOfRange(hexagon.ypoints, 0, 6));

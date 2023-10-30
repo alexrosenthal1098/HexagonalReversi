@@ -9,8 +9,8 @@ import Tile.ReversiTile;
 
 /**
  * An interface that defines the methods necessary to play the game Reversi.
- * The game can be played using regular polygon as a tile and any board arrangement
- * that can be represented using a two-dimensional array.
+ * The game can be played using any regular polygon as a tile and any board arrangement
+ * that can be represented using x and y coordinates.
  */
 public interface ReversiModel {
   /**
