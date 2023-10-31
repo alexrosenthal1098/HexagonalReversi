@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,8 +9,8 @@ import java.awt.Color;
 import java.util.Map;
 import java.util.List;
 
-import Tile.PointyTopHexagon;
-import Tile.ReversiTile;
+import tile.PointyTopHexagon;
+import tile.ReversiTile;
 
 /**
  * Tests for private/protected methods of HexagonalReversi.

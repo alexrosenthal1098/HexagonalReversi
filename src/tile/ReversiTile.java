@@ -1,4 +1,4 @@
-package Tile;
+package tile;
 
 import java.awt.Color;
 import java.awt.Point;

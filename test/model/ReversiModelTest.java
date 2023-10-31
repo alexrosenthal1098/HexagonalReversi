@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -8,7 +8,7 @@ import java.awt.Point;
 import java.awt.Color;
 import java.util.Map;
 
-import Tile.ReversiTile;
+import tile.ReversiTile;
 
 
 /**
@@ -264,7 +264,7 @@ public class ReversiModelTest {
   }
 
   @Test
-  public void testGetPlayer1ScoreIncreasesAfterBlackMove () {
+  public void testGetPlayer1ScoreIncreasesAfterBlackMove() {
     int scoreBefore = this.model.getPlayer1Score();
     this.model.moveAt(1, 1);
     int scoreAfter = this.model.getPlayer1Score();
@@ -302,7 +302,7 @@ public class ReversiModelTest {
   }
 
   @Test
-  public void testGetPlayer2ScoreIncreasesAfterWhiteMove () {
+  public void testGetPlayer2ScoreIncreasesAfterWhiteMove() {
     int scoreBefore = this.model.getPlayer2Score();
     this.model.passTurn();
     this.model.moveAt(1, 1);

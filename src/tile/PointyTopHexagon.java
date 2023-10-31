@@ -1,6 +1,8 @@
-package Tile;
+package tile;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
+import java.awt.Polygon;
 
 
 /**

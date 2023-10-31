@@ -46,11 +46,11 @@ _ _ _ O _ O _ _ _
 
 
     KEY COMPONENTS
-Model - Represents the state of the game by providing the state of the board, current player,
+model - Represents the state of the game by providing the state of the board, current player,
         scores of players, and if the game is over. Also enforces the rules of the game and
         performs player actions on the board. The model is the heart of the program and is what
         performs the logic involved in the game itself.
-View - A representation of the board that allows us to see the state of the model visually. The
+view - A representation of the board that allows us to see the state of the model visually. The
        view does not further the playing of the game, it simply observes the model and displays
        its current state.
 Players - Without players, there would be no way to play the game other than hard coding moves,
@@ -66,7 +66,7 @@ Tiles - The model is represented by an arrangement of ReversiTiles. Each tile ca
 
     PROJECT ORGANIZATION
 The project is composed of 4 packages:
-The Model package holds the model interfaces and the classes that implement them.
-The Player package holds the interface for players along with the player classes.
-The Tile package holds the tile interface and implementing classes.
-The View package holds the interfaces for viewing the model and the classes that implement them.
+The model package holds the model interfaces and the classes that implement them.
+The player package holds the interface for players along with the player classes.
+The tile package holds the tile interface and implementing classes.
+The view package holds the interfaces for viewing the model and the classes that implement them.

@@ -1,8 +1,9 @@
-package View;
+package view;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 
-import Model.ViewReversiModel;
+import model.ViewReversiModel;
 
 /**
  * A class that creates a textual view of a HexagonalReversi game.
@@ -12,8 +13,8 @@ public class HexReversiTextView implements TextView {
   // declares the model as type ViewReversiModel to prevent this class from mutating the model
 
   /**
-   * A constructor that takes in a HexagonalReversi model
-   * @param model a HexagonalReversi model.
+   * A constructor that takes in a read only hexagonal reversi model to create a view from.
+   * @param model a read only reversi model.
    */
   public HexReversiTextView(ViewReversiModel model) {
     // ensure the given model is not null

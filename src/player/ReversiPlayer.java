@@ -1,8 +1,8 @@
-package Player;
+package player;
 
 import java.awt.Point;
 
-import Model.ViewReversiModel;
+import model.ViewReversiModel;
 
 /**
  * An interface that represents player actions for the game Reversi.

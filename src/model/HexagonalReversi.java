@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.awt.Point;
 import java.awt.Color;
@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import Tile.PointyTopHexagon;
-import Tile.ReversiTile;
+import tile.PointyTopHexagon;
+import tile.ReversiTile;
 
 /**
  * A version of the game Reversi that is played on hexagonal tiles using black and white disks.
@@ -56,6 +56,8 @@ public class HexagonalReversi implements ReversiModel {
     if (sideLength < 3) { // check if the side length is at least three
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
+    // the currentPlayer invariant is guaranteed by the constructor because it is
+    // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
     this.tiles = this.makeBoard(sideLength); // initialize the state of the board
   }
@@ -90,6 +92,9 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public void passTurn() {
+    // the currentPlayer is only modified in the passTurn method
+    // the invariant is enforced because the otherPlayerColor helper can only return
+    // either player 1's color or player 2's color.
     this.currentPlayer = this.otherPlayerColor(); // set the current player to the other player
   }
 
@@ -202,12 +207,12 @@ public class HexagonalReversi implements ReversiModel {
     Map<Point, PointyTopHexagon> board = new HashMap<>(); // create the board
 
     // this code is adapted from the "Movement Range" section of the website linked in the README
-    // the "N" value is the number of tiles away from the center a tile can be, which in our case
+    // the "n" value is the number of tiles away from the center a tile can be, which in our case
     // is the side length of the hex grid - 1
-    int N = side - 1;
-    for (int q = -side + 1; q <= N; q++) { // iterate over all q values
-      int rStart = Math.max(-N, -q - N); // calculate starting point of r values for this q column
-      int rEnd = Math.min( N, -q + N); // calculate ending point of r values for this q column
+    int n = side - 1;
+    for (int q = -side + 1; q <= n; q++) { // iterate over all q values
+      int rStart = Math.max(-n, -q - n); // calculate starting point of r values for this q column
+      int rEnd = Math.min( n, -q + n); // calculate ending point of r values for this q column
       for (int r = rStart; r <= rEnd; r++) { // loop over r values from start to end point
         // at the point (q, r) create a new hexagon
         board.put(new Point(q, r), new PointyTopHexagon());
@@ -235,6 +240,9 @@ public class HexagonalReversi implements ReversiModel {
     else { // if current player is player 2
       return this.PLAYER_1_COLOR; // return player 1 color
     }
+
+    // this method can only return either player 1's or player 2's color,
+    // which enforces the invariant
   }
 
   // returns the total number of tiles with the given disk color

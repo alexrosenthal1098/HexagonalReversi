@@ -1,10 +1,12 @@
-package Tile;
+package tile;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
+import java.awt.Polygon;
 import java.util.Arrays;
 
 /**

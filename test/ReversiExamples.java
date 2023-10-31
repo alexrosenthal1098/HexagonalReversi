@@ -2,11 +2,10 @@ import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Color;
 
-import Model.HexagonalReversi;
-import Model.ReversiModel;
-import View.HexReversiTextView;
+import model.HexagonalReversi;
+import view.HexReversiTextView;
 
 /**
  * A class that shows examples of how to play the game Reversi using this codebase.

@@ -1,12 +1,13 @@
-package Mocks;
+package mocks;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-import Model.HexagonalReversi;
-import Tile.PointyTopHexagon;
-import Tile.ReversiTile;
+import model.HexagonalReversi;
+import tile.PointyTopHexagon;
+import tile.ReversiTile;
 
 /**
  * A mock of a HexagonalReversi game used for testing purposes.

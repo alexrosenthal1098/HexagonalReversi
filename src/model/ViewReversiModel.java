@@ -1,13 +1,14 @@
-package Model;
+package model;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.Map;
 
-import Tile.ReversiTile;
+import tile.ReversiTile;
 
 /**
  * An interface that defines only the methods that can view the state of a
- * {@link Model.ReversiModel} and not the methods that mutate the model.
+ * {@link model.ReversiModel} and not the methods that mutate the model.
  * This prevents view classes from mutating the model.
  */
 public interface ViewReversiModel {

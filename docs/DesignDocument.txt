@@ -1,4 +1,4 @@
-The Player interface only provides one method: getNextMove
+The player interface only provides one method: getNextMove
 
 A class that implements this interface is saying that they can play the game Reversi. The model
 is not aware of who is playing the game. It only cares about what moves are being made (or
