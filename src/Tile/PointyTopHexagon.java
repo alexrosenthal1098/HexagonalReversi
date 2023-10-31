@@ -46,7 +46,7 @@ public class PointyTopHexagon implements ReversiTile {
     Polygon hexagon = new Polygon(); // create a new polygon
 
     for (int sideNum = 1; sideNum < 7; sideNum++) { // iterate over the number of sides (6)
-      // calculate x and y position (math was found on the internet)
+      // calculate x and y position by adding the x and y component of the side length to the center
       int xPos = (int) (center.x + sideLength * Math.cos((sideNum * Math.PI / 3) - (Math.PI / 6)));
       int yPos = (int) (center.y + sideLength * Math.sin((sideNum * Math.PI / 3) - (Math.PI / 6)));
       hexagon.addPoint(xPos, yPos); // add the point for each side to the polygon

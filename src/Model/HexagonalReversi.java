@@ -15,15 +15,19 @@ import Tile.ReversiTile;
 /**
  * A version of the game Reversi that is played on hexagonal tiles using black and white disks.
  * The tiles are arranged in a grid-like pattern that creates the shape of a larger hexagon.
- * Player one moves first and uses the black side of the disks while player two, who moves second,
- * uses the white side. THe location of each tile is described using axial coordinates (q and r in
- * place of x and y respectively) where the center of the board is at the point (0, 0).
+ * The game has two players. Player one moves first and uses the black side of the disks while
+ * player two, who moves second, uses the white side. The location of each tile is described
+ * using axial coordinates (q and r in place of x and y respectively) where the center of the
+ * board is at the point (0, 0).
  */
-public class HexagonalReversi implements ReversiModel, ViewReversiModel {
-  private final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
-  private final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
+public class HexagonalReversi implements ReversiModel {
+  //          FIELDS
+  //////////////////////////////////////////
+  protected final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
+  protected final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
 
-  // The board uses axial coordinates as described on the page linked in the instructions
+  // The board uses axial coordinates as described on the "Coordinate Systems" section of the
+  // website linked in the README.
   // The x value of a point is the q value of the tile, which is like a diagonal column
   // The y value of a point is the r value of the tile, which is a horizontal row
 
@@ -31,9 +35,17 @@ public class HexagonalReversi implements ReversiModel, ViewReversiModel {
   // notice how the tiles can only be represented using hexagons!
   private final Map<Point, PointyTopHexagon> tiles;
 
-  private Color currentPlayer; // The disk color of the current player.
+  protected Color currentPlayer; // The disk color of the current player.
 
   // INVARIANT: currentPlayer equals PLAYER_1_COLOR or PLAYER_2_COLOR
+
+  // All fields EXCEPT for tiles are declared as protected so that subclasses have the
+  // opportunity to change the color of players or how the currentPlayer is decided.
+  // The tiles field is kept private because we want to ensure that the shape of the board is not
+  // changed after the model is instantiated. Subclasses can, however, override the makeBoard
+  // helper if they want to change the board shape.
+
+
 
   /**
    * A constructor that specifies the side length of the board, in tiles.
@@ -48,6 +60,10 @@ public class HexagonalReversi implements ReversiModel, ViewReversiModel {
     this.tiles = this.makeBoard(sideLength); // initialize the state of the board
   }
 
+
+
+  //          INTERFACE METHODS
+  ///////////////////////////////////////////////
   @Override
   public void moveAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
     // if the board does not contain the given coordinate
@@ -179,13 +195,13 @@ public class HexagonalReversi implements ReversiModel, ViewReversiModel {
 
 
   //          HELPER METHODS
-
+  ////////////////////////////////////////////
   // initializes the state of the board using the given side length of the hexagon
   // this method has the protected modifier in case a subclass wants to use a different board shape
   protected Map<Point, PointyTopHexagon> makeBoard(int side) {
     Map<Point, PointyTopHexagon> board = new HashMap<>(); // create the board
 
-    // this code is adapted from the "Movement Range" section of the page linked in the instructions
+    // this code is adapted from the "Movement Range" section of the website linked in the README
     // the "N" value is the number of tiles away from the center a tile can be, which in our case
     // is the side length of the hex grid - 1
     int N = side - 1;

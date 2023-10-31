@@ -60,7 +60,7 @@ public class HexReversiTextView implements TextView {
     // we must calculate the value we need using only properties of the tiles Map
 
     // the equation below uses the number of hexagons that compose the board (the area) to
-    // get the side length of the board. I derived it myself :)
+    // calculate the side length of the board
 
     // first, we get an intermediate computation and ensure that it is an integer value
     // if it is not, then the model's board is not a valid hex grid, so we throw an exception
