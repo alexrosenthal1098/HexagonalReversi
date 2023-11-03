@@ -79,8 +79,15 @@ The model from part 1 lacked a default and copy constructor. To add this, we cre
 that took no arguments that initialized the board with a side length of 6 tiles. We also added a
 constructor that takes in another HexagonalReversi model and copies the information we needed to
 instantiate the new model.
+
 The model lacked an observation method that returned the size of the board, so we chose to store
 that value and return the side length, which is measure in tiles, of the board using a method
 called getBoardSideLength.
+
 We also replaced the getTiles() method, which returned a map of points to tiles, with a method
-called getTileAt in order to prevent leacking the implementation details of the model.
+called getTileAt in order to prevent leaking the implementation details of the model.
+
+Similarly, we removed the buildTile method from the ReversiTile interface and instead implemented
+that functionality within the view itself (using a Path2D.Double instead of a Polygon). This
+helps to further decouple the tiles from the view, and allows views to represent tiles using
+whatever data types they want.
