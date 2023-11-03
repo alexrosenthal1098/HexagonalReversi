@@ -17,7 +17,7 @@ public interface ReadOnlyReversiModel {
    * @param y The y position to look at.
    * @return True if the move is possible, false if it is not.
    * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the board.
+   *                                  the bounds of the HexagonalBoard.
    */
   boolean isMovePossible(int x, int y) throws IllegalArgumentException;
 
@@ -57,7 +57,7 @@ public interface ReadOnlyReversiModel {
    * @param y The y position to look at.
    * @return The color of the disk that occupies the tile.
    * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the board.
+   *                                  the bounds of the HexagonalBoard.
    * @throws IllegalStateException if the tile at the given position is not occupied.
    */
   Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
@@ -68,13 +68,13 @@ public interface ReadOnlyReversiModel {
    * @param y The y position to look at.
    * @return The tile at the coordinates.
    * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the board.
+   *                                  the bounds of the HexagonalBoard.
    */
   ReversiTile getTileAt(int x, int y) throws IllegalArgumentException;
 
   /**
-   * Return the side length, in number of tiles, of the board.
-   * @return An int representing the side length of the board.
+   * Return the side length, in number of tiles, of the HexagonalBoard.
+   * @return An int representing the side length of the HexagonalBoard.
    */
   int getBoardSideLength();
 }

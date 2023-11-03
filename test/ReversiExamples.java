@@ -16,17 +16,17 @@ public class ReversiExamples {
 
   @Before
   public void setUp() {
-    // A HexagonalReversi model allows you to specify the side length of the board in tiles
+    // A HexagonalReversi model allows you to specify the side length of the HexagonalBoard in tiles
     this.model = new HexagonalReversi(6);
 
     // a HexReversiTextView only accepts the type HexagonalReversi, not just any ReversiModel,
-    // because that is the only type of board it knows how to draw
+    // because that is the only type of HexagonalBoard it knows how to draw
     this.view = new HexReversiTextView(this.model);
   }
 
   @Test
   public void testStartingViewWith6Sides() {
-    // The board is arranged into a hexagon. 6 disks, 3 for each player,
+    // The HexagonalBoard is arranged into a hexagon. 6 disks, 3 for each player,
     // are placed to start off.
 
     Assert.assertEquals("" +
@@ -47,7 +47,7 @@ public class ReversiExamples {
   public void testAxialCoordinates() {
     // The location of a tile is represented using axial coordinates where the
     // first argument is the q value and second argument is the r value
-    // the tile in the center of the board (the empty tile surrounded by disks) is at
+    // the tile in the center of the HexagonalBoard (the empty tile surrounded by disks) is at
     // the point (0, 0).
 
     // player one can move at the tile represented by (1, 1)
@@ -110,11 +110,11 @@ public class ReversiExamples {
 
   @Test
   public void testPlayingAFullGame() {
-    // Here is an example of a full game being played on a smaller board
+    // Here is an example of a full game being played on a smaller HexagonalBoard
     this.model = new HexagonalReversi(3);
     this.view = new HexReversiTextView(this.model);
 
-    // The board looks like this at the start:
+    // The HexagonalBoard looks like this at the start:
     Assert.assertEquals("" +
             "  _ _ _ \n" +
             " _ X O _ \n" +
@@ -139,7 +139,7 @@ public class ReversiExamples {
     Assert.assertFalse(this.model.anyMoves()); // white also has no moves remaining!
     Assert.assertTrue(this.model.isGameOver()); // therefore the game is over
 
-    // The board now looks like this:
+    // The HexagonalBoard now looks like this:
     Assert.assertEquals("" +
             "  _ O _ \n" +
             " X X X X \n" +

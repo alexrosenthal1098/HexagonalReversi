@@ -26,18 +26,18 @@ public class HexReversiTextView implements TextView {
 
   @Override
   public String toString() {
-    int sideLength = this.model.getBoardSideLength(); // get the side length of this model's board
-    // initialize a StringBuilder that represents the board.
+    int sideLength = this.model.getBoardSideLength(); // get the side length of this model's HexagonalBoard
+    // initialize a StringBuilder that represents the HexagonalBoard.
     StringBuilder boardString = new StringBuilder();
 
-    // iterate over all r values that occur on the board
+    // iterate over all r values that occur on the HexagonalBoard
     for (int r = -sideLength + 1; r <= sideLength - 1; r++) {
       // iterate over q values, ensuring that they start and end in a location that ensures a
       // correct number of total columns to ensure proper spacing/padding
       // (this math was derived by looking at the formula to generate the HashMap)
       for (int q = Math.min(-sideLength + 1, -sideLength + 1 - r);
            q <= Math.min(sideLength - 1, sideLength - 1 - r); q++) {
-        try { // try getting the tile from the board at the given point
+        try { // try getting the tile from the HexagonalBoard at the given point
           ReversiTile tile = this.model.getTileAt(q, r);
           // now that we got the tile without an error, append a string representation and a space
           boardString.append(this.tileToString(tile)).append(" ");

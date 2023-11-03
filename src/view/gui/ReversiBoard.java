@@ -3,14 +3,15 @@ package view.gui;
 import java.awt.*;
 
 /**
- * A view for a Reversi game board along with the actions it can perform.
+ * A view for a Reversi game HexagonalBoard along with the actions it can perform. A class that implements
+ * this interface is free to represent the HexagonalBoard however it likes.
  */
-public interface BoardView {
+public interface ReversiBoard {
 
   /**
    * Select the tile at the given location. Only one tile can be selected at a time.
-   * @param tileLocation The point referring to the coordinates of the tile on the board.
-   * @throws IllegalArgumentException if the given point is null or the point is not on the board.
+   * @param tileLocation The point referring to the coordinates of the tile on the HexagonalBoard.
+   * @throws IllegalArgumentException if the given point is null or the point is not on the HexagonalBoard.
    * @throws IllegalStateException if there is already a tile selected.
    */
   void selectTile(Point tileLocation) throws IllegalArgumentException, IllegalStateException;

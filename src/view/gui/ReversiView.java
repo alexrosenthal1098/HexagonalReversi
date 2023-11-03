@@ -6,7 +6,7 @@ package view.gui;
  */
 public interface ReversiView {
 
-  // leaving this empty for now because we don't know what the overall frame for the game is
+  // leaving this empty for now because we don't know what the overall ReversiFrame for the game is
   // going to look like
 
   // could include things like "display error message", "update scores", "display controls", etc.

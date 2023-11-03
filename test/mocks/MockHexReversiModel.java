@@ -13,7 +13,7 @@ public class MockHexReversiModel extends HexagonalReversi {
 
   /**
    * A constructor for a mock hexagonal reversi model.
-   * @param sideLength The side length of the board.
+   * @param sideLength The side length of the HexagonalBoard.
    */
   public MockHexReversiModel(int sideLength) {
     super(sideLength);

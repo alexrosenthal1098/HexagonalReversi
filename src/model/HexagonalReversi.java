@@ -18,7 +18,7 @@ import model.tile.ReversiTile;
  * The game has two players. Player one moves first and uses the black side of the disks while
  * player two, who moves second, uses the white side. The location of each tile is described
  * using axial coordinates (q and r in place of x and y respectively) where the center of the
- * board is at the point (0, 0).
+ * HexagonalBoard is at the point (0, 0).
  */
 public class HexagonalReversi implements ReversiModel {
   //          FIELDS
@@ -26,12 +26,12 @@ public class HexagonalReversi implements ReversiModel {
   protected final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
   protected final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
 
-  // The board uses axial coordinates as described on the "Coordinate Systems" section of the
+  // The HexagonalBoard uses axial coordinates as described on the "Coordinate Systems" section of the
   // website linked in the README.
   // The x value of a point is the q value of the tile, which is like a diagonal column
   // The y value of a point is the r value of the tile, which is a horizontal row
 
-  // A map that represents the board using each hexagon's axial coordinates
+  // A map that represents the HexagonalBoard using each hexagon's axial coordinates
   private final Map<Point, ReversiTile> tiles;
   protected Color currentPlayer; // The disk color of the current player.
   protected final int sideLength;
@@ -40,13 +40,16 @@ public class HexagonalReversi implements ReversiModel {
 
   // All fields EXCEPT for tiles are declared as protected so that subclasses have the
   // opportunity to view the other fields
-  // The tiles field is kept private because we want to ensure that the shape of the board is not
+  // The tiles field is kept private because we want to ensure that the shape of the HexagonalBoard is not
   // changed after the model is instantiated. Subclasses can, however, override the makeBoard
-  // helper if they want to change the board shape.
+  // helper if they want to change the HexagonalBoard shape.
 
 
+
+  //          CONSTRUCTORS
+  //////////////////////////////////////////
   /**
-   * A constructor that takes in no arguments and initializes the board with a default
+   * A constructor that takes in no arguments and initializes the HexagonalBoard with a default
    * side length of 6.
    */
   public HexagonalReversi() {
@@ -54,19 +57,19 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   /**
-   * A constructor that specifies the side length of the board, in tiles.
+   * A constructor that specifies the side length of the HexagonalBoard, in tiles.
    * The side length must be at least 3.
-   * @param sideLength The side length, in hexagons, of each edge of the board.
+   * @param sideLength The side length, in hexagons, of each edge of the HexagonalBoard.
    */
   public HexagonalReversi(int sideLength) {
     if (sideLength < 3) { // check if the side length is at least three, guaranteeing the invariant
-      throw new IllegalArgumentException("The board side length must be at least 3.");
+      throw new IllegalArgumentException("The HexagonalBoard side length must be at least 3.");
     }
     this.sideLength = sideLength;
     // the currentPlayer invariant is guaranteed by the constructor because it is
     // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
-    this.tiles = this.makeBoard(sideLength); // initialize the state of the board
+    this.tiles = this.makeBoard(sideLength); // initialize the state of the HexagonalBoard
   }
 
   /**
@@ -99,7 +102,7 @@ public class HexagonalReversi implements ReversiModel {
   ///////////////////////////////////////////////
   @Override
   public void moveAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
-    // if the board does not contain the given coordinate
+    // if the HexagonalBoard does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -131,7 +134,7 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public boolean isMovePossible(int q, int r) throws IllegalArgumentException {
-    // if the board does not contain the given coordinate
+    // if the HexagonalBoard does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -196,7 +199,7 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public Color getColorAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
-    // if the board does not contain the given coordinate
+    // if the HexagonalBoard does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -213,7 +216,7 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
-    // if the board does not contain the given coordinate
+    // if the HexagonalBoard does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -231,10 +234,10 @@ public class HexagonalReversi implements ReversiModel {
 
   //          HELPER METHODS
   ////////////////////////////////////////////
-  // initializes the state of the board using the given side length of the hexagon
-  // this method has the protected modifier in case a subclass wants to use a different board shape
+  // initializes the state of the HexagonalBoard using the given side length of the hexagon
+  // this method has the protected modifier in case a subclass wants to use a different HexagonalBoard shape
   protected Map<Point, ReversiTile> makeBoard(int side) {
-    Map<Point, ReversiTile> board = new HashMap<>(); // create the board
+    Map<Point, ReversiTile> board = new HashMap<>(); // create the HexagonalBoard
 
     // this code is adapted from the "Movement Range" section of the website linked in the README
     // the "n" value is the number of tiles away from the center a tile can be, which in our case
@@ -257,7 +260,7 @@ public class HexagonalReversi implements ReversiModel {
     board.get(new Point(-1, 1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
     board.get(new Point(-1, 0)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
 
-    return board; // return the board
+    return board; // return the HexagonalBoard
   }
 
   // returns the color of the player whose turn it currently is not
@@ -294,7 +297,7 @@ public class HexagonalReversi implements ReversiModel {
   // record and return all tiles with a disk color of the player that is not the current turn
   // stop once you've reached a tile that has the current player's disk, and return the list
   // (NOT including the tile with the current player's color)
-  // if you reach the end of the board or an empty tile before finding a tile with the current
+  // if you reach the end of the HexagonalBoard or an empty tile before finding a tile with the current
   // player's color, return an empty list.
   List<ReversiTile> tilesToFlip(Point start, int delQ, int delR) {
     Objects.requireNonNull(start);
@@ -303,7 +306,7 @@ public class HexagonalReversi implements ReversiModel {
 
     List<ReversiTile> foundTiles = new ArrayList<>(); // initialize list to hold recorded tiles
 
-    while (this.tiles.containsKey(curPoint)) { // while the current point is still on the board
+    while (this.tiles.containsKey(curPoint)) { // while the current point is still on the HexagonalBoard
       ReversiTile tileAtPoint = this.tiles.get(curPoint); // get the tile at the current point
       if (!tileAtPoint.hasDisk()) { // if the tile does not have a disk
         return new ArrayList<>(); // return an empty list
@@ -319,11 +322,11 @@ public class HexagonalReversi implements ReversiModel {
       return foundTiles; // so return the tiles we've found
 
     }
-    // if we left the while loop that means we reached a point that is off the board
+    // if we left the while loop that means we reached a point that is off the HexagonalBoard
     return new ArrayList<>(); // so return an empty list
   }
 
-  // get a list representing all 6 directions that you can move in on the board
+  // get a list representing all 6 directions that you can move in on the HexagonalBoard
   // a direction is represented by a point holding the change in q and change in r
   // for a step in that direction
   List<Point> getDirections() {
@@ -337,16 +340,16 @@ public class HexagonalReversi implements ReversiModel {
     ));
   }
 
-  // creates and returns a copy of the board from the given model
+  // creates and returns a copy of the HexagonalBoard from the given model
   Map<Point, ReversiTile> copyBoard(HexagonalReversi model) {
     Objects.requireNonNull(model);
-    Map<Point, ReversiTile> newBoard = new HashMap<>(); // initialize board to hold the copy
+    Map<Point, ReversiTile> newBoard = new HashMap<>(); // initialize HexagonalBoard to hold the copy
 
     for (Point point : model.tiles.keySet()) { // iterate over the point in the given model's tile
-      // at each point, put a copy of the tile into our copied board
+      // at each point, put a copy of the tile into our copied HexagonalBoard
       newBoard.put(point, new PointyTopHexagon(model.tiles.get(point)));
     }
 
-    return newBoard; // return the copied board
+    return newBoard; // return the copied HexagonalBoard
   }
 }

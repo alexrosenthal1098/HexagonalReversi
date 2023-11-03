@@ -1,8 +1,6 @@
 package model.tile;
 
-import java.awt.Point;
 import java.awt.Color;
-import java.awt.Polygon;
 
 
 /**
@@ -16,7 +14,7 @@ public class PointyTopHexagon implements ReversiTile {
 
   /**
    * An empty constructor for a PointyTopHexagon that is not occupied.
-   * Used to initialize the state of the board in a Reversi game before
+   * Used to initialize the state of the HexagonalBoard in a Reversi game before
    *  players have made any moves.
    */
   public PointyTopHexagon() {
@@ -38,25 +36,6 @@ public class PointyTopHexagon implements ReversiTile {
       this.bottomColor = new Color(tile.getTopColor().getRGB()); // copy the bottom color
       tile.flipDisk(); // flip the disk back over
     }
-  }
-
-  @Override
-  public Polygon buildTile(Point center, int sideLength) throws IllegalArgumentException {
-    // ensure the center point is not null and side length is positive
-    if (center == null || sideLength <= 0) {
-      throw new IllegalArgumentException("Center cannot be null and side length must be positive");
-    }
-
-    Polygon hexagon = new Polygon(); // create a new polygon
-
-    for (int sideNum = 1; sideNum < 7; sideNum++) { // iterate over the number of sides (6)
-      // calculate x and y position by adding the x and y component of the side length to the center
-      int xPos = (int) (center.x + sideLength * Math.cos((sideNum * Math.PI / 3) - (Math.PI / 6)));
-      int yPos = (int) (center.y + sideLength * Math.sin((sideNum * Math.PI / 3) - (Math.PI / 6)));
-      hexagon.addPoint(xPos, yPos); // add the point for each side to the polygon
-    }
-
-    return hexagon; // return the polygon
   }
 
   @Override
