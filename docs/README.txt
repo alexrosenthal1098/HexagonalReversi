@@ -70,3 +70,17 @@ The model package holds the model interfaces and the classes that implement them
 The player package holds the interface for players along with the player classes.
 The tile package holds the tile interface and implementing classes.
 The view package holds the interfaces for viewing the model and the classes that implement them.
+
+
+
+
+    CHANGES FOR PART 2
+The model from part 1 lacked a default and copy constructor. To add this, we created a constructor
+that took no arguments that initialized the board with a side length of 6 tiles. We also added a
+constructor that takes in another HexagonalReversi model and copies the information we needed to
+instantiate the new model.
+The model lacked an observation method that returned the size of the board, so we chose to store
+that value and return the side length, which is measure in tiles, of the board using a method
+called getBoardSideLength.
+We also replaced the getTiles() method, which returned a map of points to tiles, with a method
+called getTileAt in order to prevent leacking the implementation details of the model.

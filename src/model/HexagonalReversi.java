@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import tile.PointyTopHexagon;
-import tile.ReversiTile;
+import model.tile.PointyTopHexagon;
+import model.tile.ReversiTile;
 
 /**
  * A version of the game Reversi that is played on hexagonal tiles using black and white disks.
@@ -32,20 +32,26 @@ public class HexagonalReversi implements ReversiModel {
   // The y value of a point is the r value of the tile, which is a horizontal row
 
   // A map that represents the board using each hexagon's axial coordinates
-  // notice how the tiles can only be represented using hexagons!
-  private final Map<Point, PointyTopHexagon> tiles;
-
+  private final Map<Point, ReversiTile> tiles;
   protected Color currentPlayer; // The disk color of the current player.
+  protected final int sideLength;
 
   // INVARIANT: currentPlayer equals PLAYER_1_COLOR or PLAYER_2_COLOR
 
   // All fields EXCEPT for tiles are declared as protected so that subclasses have the
-  // opportunity to change the color of players or how the currentPlayer is decided.
+  // opportunity to view the other fields
   // The tiles field is kept private because we want to ensure that the shape of the board is not
   // changed after the model is instantiated. Subclasses can, however, override the makeBoard
   // helper if they want to change the board shape.
 
 
+  /**
+   * A constructor that takes in no arguments and initializes the board with a default
+   * side length of 6.
+   */
+  public HexagonalReversi() {
+    this(6);
+  }
 
   /**
    * A constructor that specifies the side length of the board, in tiles.
@@ -53,13 +59,38 @@ public class HexagonalReversi implements ReversiModel {
    * @param sideLength The side length, in hexagons, of each edge of the board.
    */
   public HexagonalReversi(int sideLength) {
-    if (sideLength < 3) { // check if the side length is at least three
+    if (sideLength < 3) { // check if the side length is at least three, guaranteeing the invariant
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
+    this.sideLength = sideLength;
     // the currentPlayer invariant is guaranteed by the constructor because it is
     // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
     this.tiles = this.makeBoard(sideLength); // initialize the state of the board
+  }
+
+  /**
+   * A copy constructor that takes in another HexagonalReversi model and initializes this
+   * model to be a copy of it.
+   * @param modelToCopy The model that is used to make a copy of.
+   */
+  public HexagonalReversi(HexagonalReversi modelToCopy) {
+    if (modelToCopy == null) { // check if the given model is null
+      throw new IllegalArgumentException("Given model cannot be null"); // if it is, throw exception
+    }
+    this.sideLength = modelToCopy.getBoardSideLength(); // copy the side length
+    Color modelCopyPlayer = modelToCopy.getCurrentPlayer(); // get the current player from copy
+    if (modelCopyPlayer.equals(this.PLAYER_1_COLOR)) { // if the color is equal to our player 1
+      this.currentPlayer = this.PLAYER_1_COLOR; // set our current player to player 1
+    }
+    else if (modelCopyPlayer.equals(this.PLAYER_2_COLOR)) { // if the color is equal to our player 2
+      this.currentPlayer = this.PLAYER_2_COLOR; // set our current player to player 2
+    }
+    else { // if it is not equal to either, throw an exception
+      throw new IllegalStateException("Given model has unrecognized player color.");
+    }
+
+    this.tiles = this.copyBoard(modelToCopy);
   }
 
 
@@ -180,21 +211,20 @@ public class HexagonalReversi implements ReversiModel {
     return tile.getTopColor();
   }
 
-  /**
-   * Returns a map that represents the coordinate location of each hexagonal tile
-   * in the board. The location of the tiles are specified using axial coordinates, with
-   * the first tile's coordinates being (0, 0).
-   * @return A map of Point to ReversiTile.
-   */
   @Override
-  public Map<Point, ReversiTile> getTiles() {
-    // create deep copy of the tiles map
-    Map<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
-    for (Point point: this.tiles.keySet()) { // iterate over all the keys
-      // create a copy of the hexagon tile and put it with the corresponding copy of the point
-      clone.put(new Point(point), new PointyTopHexagon(this.tiles.get(point)));
+  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
+    // if the board does not contain the given coordinate
+    if (!this.tiles.containsKey(new Point(q, r))) {
+      throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
-    return clone; // return the copy of tiles
+
+    ReversiTile tileToCopy = this.tiles.get(new Point(q, r)); // get the tile to copy
+    return new PointyTopHexagon(tileToCopy); // return a copy of the tile
+  }
+
+  @Override
+  public int getBoardSideLength() {
+    return this.sideLength; // return the side length
   }
 
 
@@ -203,8 +233,8 @@ public class HexagonalReversi implements ReversiModel {
   ////////////////////////////////////////////
   // initializes the state of the board using the given side length of the hexagon
   // this method has the protected modifier in case a subclass wants to use a different board shape
-  protected Map<Point, PointyTopHexagon> makeBoard(int side) {
-    Map<Point, PointyTopHexagon> board = new HashMap<>(); // create the board
+  protected Map<Point, ReversiTile> makeBoard(int side) {
+    Map<Point, ReversiTile> board = new HashMap<>(); // create the board
 
     // this code is adapted from the "Movement Range" section of the website linked in the README
     // the "n" value is the number of tiles away from the center a tile can be, which in our case
@@ -249,7 +279,7 @@ public class HexagonalReversi implements ReversiModel {
   int tilesWithColor(Color color) {
     Objects.requireNonNull(color);
     int total = 0; // initialize total number of tiles with the color
-    for (PointyTopHexagon tile : this.tiles.values()) { // iterate over all tiles in the map
+    for (ReversiTile tile : this.tiles.values()) { // iterate over all tiles in the map
       if (!tile.hasDisk()) { // if the tile does not have a disk
         continue; // continue to the next tile
       }
@@ -307,4 +337,16 @@ public class HexagonalReversi implements ReversiModel {
     ));
   }
 
+  // creates and returns a copy of the board from the given model
+  Map<Point, ReversiTile> copyBoard(HexagonalReversi model) {
+    Objects.requireNonNull(model);
+    Map<Point, ReversiTile> newBoard = new HashMap<>(); // initialize board to hold the copy
+
+    for (Point point : model.tiles.keySet()) { // iterate over the point in the given model's tile
+      // at each point, put a copy of the tile into our copied board
+      newBoard.put(point, new PointyTopHexagon(model.tiles.get(point)));
+    }
+
+    return newBoard; // return the copied board
+  }
 }

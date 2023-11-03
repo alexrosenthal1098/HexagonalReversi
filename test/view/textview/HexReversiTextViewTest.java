@@ -1,10 +1,8 @@
-package view;
+package view.textview;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.awt.Point;
 
 import mocks.MockHexReversiModel;
 import model.HexagonalReversi;
@@ -115,28 +113,6 @@ public class HexReversiTextViewTest {
 
 
 
-  // test getModelSideLength
-  @Test
-  public void testGetModelSideLengthInvalidModel() {
-    HexagonalReversi mock = new MockHexReversiModel(6);
-    this.view = new HexReversiTextView(mock);
-    Assert.assertThrows(IllegalStateException.class, () -> this.view.getModelSideLength());
-  }
-
-  @Test
-  public void testGetModelSideLengthOfArea5() {
-    HexagonalReversi model = new HexagonalReversi(4);
-    this.view = new HexReversiTextView(model);
-    Assert.assertEquals(4, this.view.getModelSideLength());
-  }
-
-  @Test
-  public void testGetModelSideLength6() {
-    Assert.assertEquals(6, this.view.getModelSideLength());
-  }
-
-
-
   // test tileToString
   @Test(expected = IllegalArgumentException.class)
   public void testTileToStringNullTile() {
@@ -147,21 +123,21 @@ public class HexReversiTextViewTest {
   public void testTileToStringUnrecognizedColor() {
     HexagonalReversi mock = new MockHexReversiModel(6);
     this.view = new HexReversiTextView(mock);
-    this.view.tileToString(new Point(0, 0));
+    this.view.tileToString(mock.getTileAt(0, 0));
   }
 
   @Test
   public void testTileToStringTileWithoutDisk() {
-    Assert.assertEquals("_", this.view.tileToString(new Point(2, 0)));
+    Assert.assertEquals("_", this.view.tileToString(this.model.getTileAt(2, 0)));
   }
 
   @Test
   public void testTileToStringBlack() {
-    Assert.assertEquals("X", this.view.tileToString(new Point(0, -1)));
+    Assert.assertEquals("X", this.view.tileToString(this.model.getTileAt(0, -1)));
   }
 
   @Test
   public void testTileToStringWhit() {
-    Assert.assertEquals("O", this.view.tileToString(new Point(1, -1)));
+    Assert.assertEquals("O", this.view.tileToString(this.model.getTileAt(1, -1)));
   }
 }

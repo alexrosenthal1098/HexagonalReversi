@@ -9,8 +9,7 @@ import java.awt.Color;
 import java.util.Map;
 import java.util.List;
 
-import tile.PointyTopHexagon;
-import tile.ReversiTile;
+import model.tile.ReversiTile;
 
 /**
  * Tests for private/protected methods of HexagonalReversi.
@@ -20,28 +19,28 @@ public class HexagonalReversiTest {
 
   @Before
   public void setUp() {
-    this.model = new HexagonalReversi(6);
+    this.model = new HexagonalReversi();
   }
 
 
   // tests for makeBoard()
   @Test
   public void testMakeBoardCorrectSize() {
-    Map<Point, PointyTopHexagon> tiles = this.model.makeBoard(6);
+    Map<Point, ReversiTile> tiles = this.model.makeBoard(6);
     Assert.assertEquals(91, tiles.keySet().size());
     Assert.assertEquals(91, tiles.values().size());
   }
 
   @Test
   public void testMakeBoardCorrectSize2() {
-    Map<Point, PointyTopHexagon> tiles = this.model.makeBoard(4);
+    Map<Point, ReversiTile> tiles = this.model.makeBoard(4);
     Assert.assertEquals(37, tiles.keySet().size());
     Assert.assertEquals(37, tiles.values().size());
   }
 
   @Test
   public void testMakeBoardCorrectTileLocations() {
-    Map<Point, PointyTopHexagon> tiles = this.model.makeBoard(3);
+    Map<Point, ReversiTile> tiles = this.model.makeBoard(3);
     this.model = new HexagonalReversi(3);
     for (int q = -2; q <= 2; q++) {
       for (int r = Math.max(-2, -q - 2); r < Math.min(2, -q + 2); r++) {
@@ -52,7 +51,7 @@ public class HexagonalReversiTest {
 
   @Test
   public void testMakeBoardHasStartingTiles() {
-    Map<Point, PointyTopHexagon> tiles = this.model.makeBoard(6);
+    Map<Point, ReversiTile> tiles = this.model.makeBoard(6);
     Assert.assertEquals(Color.BLACK, tiles.get(new Point(0, -1)).getTopColor());
     Assert.assertEquals(Color.WHITE, tiles.get(new Point(1, -1)).getTopColor());
     Assert.assertEquals(Color.BLACK, tiles.get(new Point(1, 0)).getTopColor());
@@ -246,5 +245,45 @@ public class HexagonalReversiTest {
     Assert.assertTrue(directions.contains(new Point(1, 0))); // right
     Assert.assertTrue(directions.contains(new Point(0, 1))); // down and right
     Assert.assertTrue(directions.contains(new Point(-1, 1))); // down and left
+  }
+
+
+
+  // tests for copyBoard
+  @Test(expected = NullPointerException.class)
+  public void testCopyBoardNullException() {
+    this.model.copyBoard(null);
+  }
+
+  @Test
+  public void testCopyBoardActuallyMakesCopy() {
+    HexagonalReversi copyModel = new HexagonalReversi(3);
+    Map<Point, ReversiTile> board1 = this.model.copyBoard(copyModel);
+    Map<Point, ReversiTile> board2 = this.model.copyBoard(copyModel);
+    Assert.assertNotSame(board1, board2);
+  }
+
+  @Test
+  public void testCopyBoardHasCorrectTiles() {
+    HexagonalReversi copyModel = new HexagonalReversi(3);
+    copyModel.moveAt(1, 1);
+    copyModel.moveAt(1, -2);
+    Map<Point, ReversiTile> newBoard = this.model.copyBoard(copyModel);
+
+    for (int q = -2; q <= 2; q++) {
+      for (int r = -2; r <= 2; r++) {
+        ReversiTile newTile = newBoard.get(new Point(q, r));
+        if (newTile != null) {
+          ReversiTile oldTile = copyModel.getTileAt(q, r);
+          Assert.assertEquals(oldTile.hasDisk(), newTile.hasDisk());
+          if (newTile.hasDisk()) {
+            Assert.assertEquals(oldTile.getTopColor(), newTile.getTopColor());
+            oldTile.flipDisk();
+            newTile.flipDisk();
+            Assert.assertEquals(oldTile.getTopColor(), newTile.getTopColor());
+          }
+        }
+      }
+    }
   }
 }

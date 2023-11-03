@@ -6,7 +6,7 @@ package model;
  * The game can be played using any regular polygon as a tile and any board arrangement
  * that can be represented using two-dimensional coordinates.
  */
-public interface ReversiModel extends ViewReversiModel {
+public interface ReversiModel extends ReadOnlyReversiModel {
   /**
    * Make the current player move at the tile given by its x and y position, and
    * move the turn to the other player.

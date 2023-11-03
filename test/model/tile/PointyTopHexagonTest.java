@@ -1,4 +1,4 @@
-package tile;
+package model.tile;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,6 +18,30 @@ public class PointyTopHexagonTest {
   @Before
   public void setUp() {
     this.hexTile = new PointyTopHexagon();
+  }
+
+
+
+  // tests for constructors
+  @Test
+  public void testEmptyConstructor() {
+    ReversiTile tile = new PointyTopHexagon();
+    Assert.assertFalse(tile.hasDisk());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCopyConstructorNullTile() {
+    ReversiTile tile = new PointyTopHexagon(null);
+  }
+
+  @Test
+  public void testCopyConstructorValidTile() {
+    this.hexTile.placeDisk(Color.BLUE, Color.PINK);
+    ReversiTile tile = new PointyTopHexagon(this.hexTile);
+    Assert.assertTrue(tile.hasDisk());
+    Assert.assertEquals(Color.BLUE, tile.getTopColor());
+    tile.flipDisk();
+    Assert.assertEquals(Color.PINK, tile.getTopColor());
   }
 
   // tests for buildTile

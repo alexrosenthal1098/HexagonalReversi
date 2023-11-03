@@ -1,13 +1,10 @@
 package mocks;
 
-import java.awt.Point;
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
 
 import model.HexagonalReversi;
-import tile.PointyTopHexagon;
-import tile.ReversiTile;
+import model.tile.PointyTopHexagon;
+import model.tile.ReversiTile;
 
 /**
  * A mock of a HexagonalReversi game used for testing purposes.
@@ -23,25 +20,14 @@ public class MockHexReversiModel extends HexagonalReversi {
   }
 
   @Override
-  public Color getColorAt(int x, int y) throws IllegalArgumentException {
+  public Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException {
     return Color.GREEN;
   }
 
   @Override
-  public Map<Point, ReversiTile> getTiles() {
-    // create a mock tile map
-    Map<Point, ReversiTile> mockTiles = new HashMap<Point, ReversiTile>();
-
-    // add random hexagons to the map
-    mockTiles.put(new Point(1, 1), new PointyTopHexagon());
-    mockTiles.put(new Point(2, 2), new PointyTopHexagon());
-    mockTiles.put(new Point(3, 3), new PointyTopHexagon());
-
-    // add a disk with unsupported colors to a tile
-    PointyTopHexagon tile = new PointyTopHexagon();
-    tile.placeDisk(Color.YELLOW, Color.CYAN);
-    mockTiles.put(new Point(0, 0), tile);
-
-    return mockTiles; // return them mock map
+  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
+    ReversiTile tile = new PointyTopHexagon();
+    tile.placeDisk(Color.GREEN, Color.YELLOW);
+    return tile;
   }
 }

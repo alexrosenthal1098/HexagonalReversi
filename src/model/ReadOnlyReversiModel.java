@@ -1,17 +1,15 @@
 package model;
 
-import java.awt.Point;
 import java.awt.Color;
-import java.util.Map;
 
-import tile.ReversiTile;
+import model.tile.ReversiTile;
 
 /**
  * An interface that defines only the methods that can view the state of a
  * {@link model.ReversiModel} and not the methods that mutate the model.
  * This prevents view classes from mutating the model.
  */
-public interface ViewReversiModel {
+public interface ReadOnlyReversiModel {
   /**
    * Determines whether the player whose move it currently is can make a move at
    * the tile given by its x and y position.
@@ -54,11 +52,10 @@ public interface ViewReversiModel {
   Color getCurrentPlayer();
 
   /**
-   * Returns the color of the disk that occupies the tile at the given x and y position,
-   * or null if there is no disk at that position.
+   * Returns the color of the disk that occupies the tile at the given x and y position.
    * @param x The x position to look at.
    * @param y The y position to look at.
-   * @return The color of the disk that occupies the tile, or null.
+   * @return The color of the disk that occupies the tile.
    * @throws IllegalArgumentException if the given x or y position are outside
    *                                  the bounds of the board.
    * @throws IllegalStateException if the tile at the given position is not occupied.
@@ -66,8 +63,18 @@ public interface ViewReversiModel {
   Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
 
   /**
-   * Returns a map of points to tiles that represents the game board.
-   * @return A map of Point to ReversiTile.
+   * Returns the tile found at the given x and y position
+   * @param x The x position to look at.
+   * @param y The y position to look at.
+   * @return The tile at the coordinates.
+   * @throws IllegalArgumentException if the given x or y position are outside
+   *                                  the bounds of the board.
    */
-  Map<Point, ReversiTile> getTiles();
+  ReversiTile getTileAt(int x, int y) throws IllegalArgumentException;
+
+  /**
+   * Return the side length, in number of tiles, of the board.
+   * @return An int representing the side length of the board.
+   */
+  int getBoardSideLength();
 }

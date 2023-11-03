@@ -2,7 +2,7 @@ package player;
 
 import java.awt.Point;
 
-import model.ViewReversiModel;
+import model.ReadOnlyReversiModel;
 
 /**
  * An interface that represents player actions for the game Reversi.
@@ -15,5 +15,5 @@ public interface ReversiPlayer {
    * @param model The model (read-only) that the player uses to choose the next move.
    * @return A Point representing the location of the tile to play at.
    */
-  Point getNextMove(ViewReversiModel model);
+  Point getNextMove(ReadOnlyReversiModel model);
 }
