@@ -28,4 +28,12 @@ public interface ReversiBoard {
    * @throws IllegalStateException if there is no tile selected.
    */
   Point getSelectedTile() throws IllegalStateException;
+
+
+  /**
+   * Add a class to the list of those who implement features of this board so that they
+   * can be updated with feature-level events.
+   * @param feature The class to add to the list of features.
+   */
+  void addFeature(BoardFeatures feature);
 }
