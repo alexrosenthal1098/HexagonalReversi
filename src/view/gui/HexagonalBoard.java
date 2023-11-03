@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.swing.*;
 
 import model.ReadOnlyReversiModel;
+import model.tile.PointyTopHexagon;
 import model.tile.ReversiTile;
 
 /**
@@ -36,14 +37,16 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
     if (model == null) { // check if the model is null and throw exception if it is
       throw new IllegalArgumentException("Cannot create a board from a null model.");
     }
+    if (width <= 0 || height <= 0) { // check if the width or height are not positive
+      throw new IllegalArgumentException("Dimensions of the panel must be positive.");
+    }
     this.model = model; // set the model
     this.tiles = new HashMap<>(); // initialize the tile map
     this.disks = new HashMap<>(); // initialize the disk map
     this.initBoard(); // initialize the key set of the tiles map
 
-    setSize(new Dimension(width, height));
+    setSize(new Dimension(width, height)); // set the size of the model
     setBackground(this.BACKGROUND_COLOR); // set the background color
-    System.out.println(this.getSize());
   }
 
 
@@ -52,21 +55,21 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   //////////////////////////////////////////
   @Override
   public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    Graphics2D g2d = (Graphics2D) g;
+    super.paintComponent(g); // call super
+    Graphics2D g2d = (Graphics2D) g; // cast graphics object to Graphics2D
 
-    this.updateBoard();
+    this.updateBoard(); // update the state of the board
 
-    for (Shape tile : this.tiles.values()) {
-      g2d.setColor(this.TILE_COLOR);
-      g2d.fill(tile);
-      g2d.setColor(this.OUTLINE_COLOR);
-      g2d.draw(tile);
+    for (Shape tile : this.tiles.values()) { // iterate over all the tile shapes
+      g2d.setColor(this.TILE_COLOR); // change color to the tile color
+      g2d.fill(tile); // fill in the shape of the tile
+      g2d.setColor(this.OUTLINE_COLOR); // change color to the outline color
+      g2d.draw(tile); // draw the outline of the tile
 
     }
-    for (Shape disk : this.disks.keySet()) {
-      g2d.setColor(this.disks.get(disk));
-      g2d.fill(disk);
+    for (Shape disk : this.disks.keySet()) { // iterate over all the disk shapes
+      g2d.setColor(this.disks.get(disk)); // set the color to the disks color using a map
+      g2d.fill(disk); // fill in the shape of the disk
     }
   }
 
@@ -96,18 +99,15 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   // initializes the keySet of the tiles map so that we only have to find all the tiles on the
   // board once. doing this ets the updateBoard method already know what all the tile points are.
   protected void initBoard() {
-    int boardSide = this.model.getBoardSideLength();
-    for (int r = -boardSide + 1; r <= boardSide - 1; r++) {
-      for (int q = Math.min(-boardSide + 1, -boardSide + 1 - r);
-           q <= Math.min(boardSide - 1, boardSide - 1 - r); q++) {
-        try {
-          this.model.getTileAt(q, r); // try to get the current tiles
-        }
-        catch (IllegalArgumentException ignored) {
-          continue; // if there is no tile at the current point, continue to the next point
-        }
-        // if there is a tile at the current point, initialize a key in the tiles map
-        this.tiles.put(new Point(q, r), new Path2D.Double());
+    int boardSide = this.model.getBoardSideLength(); // get the size of the board
+    // use the same loops that are used in the model to create the board
+    int n = boardSide - 1;
+    for (int q = -boardSide + 1; q <= n; q++) {
+      int rStart = Math.max(-n, -q - n);
+      int rEnd = Math.min(n, -q + n);
+      for (int r = rStart; r <= rEnd; r++) {
+        // at the point (q, r), put a null value as a placeholder for future tiles
+        this.tiles.put(new Point(q, r), null);
       }
     }
   }
@@ -115,19 +115,26 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   // updates the board by calculating the shape of each tile and disk depending on the
   // size of the window
   protected void updateBoard() {
-    this.disks.clear();
+    this.disks.clear(); // clear the current disks
 
+    // iterate over all points where tiles are on the board
     for (Point point : this.tiles.keySet()) {
-      ReversiTile tile = this.model.getTileAt(point.x, point.y);
+      ReversiTile tile = this.model.getTileAt(point.x, point.y); // get the tile from the model
 
-      double tileSide = this.getTileSideLength();
+      double tileSide = this.getTileSideLength(); // get its side length from a helper
+      // calculate the coordinates of the center of the tiles
+      // this formula was adapted from the "Hex to Pixel" section of the website
+      // linked in the README
       double centerX = ((double) this.getSize().width / 2) +
               (tileSide * (Math.sqrt(3) * point.x + Math.sqrt(3) / 2 * point.y));
       double centerY = ((double) this.getSize().height / 2) +
               (tileSide * (3.0 / 2 * point.y));
+      // use a helper to create the tile and put it in the tiles map, which replaces the tile that
+      // was previously in that location
       this.tiles.put(point, this.buildTile(centerX, centerY, tileSide));
 
-      if (tile.hasDisk()) {
+      if (tile.hasDisk()) { // if the tile has a disk
+        // use a helper to create the disk and put it in the disks map along with the disk color
         this.disks.put(this.buildDisk(centerX, centerY, tileSide / 2), tile.getTopColor());
       }
     }
@@ -164,18 +171,17 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   // creates a shape that represents a circular disk centered at the given x and y coordinates
   // and with the given radius, in pixels.
   protected Shape buildDisk(double centerX, double centerY, double radius) {
-    double diameter = radius * 2;
-    double xPos = centerX - radius;
-    double yPos = centerY - radius;
-    Ellipse2D.Double circle = new Ellipse2D.Double(xPos, yPos, diameter, diameter);
-    return circle;
+    double xPos = centerX - radius; // calculate the x position of the circle
+    double yPos = centerY - radius; // calculate the y position of the circle
+    // create and return the circle
+    return new Ellipse2D.Double(xPos, yPos, radius * 2, radius * 2);
   }
 
   // use the size of the board to calculate the appropriate tile side length
   protected double getTileSideLength() {
-    Dimension size = this.getSize();
-    int boardSize = this.model.getBoardSideLength();
-    double minSide = Math.min(size.width, size.height);
-    return minSide / (boardSize * 2 - 1) / Math.sqrt(3);
+    Dimension size = this.getSize(); // get the size of the panel
+    double minSide = Math.min(size.width, size.height); // find the smallest dimension
+    // calculate and return an appropriate side length for each individual tile's side length
+    return minSide / (this.model.getBoardSideLength() * 2 - 1) / Math.sqrt(3);
   }
 }

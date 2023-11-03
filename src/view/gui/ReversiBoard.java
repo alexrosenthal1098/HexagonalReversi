@@ -3,8 +3,8 @@ package view.gui;
 import java.awt.*;
 
 /**
- * A view for a Reversi game HexagonalBoard along with the actions it can perform. A class that implements
- * this interface is free to represent the HexagonalBoard however it likes.
+ * A view for a Reversi game HexagonalBoard along with the actions it can perform. A class that
+ * implements this interface is free to represent the HexagonalBoard however it likes.
  */
 public interface ReversiBoard {
 
