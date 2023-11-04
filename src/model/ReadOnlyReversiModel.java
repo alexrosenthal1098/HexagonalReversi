@@ -1,6 +1,8 @@
 package model;
 
+import java.awt.Point;
 import java.awt.Color;
+import java.util.Map;
 
 import model.tile.ReversiTile;
 
@@ -63,18 +65,8 @@ public interface ReadOnlyReversiModel {
   Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
 
   /**
-   * Returns the tile found at the given x and y position
-   * @param x The x position to look at.
-   * @param y The y position to look at.
-   * @return The tile at the coordinates.
-   * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the HexagonalBoard.
+   * Returns a map of points to tiles that represents the game board.
+   * @return A map of Point to ReversiTile.
    */
-  ReversiTile getTileAt(int x, int y) throws IllegalArgumentException;
-
-  /**
-   * Return the side length, in number of tiles, of the HexagonalBoard.
-   * @return An int representing the side length of the HexagonalBoard.
-   */
-  int getBoardSideLength();
+  Map<Point, ReversiTile> getTiles();
 }

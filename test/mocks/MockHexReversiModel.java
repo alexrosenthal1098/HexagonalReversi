@@ -1,6 +1,8 @@
 package mocks;
 
+import java.awt.Point;
 import java.awt.Color;
+import java.util.Map;
 
 import model.HexagonalReversi;
 import model.tile.PointyTopHexagon;
@@ -25,9 +27,12 @@ public class MockHexReversiModel extends HexagonalReversi {
   }
 
   @Override
-  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
+  public Map<Point, ReversiTile> getTiles() {
+    Map<Point, ReversiTile> fakeBoard = super.getTiles();
     ReversiTile tile = new PointyTopHexagon();
     tile.placeDisk(Color.GREEN, Color.YELLOW);
-    return tile;
+    fakeBoard.put(new Point(0, 0), tile);
+
+    return fakeBoard;
   }
 }

@@ -274,7 +274,7 @@ public class HexagonalReversiTest {
       for (int r = -2; r <= 2; r++) {
         ReversiTile newTile = newBoard.get(new Point(q, r));
         if (newTile != null) {
-          ReversiTile oldTile = copyModel.getTileAt(q, r);
+          ReversiTile oldTile = copyModel.getTiles().get(new Point(q, r));
           Assert.assertEquals(oldTile.hasDisk(), newTile.hasDisk());
           if (newTile.hasDisk()) {
             Assert.assertEquals(oldTile.getTopColor(), newTile.getTopColor());

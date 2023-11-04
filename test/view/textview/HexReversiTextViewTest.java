@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.awt.*;
+
 import mocks.MockHexReversiModel;
 import model.HexagonalReversi;
 
@@ -123,21 +125,21 @@ public class HexReversiTextViewTest {
   public void testTileToStringUnrecognizedColor() {
     HexagonalReversi mock = new MockHexReversiModel(6);
     this.view = new HexReversiTextView(mock);
-    this.view.tileToString(mock.getTileAt(0, 0));
+    this.view.tileToString(mock.getTiles().get(new Point(0, 0)));
   }
 
   @Test
   public void testTileToStringTileWithoutDisk() {
-    Assert.assertEquals("_", this.view.tileToString(this.model.getTileAt(2, 0)));
+    Assert.assertEquals("_", this.view.tileToString(this.model.getTiles().get(new Point(2, 0))));
   }
 
   @Test
   public void testTileToStringBlack() {
-    Assert.assertEquals("X", this.view.tileToString(this.model.getTileAt(0, -1)));
+    Assert.assertEquals("X", this.view.tileToString(this.model.getTiles().get(new Point(0, -1))));
   }
 
   @Test
   public void testTileToStringWhit() {
-    Assert.assertEquals("O", this.view.tileToString(this.model.getTileAt(1, -1)));
+    Assert.assertEquals("O", this.view.tileToString(this.model.getTiles().get(new Point(1, -1))));
   }
 }

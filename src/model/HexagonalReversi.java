@@ -23,8 +23,8 @@ import model.tile.ReversiTile;
 public class HexagonalReversi implements ReversiModel {
   //          FIELDS
   //////////////////////////////////////////
-  protected final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
-  protected final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
+  protected final Color PLAYER_1_COLOR; // The disk color of player one
+  protected final Color PLAYER_2_COLOR; // The disk color of player two
 
   // The HexagonalBoard uses axial coordinates as described on the "Coordinate Systems" section of the
   // website linked in the README.
@@ -33,16 +33,16 @@ public class HexagonalReversi implements ReversiModel {
 
   // A map that represents the HexagonalBoard using each hexagon's axial coordinates
   private final Map<Point, ReversiTile> tiles;
-  protected Color currentPlayer; // The disk color of the current player.
-  protected final int sideLength;
+  protected Color currentPlayer; // The disk color of the current player
 
   // INVARIANT: currentPlayer equals PLAYER_1_COLOR or PLAYER_2_COLOR
 
-  // All fields EXCEPT for tiles are declared as protected so that subclasses have the
-  // opportunity to view the other fields
-  // The tiles field is kept private because we want to ensure that the shape of the HexagonalBoard is not
-  // changed after the model is instantiated. Subclasses can, however, override the makeBoard
-  // helper if they want to change the HexagonalBoard shape.
+  // The color and currentPlyaer fields are declared as protected so that subclasses can change
+  // each player's color along with how the turn is decided (maybe each player goes twice in a row)
+
+  // The tiles and sideLength fields are kept private because we want to ensure that the shape of
+  // the board is not changed after the model is instantiated. Subclasses can, however, override
+  // the makeBoard helper if they want to change the board shape.
 
 
 
@@ -65,7 +65,9 @@ public class HexagonalReversi implements ReversiModel {
     if (sideLength < 3) { // check if the side length is at least three, guaranteeing the invariant
       throw new IllegalArgumentException("The HexagonalBoard side length must be at least 3.");
     }
-    this.sideLength = sideLength;
+    this.PLAYER_1_COLOR = Color.BLACK; // set player 1 color to black
+    this.PLAYER_2_COLOR = Color.WHITE; // and player 2 color to white
+
     // the currentPlayer invariant is guaranteed by the constructor because it is
     // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
@@ -81,19 +83,20 @@ public class HexagonalReversi implements ReversiModel {
     if (modelToCopy == null) { // check if the given model is null
       throw new IllegalArgumentException("Given model cannot be null"); // if it is, throw exception
     }
-    this.sideLength = modelToCopy.getBoardSideLength(); // copy the side length
-    Color modelCopyPlayer = modelToCopy.getCurrentPlayer(); // get the current player from copy
-    if (modelCopyPlayer.equals(this.PLAYER_1_COLOR)) { // if the color is equal to our player 1
-      this.currentPlayer = this.PLAYER_1_COLOR; // set our current player to player 1
+    this.PLAYER_1_COLOR = new Color(modelToCopy.PLAYER_1_COLOR.getRGB()); // copy player 1 color
+    this.PLAYER_2_COLOR = new Color(modelToCopy.PLAYER_2_COLOR.getRGB()); // copy player 2 color
+
+    // check the model to copy's current player and set our currentPlayer field to the appropriate
+    // color (the reference to that color not a copy so we can use referential equality)
+    if (modelToCopy.currentPlayer.equals(this.PLAYER_1_COLOR)) {
+      this.currentPlayer = this.PLAYER_1_COLOR;
     }
-    else if (modelCopyPlayer.equals(this.PLAYER_2_COLOR)) { // if the color is equal to our player 2
-      this.currentPlayer = this.PLAYER_2_COLOR; // set our current player to player 2
-    }
-    else { // if it is not equal to either, throw an exception
-      throw new IllegalStateException("Given model has unrecognized player color.");
+    // the class invariant guarantees that currentPlayer equals either player 1 or 2
+    else {  // so no need to check a conditional for both, we can use else statement
+      this.currentPlayer = this.PLAYER_2_COLOR;
     }
 
-    this.tiles = this.copyBoard(modelToCopy);
+    this.tiles = modelToCopy.getTiles(); // set our tiles to a copy of the model's tiles
   }
 
 
@@ -214,23 +217,22 @@ public class HexagonalReversi implements ReversiModel {
     return tile.getTopColor();
   }
 
+  /**
+   * Returns a map that represents the coordinate location of each hexagonal tile
+   * in the board. The location of the tiles are specified using axial coordinates, with
+   * the first tile's coordinates being (0, 0).
+   * @return A map of Point to ReversiTile.
+   */
   @Override
-  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
-    // if the HexagonalBoard does not contain the given coordinate
-    if (!this.tiles.containsKey(new Point(q, r))) {
-      throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
+  public Map<Point, ReversiTile> getTiles() {
+    // create deep copy of the tiles map
+    Map<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
+    for (Point point: this.tiles.keySet()) { // iterate over all the keys
+      // create a copy of the hexagon tile and put it with the corresponding copy of the point
+      clone.put(new Point(point), new PointyTopHexagon(this.tiles.get(point)));
     }
-
-    ReversiTile tileToCopy = this.tiles.get(new Point(q, r)); // get the tile to copy
-    return new PointyTopHexagon(tileToCopy); // return a copy of the tile
+    return clone; // return the copy of tiles
   }
-
-  @Override
-  public int getBoardSideLength() {
-    return this.sideLength; // return the side length
-  }
-
-
 
   //          HELPER METHODS
   ////////////////////////////////////////////

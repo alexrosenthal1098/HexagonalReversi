@@ -3,6 +3,7 @@ package view.gui;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import javax.swing.*;
 import model.ReadOnlyReversiModel;
 import model.tile.PointyTopHexagon;
 import model.tile.ReversiTile;
+import util.HexReversiUtils;
 
 /**
  * A GUI representation of a HexagonalReversi game board. Can be dynamically resized and
@@ -108,16 +110,8 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   // board once. doing this allows the updateBoard method to already know what all the tile points
   // are, which makes it easier and more efficient to update the board.
   protected void initBoard() {
-    int boardSide = this.model.getBoardSideLength(); // get the size of the board
-    // use the same loops that are used in the model to create the board
-    int n = boardSide - 1;
-    for (int q = -boardSide + 1; q <= n; q++) {
-      int rStart = Math.max(-n, -q - n);
-      int rEnd = Math.min(n, -q + n);
-      for (int r = rStart; r <= rEnd; r++) {
-        // at the point (q, r), put a null value as a placeholder for future tiles
-        this.tiles.put(new Point(q, r), null);
-      }
+    for (Point tilePoint : this.model.getTiles().keySet()) { // iterate over all tile points
+      this.tiles.put(tilePoint, null); // put the point in the map with null as a placeholder
     }
   }
 
@@ -126,21 +120,23 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   protected void updateBoard() {
     this.disks.clear(); // clear the current disks
 
-    // iterate over all points where tiles are on the board
-    for (Point point : this.tiles.keySet()) {
-      ReversiTile tile = this.model.getTileAt(point.x, point.y); // get the tile from the model
+    Map<Point, ReversiTile> board = this.model.getTiles(); // get the map of tiles from the model
 
-      double tileSide = this.getTileSideLength(); // get its side length from a helper
-      // calculate the coordinates of the center of the tiles
-      // this formula was adapted from the "Hex to Pixel" section of the website
-      // linked in the README
+    for (Point point : this.model.getTiles().keySet()) {  // iterate over all point on the board
+      double tileSide = this.getTileSideLength(); // get the tile side length from a helper
+
+      // calculate the coordinates of the center of the tile. this formula was adapted from the
+      // "Hex to Pixel" section of the website linked in the README
       double centerX = ((double) this.getSize().width / 2) +
               (tileSide * (Math.sqrt(3) * point.x + Math.sqrt(3) / 2 * point.y));
       double centerY = ((double) this.getSize().height / 2) +
               (tileSide * (3.0 / 2 * point.y));
+
       // use a helper to create the tile and put it in the tiles map, which replaces the tile that
       // was previously in that location
       this.tiles.put(point, this.buildTile(centerX, centerY, tileSide));
+
+      ReversiTile tile = board.get(point); // get the tile from the board
 
       if (tile.hasDisk()) { // if the tile has a disk
         // use a helper to create the disk and put it in the disks map along with the disk color
@@ -191,6 +187,11 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
     Dimension size = this.getSize(); // get the size of the panel
     double minSide = Math.min(size.width, size.height); // find the smallest dimension
     // calculate and return an appropriate side length for each individual tile's side length
-    return minSide / (this.model.getBoardSideLength() * 2 - 1) / Math.sqrt(3);
+    return minSide /
+            (HexReversiUtils.getBoardSideLength(this.model.getTiles()) * 2 - 1) /
+            Math.sqrt(3);
+
+    // todo try going back to the width < height thing but this time use diagonal to calculate height
+    // with trigonometry
   }
 }
