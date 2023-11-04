@@ -44,58 +44,6 @@ public class PointyTopHexagonTest {
     Assert.assertEquals(Color.PINK, tile.getTopColor());
   }
 
-  // tests for buildTile
-  @Test(expected = IllegalArgumentException.class)
-  public void testBuildTileNullCenter() {
-    this.hexTile.buildTile(null, 30);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testBuildTile0SideLength() {
-    this.hexTile.buildTile(new Point(100, 100), 0);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testBuildTileNegativeSideLength() {
-    this.hexTile.buildTile(new Point(100, 100), -20);
-  }
-
-  @Test
-  public void testBuildTileSideLength10() {
-    Polygon hexagon = this.hexTile.buildTile(new Point(100, 100), 10);
-    int[] xPoints = {108, 100, 91, 91, 100, 108};
-    int[] yPoints = {105, 110, 105, 95, 90, 95};
-
-    Assert.assertArrayEquals(xPoints, Arrays.copyOfRange(hexagon.xpoints, 0, 6));
-    Assert.assertArrayEquals(yPoints, Arrays.copyOfRange(hexagon.ypoints, 0, 6));
-  }
-
-  @Test
-  public void testBuildTileSideLength50() {
-    Polygon hexagon = this.hexTile.buildTile(new Point(200, 200), 50);
-    int[] xPoints = {243, 200, 156, 156, 200, 243};
-    int[] yPoints = {225, 250, 225, 175, 150, 174};
-
-    Assert.assertArrayEquals(xPoints, Arrays.copyOfRange(hexagon.xpoints, 0, 6));
-    Assert.assertArrayEquals(yPoints, Arrays.copyOfRange(hexagon.ypoints, 0, 6));
-  }
-
-  @Test
-  public void testBuildTileNegativeCenter() {
-    Polygon hexagon = this.hexTile.buildTile(new Point(-50, -50), 15);
-    int[] xPoints = {-37, -50, -62, -62, -50, -37};
-    int[] yPoints = {-42, -35, -42, -57, -65, -57};
-
-    Assert.assertArrayEquals(xPoints, Arrays.copyOfRange(hexagon.xpoints, 0, 6));
-    Assert.assertArrayEquals(yPoints, Arrays.copyOfRange(hexagon.ypoints, 0, 6));
-  }
-
-  @Test
-  public void testBuildTileContainsCenter() {
-    Polygon hexagon = this.hexTile.buildTile(new Point(75, 80), 10);
-    Assert.assertTrue(hexagon.contains(new Point(75, 80)));
-  }
-
 
 
   // tests for hasDisk

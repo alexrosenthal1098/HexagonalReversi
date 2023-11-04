@@ -19,14 +19,15 @@ import model.tile.ReversiTile;
 public class HexagonalBoard extends JPanel implements ReversiBoard {
   //          FIELDS
   //////////////////////////////////////////
+
+  // all fields are declared protected so that subclasses can change how the board looks
   protected final Color BACKGROUND_COLOR = new Color(50, 50, 50); // the background color
   protected final Color TILE_COLOR = new Color(180, 180, 180); // the tile color
   protected final Color OUTLINE_COLOR = Color.BLACK; // the color of each tile's outline
 
+  protected final ReadOnlyReversiModel model; // read-only version of the model this view represents
 
-  private final ReadOnlyReversiModel model; // read-only version of the model this view represents
-  // a map of point in the model to tiles that represents the board tiles
-  protected final Map<Point, Shape> tiles;
+  protected final Map<Point, Shape> tiles; // a map of point on the board to tile shape
   protected final Map<Shape, Color> disks; // a map of disk shape to disk color
 
 
@@ -92,12 +93,20 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
     return null;
   }
 
+  @Override
+  public void addFeature(BoardFeatures feature) {
+
+  }
 
 
   //          HELPER METHODS
   //////////////////////////////////////////
+  // all helpers are declared protected so that subclasses can change how the board is set up
+  // and updated along with details of how the tiles and disks are drawn
+
   // initializes the keySet of the tiles map so that we only have to find all the tiles on the
-  // board once. doing this ets the updateBoard method already know what all the tile points are.
+  // board once. doing this allows the updateBoard method to already know what all the tile points
+  // are, which makes it easier and more efficient to update the board.
   protected void initBoard() {
     int boardSide = this.model.getBoardSideLength(); // get the size of the board
     // use the same loops that are used in the model to create the board
