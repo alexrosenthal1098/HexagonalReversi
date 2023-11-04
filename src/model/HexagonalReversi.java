@@ -184,15 +184,15 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public int getPlayer1Score() {
+  public int getCurrentPlayerScore() {
     // use a helper to find tiles with player one's disk color
-    return this.tilesWithColor(this.PLAYER_1_COLOR);
+    return this.tilesWithColor(this.currentPlayer);
   }
 
   @Override
-  public int getPlayer2Score() {
+  public int getOtherPlayerScore() {
     // use a helper to find tiles with player two's disk color
-    return this.tilesWithColor(this.PLAYER_2_COLOR);
+    return this.tilesWithColor(this.otherPlayerColor());
   }
 
   @Override

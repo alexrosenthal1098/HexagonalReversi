@@ -256,65 +256,67 @@ public class ReversiModelTest {
 
 
 
-  // tests for getPlayer1Score
+  // tests for getCurrentPlayerScore
   @Test
-  public void testGetPlayer1ScoreAtStart() {
-    Assert.assertEquals(3, this.model.getPlayer1Score());
+  public void testGetCurrentPlayerScoreAtStart() {
+    Assert.assertEquals(3, this.model.getCurrentPlayerScore());
   }
 
   @Test
-  public void testGetPlayer1ScoreIncreasesAfterBlackMove() {
-    int scoreBefore = this.model.getPlayer1Score();
+  public void testGetCurrentPlayerScoreIncreasesAfterCurrentPlayerMove() {
+    int scoreBefore = this.model.getCurrentPlayerScore();
     this.model.moveAt(1, 1);
-    int scoreAfter = this.model.getPlayer1Score();
+    this.model.passTurn();
+    int scoreAfter = this.model.getCurrentPlayerScore();
     Assert.assertTrue(scoreAfter - scoreBefore > 0);
     Assert.assertEquals(5, scoreAfter);
   }
 
   @Test
-  public void testGetPlayer1ScoreDecreasesAfterWhiteMove() {
-    int scoreBefore = this.model.getPlayer1Score();
+  public void testGetCurrentPlayerScoreDecreasesAfterOtherPlayerMove() {
+    int scoreBefore = this.model.getCurrentPlayerScore();
     this.model.passTurn();
     this.model.moveAt(1, 1);
-    int scoreAfter = this.model.getPlayer1Score();
+    int scoreAfter = this.model.getCurrentPlayerScore();
     Assert.assertTrue(scoreAfter - scoreBefore < 0);
     Assert.assertEquals(2, scoreAfter);
   }
 
   @Test
-  public void testGetPlayer1ScoreIs0() {
+  public void testCurrentPlayerScoreIs0() {
     this.model.passTurn();
     this.model.moveAt(1, 1);
     this.model.passTurn();
     this.model.moveAt(-2, 1);
     this.model.passTurn();
     this.model.moveAt(1, -2);
-    Assert.assertEquals(0, this.model.getPlayer1Score());
+    Assert.assertEquals(0, this.model.getCurrentPlayerScore());
   }
 
 
 
-  // tests for getPlayer2Score
+  // tests for getOtherPlayerScore
   @Test
-  public void testGetPlayer2ScoreAtStart() {
-    Assert.assertEquals(3, this.model.getPlayer2Score());
+  public void testGetOtherPlayerScoreAtStart() {
+    Assert.assertEquals(3, this.model.getOtherPlayerScore());
   }
 
   @Test
-  public void testGetPlayer2ScoreIncreasesAfterWhiteMove() {
-    int scoreBefore = this.model.getPlayer2Score();
+  public void testGetOtherPlayerScoreIncreasesAfterMove() {
+    int scoreBefore = this.model.getOtherPlayerScore();
     this.model.passTurn();
     this.model.moveAt(1, 1);
-    int scoreAfter = this.model.getPlayer2Score();
+    int scoreAfter = this.model.getOtherPlayerScore();
     Assert.assertTrue(scoreAfter - scoreBefore > 0);
     Assert.assertEquals(5, scoreAfter);
   }
 
   @Test
-  public void testGetPlayer2ScoreDecreasesAfterBlackMove() {
-    int scoreBefore = this.model.getPlayer2Score();
+  public void testGetOtherPlayerScoreDecreasesAfterBlackMove() {
+    int scoreBefore = this.model.getOtherPlayerScore();
     this.model.moveAt(1, 1);
-    int scoreAfter = this.model.getPlayer2Score();
+    this.model.passTurn();
+    int scoreAfter = this.model.getOtherPlayerScore();
     Assert.assertTrue(scoreAfter - scoreBefore < 0);
     Assert.assertEquals(2, scoreAfter);
   }
@@ -326,7 +328,8 @@ public class ReversiModelTest {
     this.model.moveAt(-2, 1);
     this.model.passTurn();
     this.model.moveAt(1, -2);
-    Assert.assertEquals(0, this.model.getPlayer2Score());
+    this.model.passTurn();
+    Assert.assertEquals(0, this.model.getOtherPlayerScore());
   }
 
 

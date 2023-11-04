@@ -80,14 +80,14 @@ that took no arguments that initialized the board with a side length of 6 tiles.
 constructor that takes in another HexagonalReversi model and copies the information we needed to
 instantiate the new model.
 
-The model lacked an observation method that returned the size of the board, so we chose to store
-that value and return the side length, which is measure in tiles, of the board using a method
-called getBoardSideLength.
+While we already had methods to determine each player's score, the notion of having a Player 1
+and Player 2 was confusing, especially since there was no way of knowing if the current player
+is 1 or 2 after the first move. To fix this issue, we replaced the getPlayer1Score and
+getPlayer2Score methods with getCurrentPlayerScore and getOtherPlayerScore. This removes the
+notion of a player 1 and 2 and makes it easier for the client to determine the color associated
+with each score.
 
-We also replaced the getTiles() method, which returned a map of points to tiles, with a method
-called getTileAt in order to prevent leaking the implementation details of the model.
-
-Similarly, we removed the buildTile method from the ReversiTile interface and instead implemented
+We removed the buildTile method from the ReversiTile interface and instead implemented
 that functionality within the view itself (using a Path2D.Double instead of a Polygon). This
 helps to further decouple the tiles from the view, and allows views to represent tiles using
 whatever data types they want.

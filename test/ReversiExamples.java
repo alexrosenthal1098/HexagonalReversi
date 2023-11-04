@@ -97,15 +97,16 @@ public class ReversiExamples {
     Assert.assertTrue(this.model.anyMoves()); // so does white
     Assert.assertFalse(this.model.isGameOver()); // therefore the game is not over yet
 
-    // player one starts off with a score of 3
-    Assert.assertEquals(3, this.model.getPlayer1Score());
+    // the current player (player 1 who moves first) starts off with a score of 3
+    Assert.assertEquals(3, this.model.getCurrentPlayerScore());
 
-    // player two does as well
-    Assert.assertEquals(3, this.model.getPlayer2Score());
+    // the other player (player 2 who moves second) does as well
+    Assert.assertEquals(3, this.model.getOtherPlayerScore());
 
     this.model.moveAt(1, 1); // after black plays a move
-    Assert.assertEquals(5, this.model.getPlayer1Score()); // player 1 has more points
-    Assert.assertEquals(2, this.model.getPlayer2Score()); // and player 2 has less
+    // the current player is now player 2
+    Assert.assertEquals(5, this.model.getOtherPlayerScore()); // player 1 has more points
+    Assert.assertEquals(2, this.model.getCurrentPlayerScore()); // and player 2 has less
   }
 
   @Test
@@ -148,8 +149,8 @@ public class ReversiExamples {
             "  _ O _ \n", this.view.toString());
 
     // The final score is player 1: 7, player 2: 5
-    Assert.assertEquals(7, this.model.getPlayer1Score());
-    Assert.assertEquals(5, this.model.getPlayer2Score());
+    Assert.assertEquals(7, this.model.getOtherPlayerScore());
+    Assert.assertEquals(5, this.model.getCurrentPlayerScore());
   }
 
 

@@ -36,16 +36,18 @@ public interface ReadOnlyReversiModel {
   boolean isGameOver();
 
   /**
-   * Gets the score of player 1, the player who went first and uses the black discs.
+   * Gets the score of the current player. Score is the number of disks of their color that are
+   * on the board
    * @return An int representing the score.
    */
-  int getPlayer1Score();
+  int getCurrentPlayerScore();
 
   /**
-   * Gets the score of player 1, the player who went second and uses the white discs.
+   * Gets the score of the current player. Score is the number of disks of their color that are
+   * on the board
    * @return An int representing the score.
    */
-  int getPlayer2Score();
+  int getOtherPlayerScore();
 
   /**
    * Returns the color of the player whose turn it currently is.
