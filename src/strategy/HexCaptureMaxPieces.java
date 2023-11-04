@@ -13,7 +13,7 @@ import model.ReadOnlyReversiModel;
 public class HexCaptureMaxPieces implements ReversiStrategy {
 
   @Override
-  public Point choseMove(ReadOnlyReversiModel model) {
+  public Point chooseMove(ReadOnlyReversiModel model) {
     if (model == null) { // check if the given model is null and throw exception if it is.
       throw new IllegalArgumentException("Model cannot be null.");
     }
@@ -30,7 +30,10 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
           bestMove = point; // set the bestMove to this point;
         }
         else if (capturedPieces == maxCaptured) { // if the captured pieces is equal to the max
-          // we must bread the tie by choosing the uppermost-leftmost tile
+          if (bestMove == null) { // if there is no best move currently
+            bestMove = point; // set it to be the current point
+          }
+          // if there is a best move, we must break the tie by choosing the uppermost-leftmost tile
           bestMove = this.upperLeftMostPoint(bestMove, point);
         }
       }
@@ -59,13 +62,14 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
     // of how many pieces were captured
     HexagonalReversi modelCopy = new HexagonalReversi(model);
 
-    int scoreBefore = model.getCurrentPlayerScore(); // get the current player's score before moving
+    int scoreBefore = modelCopy.getCurrentPlayerScore(); // get the current player's score before
     modelCopy.moveAt(tilePoint.x, tilePoint.y); // make the move
-    int scoreAfter = model.getCurrentPlayerScore(); // get the score after making the move
+    int scoreAfter = modelCopy.getOtherPlayerScore(); // get the score after making the move
 
     // return the difference in score - 1, which is equal to the number of
     // pieces captured during that turn
     return scoreAfter - scoreBefore - 1;
+
 
   }
 

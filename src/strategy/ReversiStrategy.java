@@ -17,6 +17,6 @@ public interface ReversiStrategy {
    * @throws IllegalArgumentException if the given model is null.
    * @throws IllegalStateException if there are no moves to play for the current player.
    */
-  Point choseMove(ReadOnlyReversiModel model) throws IllegalArgumentException,
+  Point chooseMove(ReadOnlyReversiModel model) throws IllegalArgumentException,
           IllegalStateException;
 }
