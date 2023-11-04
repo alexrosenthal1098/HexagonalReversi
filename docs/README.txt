@@ -82,10 +82,14 @@ instantiate the new model.
 
 While we already had methods to determine each player's score, the notion of having a Player 1
 and Player 2 was confusing, especially since there was no way of knowing if the current player
-is 1 or 2 after the first move. To fix this issue, we replaced the getPlayer1Score and
+is 1 or 2 unless it is the first move. To fix this issue, we replaced the getPlayer1Score and
 getPlayer2Score methods with getCurrentPlayerScore and getOtherPlayerScore. This removes the
 notion of a player 1 and 2 and makes it easier for the client to determine the color associated
 with each score.
+
+Similarly, we added a otherPlayerColor method so that at any given moment, a client knows the color
+of both players of the game instead of only knowing the color of the player whose turn it currently
+is.
 
 We removed the buildTile method from the ReversiTile interface and instead implemented
 that functionality within the view itself (using a Path2D.Double instead of a Polygon). This

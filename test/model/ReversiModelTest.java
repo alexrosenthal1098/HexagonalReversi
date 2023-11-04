@@ -99,9 +99,9 @@ public class ReversiModelTest {
 
   @Test
   public void testMoveAtChangesTurn() {
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
     this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
   }
 
 
@@ -109,17 +109,17 @@ public class ReversiModelTest {
   // tests for passTurn
   @Test
   public void testPassTurnBlackToWhite() {
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
     this.model.passTurn();
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
   }
 
   @Test
   public void testPassTurnWhiteToBlack() {
     this.model.passTurn();
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
     this.model.passTurn();
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
   }
 
 
@@ -190,10 +190,10 @@ public class ReversiModelTest {
     this.model.moveAt(2, -1);
     this.model.passTurn();
     this.model.moveAt(1, -2);
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
     Assert.assertTrue(this.model.anyMoves());
     this.model.passTurn();
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
     Assert.assertFalse(this.model.anyMoves());
 
   }
@@ -208,10 +208,10 @@ public class ReversiModelTest {
     this.model.moveAt(2, -1);
     this.model.passTurn();
     this.model.moveAt(-2, 1);
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
     Assert.assertTrue(this.model.anyMoves());
     this.model.passTurn();
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
     Assert.assertFalse(this.model.anyMoves());
   }
 
@@ -222,10 +222,10 @@ public class ReversiModelTest {
     this.model.moveAt(1, -2);
     this.model.passTurn();
     this.model.moveAt(-2, 1);
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
     Assert.assertFalse(this.model.anyMoves());
     this.model.passTurn();
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
     Assert.assertFalse(this.model.anyMoves());
   }
 
@@ -337,20 +337,20 @@ public class ReversiModelTest {
   // test getCurrentPlayer() {
   @Test
   public void testGetCurrentPlayerMakesACopy() {
-    Color firstCall = this.model.getCurrentPlayer();
-    Color secondCall = this.model.getCurrentPlayer();
+    Color firstCall = this.model.currentPlayerColor();
+    Color secondCall = this.model.currentPlayerColor();
     Assert.assertNotSame(firstCall, secondCall);
   }
 
   @Test
   public void testGetCurrentPlayerBlack() {
-    Assert.assertEquals(Color.BLACK, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
   }
 
   @Test
   public void testGetCurrentPlayerWHITE() {
     this.model.passTurn();
-    Assert.assertEquals(Color.WHITE, this.model.getCurrentPlayer());
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
   }
 
 

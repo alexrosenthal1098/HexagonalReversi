@@ -43,8 +43,8 @@ public interface ReadOnlyReversiModel {
   int getCurrentPlayerScore();
 
   /**
-   * Gets the score of the current player. Score is the number of disks of their color that are
-   * on the board
+   * Gets the score of the player who is not currently moving. Score is the number of disks of
+   * their color that are on the board
    * @return An int representing the score.
    */
   int getOtherPlayerScore();
@@ -53,7 +53,13 @@ public interface ReadOnlyReversiModel {
    * Returns the color of the player whose turn it currently is.
    * @return The color of the current player.
    */
-  Color getCurrentPlayer();
+  Color currentPlayerColor();
+
+  /**
+   * Returns the color of the player whose turn it currently is NOT.
+   * @return The color of the other player.
+   */
+  Color otherPlayerColor();
 
   /**
    * Returns the color of the disk that occupies the tile at the given x and y position.

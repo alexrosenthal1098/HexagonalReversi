@@ -75,20 +75,25 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   /**
-   * A copy constructor that takes in another HexagonalReversi model and initializes this
+   * A copy constructor that takes in another read-only reversi model and initializes this
    * model to be a copy of it.
-   * @param modelToCopy The model that is used to make a copy of.
+   * @param modelToCopy The read-only model that is used to make a copy of.
    */
-  public HexagonalReversi(HexagonalReversi modelToCopy) {
+  public HexagonalReversi(ReadOnlyReversiModel modelToCopy) {
     if (modelToCopy == null) { // check if the given model is null
       throw new IllegalArgumentException("Given model cannot be null"); // if it is, throw exception
     }
-    this.PLAYER_1_COLOR = new Color(modelToCopy.PLAYER_1_COLOR.getRGB()); // copy player 1 color
-    this.PLAYER_2_COLOR = new Color(modelToCopy.PLAYER_2_COLOR.getRGB()); // copy player 2 color
+
+    // it doesn't actually matter that this model's player 1 and 2 match up with the given
+    // model's players. It only matters that this model has the same colors and starts on the same
+    // move that the given model is currently on. So knowing this, we can just use getCurrentPlayer
+    // and getOtherPlayer to copy the colors
+    this.PLAYER_1_COLOR = new Color(modelToCopy.currentPlayerColor().getRGB());
+    this.PLAYER_2_COLOR = new Color(modelToCopy.otherPlayerColor().getRGB());
 
     // check the model to copy's current player and set our currentPlayer field to the appropriate
     // color (the reference to that color not a copy so we can use referential equality)
-    if (modelToCopy.currentPlayer.equals(this.PLAYER_1_COLOR)) {
+    if (modelToCopy.currentPlayerColor().equals(this.PLAYER_1_COLOR)) {
       this.currentPlayer = this.PLAYER_1_COLOR;
     }
     // the class invariant guarantees that currentPlayer equals either player 1 or 2
@@ -196,8 +201,23 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public Color getCurrentPlayer() {
+  public Color currentPlayerColor() {
     return new Color(this.currentPlayer.getRGB()); // copy and return the current player's color
+  }
+
+  @Override
+  public Color otherPlayerColor() {
+    // using referential equality because currentPlayer is simply a reference to either
+    // the player 1 or player 2 field, not a whole new object
+    if (this.currentPlayer == this.PLAYER_1_COLOR) { // if current player is player 1
+      return this.PLAYER_2_COLOR; // player 2 color
+    }
+    else { // if current player is player 2
+      return this.PLAYER_1_COLOR; // player 1 color
+    }
+
+    // this method can only return either player 1's or player 2's color,
+    // which enforces the invariant
   }
 
   @Override
@@ -265,20 +285,6 @@ public class HexagonalReversi implements ReversiModel {
     return board; // return the HexagonalBoard
   }
 
-  // returns the color of the player whose turn it currently is not
-  Color otherPlayerColor() {
-    // using referential equality because currentPlayer is simply a reference to either
-    // the player 1 or player 2 field, not a whole new object
-    if (this.currentPlayer == this.PLAYER_1_COLOR) { // if current player is player 1
-      return this.PLAYER_2_COLOR; // return player 2 color
-    }
-    else { // if current player is player 2
-      return this.PLAYER_1_COLOR; // return player 1 color
-    }
-
-    // this method can only return either player 1's or player 2's color,
-    // which enforces the invariant
-  }
 
   // returns the total number of tiles with the given disk color
   int tilesWithColor(Color color) {

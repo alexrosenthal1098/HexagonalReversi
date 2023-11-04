@@ -3,16 +3,17 @@ package strategy;
 import java.awt.*;
 
 import model.HexagonalReversi;
+import model.ReadOnlyReversiModel;
 
 /**
  * A strategy for determining the next move to play in a game of HexagonalReversi.
  * Finds the move that would capture the most pieces for the current player, and breaks ties
  * by selecting the uppermost-leftmost tile.
  */
-public class HexCaptureMaxPieces implements HexagonalReversiStrategy {
+public class HexCaptureMaxPieces implements ReversiStrategy {
 
   @Override
-  public Point choseMove(HexagonalReversi model) {
+  public Point choseMove(ReadOnlyReversiModel model) {
     if (model == null) { // check if the given model is null and throw exception if it is.
       throw new IllegalArgumentException("Model cannot be null.");
     }
@@ -45,7 +46,7 @@ public class HexCaptureMaxPieces implements HexagonalReversiStrategy {
 
   // return the number of pieces that would be captured if a move was made on the given model
   // at the given q and r position
-  int numCapturedPieces(Point tilePoint, HexagonalReversi model) {
+  int numCapturedPieces(Point tilePoint, ReadOnlyReversiModel model) {
     // check if the model or tilePoint is null and throw an exception if it is
     if (model == null || tilePoint == null) {
       throw new IllegalArgumentException("Model or tilePoint can't be null.");
