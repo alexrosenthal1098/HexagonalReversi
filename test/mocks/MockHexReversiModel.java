@@ -22,7 +22,26 @@ public class MockHexReversiModel extends HexagonalReversi {
   }
 
   @Override
-  public ReversiTile getTileAt(int x, int y) throws IllegalArgumentException {
-    return new PointyTopHexagon(Color.GREEN, Color.YELLOW);
+  public boolean isMovePossible(int q, int r) {
+    // used to ensure that the captureMaxPieces strategy actually chooses the move that
+    // captures the most amount of pieces
+    // make sure the strategy thinks a move at (2, 2) is possible and no other moves are possible
+    if (q == -1 && r == 2) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+
+  @Override
+  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
+    // used to test that a ReversiTextView cannot display a board with unfamiliar colors
+    // (not black and white)
+    if (q == 0 && r == 0) {
+      new PointyTopHexagon(Color.GREEN, Color.YELLOW);
+    }
+    return super.getTileAt(q, r);
   }
 }

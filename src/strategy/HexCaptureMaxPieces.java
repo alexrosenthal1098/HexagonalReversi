@@ -34,7 +34,7 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
             bestMove = point; // set it to be the current point
           }
           // if there is a best move, we must break the tie by choosing the uppermost-leftmost tile
-          bestMove = this.upperLeftMostPoint(bestMove, point);
+          bestMove = this.upperLeftMost(bestMove, point);
         }
       }
     }
@@ -74,7 +74,10 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
   }
 
   // decide which of the two given points is more
-  Point upperLeftMostPoint(Point point1, Point point2) {
+  Point upperLeftMost(Point point1, Point point2) {
+    if (point1 == null || point2 == null) {
+      throw new IllegalArgumentException("Given points cannot be null.");
+    }
     int delQ = point2.x - point1.x; // get difference in q value
     int delR  = point2.y - point1.y; // get difference in r value
 
