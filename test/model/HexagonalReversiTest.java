@@ -66,20 +66,8 @@ public class HexagonalReversiTest {
   }
 
   @Test
-  public void testCopyBoardConstructorRandomBoard() {
-    Map<Point, ReversiTile> board = new HashMap<>();
-    board.put(new Point(0, 0), new PointyTopHexagon());
-    board.put(new Point(1, 0), new PointyTopHexagon());
-    board.put(new Point(0, 1), new PointyTopHexagon());
-    this.model = new HexagonalReversi(board);
-    Assert.assertTrue(this.model.getTiles().containsKey(new Point(0, 0)));
-    Assert.assertTrue(this.model.getTiles().containsKey(new Point(0, 1)));
-    Assert.assertTrue(this.model.getTiles().containsKey(new Point(1, 0)));
-  }
-
-  @Test
   public void testCopyBoardConstructorUsingAnotherModel() {
-    ReversiModel newModel = new HexagonalReversi(this.model.getTiles());
+    ReversiModel newModel = new HexagonalReversi(this.model);
     Assert.assertEquals(this.model.getTiles().keySet(), newModel.getTiles().keySet());
   }
 

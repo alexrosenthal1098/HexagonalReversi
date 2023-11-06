@@ -23,8 +23,8 @@ import model.tile.ReversiTile;
 public class HexagonalReversi implements ReversiModel {
   //          FIELDS
   //////////////////////////////////////////
-  protected final Color PLAYER_1_COLOR = Color.BLACK; // The disk color of player one
-  protected final Color PLAYER_2_COLOR = Color.WHITE; // The disk color of player two
+  protected final Color PLAYER_1_COLOR; // The disk color of player one
+  protected final Color PLAYER_2_COLOR; // The disk color of player two
 
   // The HexagonalBoard uses axial coordinates as described on the "Coordinate Systems" section of the
   // website linked in the README.
@@ -66,6 +66,10 @@ public class HexagonalReversi implements ReversiModel {
       throw new IllegalArgumentException("The HexagonalBoard side length must be at least 3.");
     }
 
+    // initialize the player colors as black and white
+    this.PLAYER_1_COLOR = Color.BLACK;
+    this.PLAYER_2_COLOR = Color.WHITE;
+
     // the currentPlayer invariant is guaranteed by the constructor because it is
     // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
@@ -73,35 +77,26 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   /**
-   * A constructor that takes in a starting state of the board.
-   * @param startingBoard A map of point to tile that represents the starting board.
+   * A constructor that initializes this model to be a copy of the given model. The given model
+   * does not have to be hexagonal because the constructor simply copies the shape of the board
+   * and the disks on the tiles; it does not care about the shape of the individual tiles. This
+   * constructor also ensures that this model starts on the same player that the given model is
+   * currently on.
+   * @param modelToCopy The model to create a copy of.
    */
-  public HexagonalReversi(Map<Point, ReversiTile> startingBoard) {
-    if (startingBoard == null) { // check if the given board is null
-      throw new IllegalArgumentException("Given board cannot be null"); // if it is, throw exception
+  public HexagonalReversi(ReadOnlyReversiModel modelToCopy) {
+    if (modelToCopy == null) { // check if the given model is null
+      throw new IllegalArgumentException("Given model cannot be null"); // if it is, throw exception
     }
+
+    // set our player colors to the given model's colors, setting the current player as player 1
+    this.PLAYER_1_COLOR = modelToCopy.currentPlayerColor();
+    this.PLAYER_2_COLOR = modelToCopy.otherPlayerColor();
+
     this.currentPlayer = this.PLAYER_1_COLOR; // set current player to player 1
 
-    this.tiles = new HashMap<>(); // initialize this model's board
-    for (Point point : startingBoard.keySet()) { // iterate over all points in the starting board
-      ReversiTile tileToCopy = startingBoard.get(point); // get the tile we want to copy
-
-      if (tileToCopy.hasDisk()) { // if the tile has a disk, we need to copy the colors
-        Color topColor = new Color(tileToCopy.getTopColor().getRGB()); // copy top color
-        tileToCopy.flipDisk(); // flip the disk so we can see the bottom color
-        Color bottomColor = new Color(tileToCopy.getTopColor().getRGB()); // copy bottom color
-        tileToCopy.flipDisk(); // flip the disk back to its original state
-
-        // in this model's board, at a copy of the point place a copy of the tile
-        this.tiles.put(new Point(point), new PointyTopHexagon(topColor, bottomColor));
-      }
-      else { // if the tile at the point is empty, simple place a new empty tile at the point
-        this.tiles.put(new Point(point), new PointyTopHexagon());
-      }
-    }
+    this.tiles = modelToCopy.getTiles();
   }
-
-
 
   //          INTERFACE METHODS
   ///////////////////////////////////////////////
