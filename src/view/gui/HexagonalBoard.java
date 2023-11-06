@@ -3,14 +3,12 @@ package view.gui;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.*;
 
 import model.ReadOnlyReversiModel;
-import model.tile.PointyTopHexagon;
 import model.tile.ReversiTile;
 import util.HexReversiUtils;
 

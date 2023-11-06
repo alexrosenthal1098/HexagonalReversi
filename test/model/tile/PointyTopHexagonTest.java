@@ -30,14 +30,18 @@ public class PointyTopHexagonTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testCopyConstructorNullTile() {
-    ReversiTile tile = new PointyTopHexagon(null);
+  public void testDiskConstructorNullTopColor() {
+    ReversiTile tile = new PointyTopHexagon(null, Color.WHITE);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testDiskConstructorNullTBottomColor() {
+    ReversiTile tile = new PointyTopHexagon(Color.BLACK, null);
   }
 
   @Test
-  public void testCopyConstructorValidTile() {
-    this.hexTile.placeDisk(Color.BLUE, Color.PINK);
-    ReversiTile tile = new PointyTopHexagon(this.hexTile);
+  public void testDiskConstructorValidTile() {
+    ReversiTile tile = new PointyTopHexagon(Color.BLUE, Color.PINK);
     Assert.assertTrue(tile.hasDisk());
     Assert.assertEquals(Color.BLUE, tile.getTopColor());
     tile.flipDisk();

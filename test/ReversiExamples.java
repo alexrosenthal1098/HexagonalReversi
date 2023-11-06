@@ -68,10 +68,10 @@ public class ReversiExamples {
             "     _ _ _ _ _ _ \n", this.view.toString());
 
     // we can get the color of the disk that was placed using the axial coordinates of the tile
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(1, 1));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(1, 1).getTopColor());
 
     // we can also check that a disk was flipped
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(0, 1));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(0, 1).getTopColor());
   }
 
   @Test

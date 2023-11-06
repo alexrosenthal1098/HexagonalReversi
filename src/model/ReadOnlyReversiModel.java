@@ -62,15 +62,14 @@ public interface ReadOnlyReversiModel {
   Color otherPlayerColor();
 
   /**
-   * Returns the color of the disk that occupies the tile at the given x and y position.
+   * Returns the tile on the board at the given x and y position.
    * @param x The x position to look at.
    * @param y The y position to look at.
-   * @return The color of the disk that occupies the tile.
+   * @return The ReversiTile at that location
    * @throws IllegalArgumentException if the given x or y position are outside
    *                                  the bounds of the HexagonalBoard.
-   * @throws IllegalStateException if the tile at the given position is not occupied.
    */
-  Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
+  ReversiTile getTileAt(int x, int y) throws IllegalArgumentException;
 
   /**
    * Returns a map of points to tiles that represents the game board.

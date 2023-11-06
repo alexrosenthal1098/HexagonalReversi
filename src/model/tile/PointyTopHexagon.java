@@ -22,20 +22,18 @@ public class PointyTopHexagon implements ReversiTile {
   }
 
   /**
-   * A copy constructor that creates a hexagonal tile with the given tile's disc.
-   * @param tile The tile to copy.
+   * A constructor that creates a hexagonal tile with a disk with the given top and bottom color
+   * @param topColor the top color of the disk on this tile.
+   * @param bottomColor the bottom color of the disk on this tile.
    */
-  public PointyTopHexagon(ReversiTile tile) {
-    if (tile == null) { // check if the given tile is null
-      throw new IllegalArgumentException("Cannot copy a null tile."); // if it is, throw exception
+  public PointyTopHexagon(Color topColor, Color bottomColor) {
+    if (topColor == null || bottomColor == null) { // check if either color is null
+      // if either is null, throw exception
+      throw new IllegalArgumentException("Cannot create a tile with a null color disk.");
     }
-    this.hasDisk = tile.hasDisk(); // copy if the given tile has a disk
-    if (this.hasDisk) { // if the tile has a disk
-      this.topColor = new Color(tile.getTopColor().getRGB()); // copy the top color
-      tile.flipDisk(); // flip the disk to see bottom color
-      this.bottomColor = new Color(tile.getTopColor().getRGB()); // copy the bottom color
-      tile.flipDisk(); // flip the disk back over
-    }
+    this.hasDisk = true; // set hasDisk to true
+    this.topColor = new Color(topColor.getRGB()); // copy the top color
+    this.bottomColor = new Color(bottomColor.getRGB()); // copy the bottom color
   }
 
   @Override

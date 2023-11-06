@@ -6,10 +6,13 @@ import org.junit.Test;
 
 import java.awt.Point;
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+import model.tile.PointyTopHexagon;
 import model.tile.ReversiTile;
+import util.HexReversiUtils;
 
 /**
  * Tests for private/protected methods of HexagonalReversi.
@@ -21,6 +24,65 @@ public class HexagonalReversiTest {
   public void setUp() {
     this.model = new HexagonalReversi();
   }
+
+
+  // tests for constructors
+  @Test
+  public void testEmptyConstructor() {
+    this.model = new HexagonalReversi();
+    Assert.assertEquals(6, HexReversiUtils.getBoardSideLength(this.model.getTiles()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructorNegativeSideLength() {
+    this.model = new HexagonalReversi(-3);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor0SideLength() {
+    this.model = new HexagonalReversi(0);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructorPositiveButLessThan3SideLength() {
+    this.model = new HexagonalReversi(2);
+  }
+
+  @Test
+  public void testConstructorSideLength3() {
+    this.model = new HexagonalReversi(3);
+    Assert.assertEquals(3, HexReversiUtils.getBoardSideLength(this.model.getTiles()));
+  }
+
+  @Test
+  public void testConstructorSideLength15() {
+    this.model = new HexagonalReversi(15);
+    Assert.assertEquals(15, HexReversiUtils.getBoardSideLength(this.model.getTiles()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCopyBoardConstructorNullBoard() {
+    this.model = new HexagonalReversi(null);
+  }
+
+  @Test
+  public void testCopyBoardConstructorRandomBoard() {
+    Map<Point, ReversiTile> board = new HashMap<>();
+    board.put(new Point(0, 0), new PointyTopHexagon());
+    board.put(new Point(1, 0), new PointyTopHexagon());
+    board.put(new Point(0, 1), new PointyTopHexagon());
+    this.model = new HexagonalReversi(board);
+    Assert.assertTrue(this.model.getTiles().containsKey(new Point(0, 0)));
+    Assert.assertTrue(this.model.getTiles().containsKey(new Point(0, 1)));
+    Assert.assertTrue(this.model.getTiles().containsKey(new Point(1, 0)));
+  }
+
+  @Test
+  public void testCopyBoardConstructorUsingAnotherModel() {
+    ReversiModel newModel = new HexagonalReversi(this.model.getTiles());
+    Assert.assertEquals(this.model.getTiles().keySet(), newModel.getTiles().keySet());
+  }
+
 
 
   // tests for makeBoard()
@@ -245,45 +307,5 @@ public class HexagonalReversiTest {
     Assert.assertTrue(directions.contains(new Point(1, 0))); // right
     Assert.assertTrue(directions.contains(new Point(0, 1))); // down and right
     Assert.assertTrue(directions.contains(new Point(-1, 1))); // down and left
-  }
-
-
-
-  // tests for copyBoard
-  @Test(expected = NullPointerException.class)
-  public void testCopyBoardNullException() {
-    this.model.copyBoard(null);
-  }
-
-  @Test
-  public void testCopyBoardActuallyMakesCopy() {
-    HexagonalReversi copyModel = new HexagonalReversi(3);
-    Map<Point, ReversiTile> board1 = this.model.copyBoard(copyModel);
-    Map<Point, ReversiTile> board2 = this.model.copyBoard(copyModel);
-    Assert.assertNotSame(board1, board2);
-  }
-
-  @Test
-  public void testCopyBoardHasCorrectTiles() {
-    HexagonalReversi copyModel = new HexagonalReversi(3);
-    copyModel.moveAt(1, 1);
-    copyModel.moveAt(1, -2);
-    Map<Point, ReversiTile> newBoard = this.model.copyBoard(copyModel);
-
-    for (int q = -2; q <= 2; q++) {
-      for (int r = -2; r <= 2; r++) {
-        ReversiTile newTile = newBoard.get(new Point(q, r));
-        if (newTile != null) {
-          ReversiTile oldTile = copyModel.getTiles().get(new Point(q, r));
-          Assert.assertEquals(oldTile.hasDisk(), newTile.hasDisk());
-          if (newTile.hasDisk()) {
-            Assert.assertEquals(oldTile.getTopColor(), newTile.getTopColor());
-            oldTile.flipDisk();
-            newTile.flipDisk();
-            Assert.assertEquals(oldTile.getTopColor(), newTile.getTopColor());
-          }
-        }
-      }
-    }
   }
 }

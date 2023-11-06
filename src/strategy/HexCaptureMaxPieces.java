@@ -60,7 +60,7 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
 
     // make a copy of the model so that we can make the move and let the model handle the logic
     // of how many pieces were captured
-    HexagonalReversi modelCopy = new HexagonalReversi(model);
+    HexagonalReversi modelCopy = new HexagonalReversi(model.getTiles());
 
     int scoreBefore = modelCopy.getCurrentPlayerScore(); // get the current player's score before
     modelCopy.moveAt(tilePoint.x, tilePoint.y); // make the move

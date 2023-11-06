@@ -47,14 +47,14 @@ public class ReversiModelTest {
   @Test
   public void testMoveAtPlacesCorrectDiskAtGivenTilePlayer1() {
     this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(1, 1));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(1, 1).getTopColor());
   }
 
   @Test
   public void testMoveAtPlacesCorrectDiskAtGivenTilePlayer2() {
     this.model.passTurn();
     this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.WHITE, this.model.getColorAt(1, 1));
+    Assert.assertEquals(Color.WHITE, this.model.getTileAt(1, 1).getTopColor());
   }
 
 
@@ -62,39 +62,39 @@ public class ReversiModelTest {
   public void testMoveAtFlipsTilesToTheRight() {
     this.model.passTurn();
     this.model.moveAt(-1, -1);
-    Assert.assertEquals(Color.WHITE, this.model.getColorAt(0, -1));
+    Assert.assertEquals(Color.WHITE, this.model.getTileAt(0, -1).getTopColor());
   }
 
   @Test
   public void testMoveAtFlipsTilesToTheLeft() {
     this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(0, 1));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(0, 1).getTopColor());
   }
 
   @Test
   public void testMoveAtFlipsTilesUpAndRight() {
     this.model.moveAt(-2, 1);
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(0, -1));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(0, -1).getTopColor());
   }
 
   @Test
   public void testMoveAtFlipsTilesDownAndRight() {
     this.model.moveAt(-1, -1);
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(-1, 0));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(-1, 0).getTopColor());
   }
 
   @Test
   public void testMoveAtFlipsTilesUpAndLeft() {
     this.model.passTurn();
     this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.WHITE, this.model.getColorAt(1, 0));
+    Assert.assertEquals(Color.WHITE, this.model.getTileAt(1, 0).getTopColor());
   }
 
   @Test
   public void testMoveAtFlipsTilesDownAndLeft() {
     this.model.passTurn();
     this.model.moveAt(2, -1);
-    Assert.assertEquals(Color.WHITE, this.model.getColorAt(1, 0));
+    Assert.assertEquals(Color.WHITE, this.model.getTileAt(1, 0).getTopColor());
   }
 
   @Test
@@ -355,42 +355,43 @@ public class ReversiModelTest {
 
 
 
-  // test getColorAt()
+  // test getTileAt
   @Test(expected = IllegalArgumentException.class)
-  public void testGetColorAtIllegalCoordinatesTooHigh() {
+  public void testGetTileAtIllegalCoordinatesTooHigh() {
     this.model.moveAt(20, 0);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testGetColorAtIllegalCoordinatesTooLow() {
+  public void testGetTileAtIllegalCoordinatesTooLow() {
     this.model.moveAt(-3, -9);
   }
 
-  @Test(expected = IllegalStateException.class)
-  public void testGetColorAtTileWithNoDisk() {
-    this.model.getColorAt(0, 0);
+  @Test
+  public void testGetTileAtReturnsCopy() {
+    ReversiTile tile1 = this.model.getTileAt(0, 1);
+    ReversiTile tile2 = this.model.getTileAt(0, 1);
+    Assert.assertNotSame(tile1, tile2);
   }
 
   @Test
-  public void testGetColorAtBlack() {
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(0, -1));
+  public void testGetTileAtBlackDisk() {
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(0, -1).getTopColor());
   }
 
   @Test
-  public void testGetColorAtWhite() {
-    Assert.assertEquals(Color.WHITE, this.model.getColorAt(1, -1));
+  public void testGetTileAtWhiteDisk() {
+    Assert.assertEquals(Color.WHITE, this.model.getTileAt(1, -1).getTopColor());
   }
 
   @Test
-  public void testGetColorAtNewTilePlaced() {
+  public void testGetTileAtNoDisk() {
+    Assert.assertFalse(this.model.getTileAt(1, 1).hasDisk());
+  }
+
+  @Test
+  public void testGetTileAtTileAfterItsFlipped() {
     this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(1, 1));
-  }
-
-  @Test
-  public void testGetColorAtTileAfterItsFlipped() {
-    this.model.moveAt(1, 1);
-    Assert.assertEquals(Color.BLACK, this.model.getColorAt(0, 1));
+    Assert.assertEquals(Color.BLACK, this.model.getTileAt(0, 1).getTopColor());
   }
 
 

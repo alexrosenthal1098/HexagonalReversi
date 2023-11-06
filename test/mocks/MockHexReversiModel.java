@@ -22,17 +22,7 @@ public class MockHexReversiModel extends HexagonalReversi {
   }
 
   @Override
-  public Color getColorAt(int x, int y) throws IllegalArgumentException, IllegalStateException {
-    return Color.GREEN;
-  }
-
-  @Override
-  public Map<Point, ReversiTile> getTiles() {
-    Map<Point, ReversiTile> fakeBoard = super.getTiles();
-    ReversiTile tile = new PointyTopHexagon();
-    tile.placeDisk(Color.GREEN, Color.YELLOW);
-    fakeBoard.put(new Point(0, 0), tile);
-
-    return fakeBoard;
+  public ReversiTile getTileAt(int x, int y) throws IllegalArgumentException {
+    return new PointyTopHexagon(Color.GREEN, Color.YELLOW);
   }
 }
