@@ -80,9 +80,12 @@ public class HexagonalReversi implements ReversiModel {
     if (startingBoard == null) { // check if the given board is null
       throw new IllegalArgumentException("Given board cannot be null"); // if it is, throw exception
     }
+    this.currentPlayer = this.PLAYER_1_COLOR; // set current player to player 1
+
     this.tiles = new HashMap<>(); // initialize this model's board
     for (Point point : startingBoard.keySet()) { // iterate over all points in the starting board
       ReversiTile tileToCopy = startingBoard.get(point); // get the tile we want to copy
+
       if (tileToCopy.hasDisk()) { // if the tile has a disk, we need to copy the colors
         Color topColor = new Color(tileToCopy.getTopColor().getRGB()); // copy top color
         tileToCopy.flipDisk(); // flip the disk so we can see the bottom color
@@ -110,7 +113,7 @@ public class HexagonalReversi implements ReversiModel {
     }
 
     if (!this.isMovePossible(q, r)) { // if the move is not possible
-      throw new IllegalStateException("This move is not possible.");
+      throw new IllegalStateException("This move is not possible. " + q + " " + r);
     }
 
     // place a disk on the tile that was moved at with the current player's color face up
