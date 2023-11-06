@@ -188,8 +188,5 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
     return minSide /
             (HexReversiUtils.getBoardSideLength(this.model.getTiles()) * 2 - 1) /
             Math.sqrt(3);
-
-    // todo try going back to the width < height thing but this time use diagonal to calculate height
-    // with trigonometry
   }
 }
