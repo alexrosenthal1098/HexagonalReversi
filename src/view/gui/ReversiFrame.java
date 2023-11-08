@@ -16,4 +16,11 @@ public class ReversiFrame extends JFrame implements ReversiView {
     this.board = new HexagonalBoard(800, 800, model);
     add(this.board);
   }
+
+
+  // this method will be left blank until the ReversiView interface is finalized
+  @Override
+  public void addLister(ReversiListener listener) {
+
+  }
 }

@@ -44,9 +44,13 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
     this.model = model; // set the model
     this.tiles = new HashMap<>(); // initialize the tile map
     this.disks = new HashMap<>(); // initialize the disk map
-    this.initBoard(); // initialize the key set of the tiles map
 
-    setSize(new Dimension(width, height)); // set the size of the model
+    // initialize the keySet of the tiles map using the model
+    for (Point tilePoint : this.model.getTiles().keySet()) { // iterate over all tile points
+      this.tiles.put(tilePoint, null); // put the point in the map with null as a placeholder
+    }
+
+    setPreferredSize(new Dimension(width, height)); // set the size of the model
     setBackground(this.BACKGROUND_COLOR); // set the background color
   }
 
@@ -94,7 +98,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   }
 
   @Override
-  public void addFeature(BoardFeatures feature) {
+  public void addListener(BoardListener listener) {
 
   }
 
@@ -103,15 +107,6 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   //////////////////////////////////////////
   // all helpers are declared protected so that subclasses can change how the board is set up
   // and updated along with details of how the tiles and disks are drawn
-
-  // initializes the keySet of the tiles map so that we only have to find all the tiles on the
-  // board once. doing this allows the updateBoard method to already know what all the tile points
-  // are, which makes it easier and more efficient to update the board.
-  protected void initBoard() {
-    for (Point tilePoint : this.model.getTiles().keySet()) { // iterate over all tile points
-      this.tiles.put(tilePoint, null); // put the point in the map with null as a placeholder
-    }
-  }
 
   // updates the board by calculating the shape of each tile and disk depending on the
   // size of the window

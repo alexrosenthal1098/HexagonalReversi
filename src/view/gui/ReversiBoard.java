@@ -31,9 +31,8 @@ public interface ReversiBoard {
 
 
   /**
-   * Add a class to the list of those who implement features of this board so that they
-   * can be updated with feature-level events.
-   * @param feature The class to add to the list of features.
+   * Add a class to the list of those who listen to events from this board.
+   * @param listener The class to add to the list of listeners.
    */
-  void addFeature(BoardFeatures feature);
+  void addListener(BoardListener listener);
 }
