@@ -42,7 +42,8 @@ public class HexCaptureMaxPiecesTest {
   public void testChooseMoveTriesEveryMove() {
     this.captureMax.chooseMove(this.mockWithLog);
     for (Point point : this.mockWithLog.getTiles().keySet()) {
-      Assert.assertTrue(this.mockWithLog.log.toString().contains(point.x + " " + point.y));
+      Assert.assertTrue(this.mockWithLog.log.toString().contains(
+              "(" + point.x + ", " + point.y + ")"));
     }
   }
 

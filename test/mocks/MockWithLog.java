@@ -18,7 +18,7 @@ public class MockWithLog extends HexagonalReversi {
 
   @Override
   public boolean isMovePossible(int q, int r) {
-    this.log.append(q).append(" ").append(r).append("\n");
+    this.log.append("Trying a move at: (").append(q).append(", ").append(r).append(")\n");
     return super.isMovePossible(q, r);
   }
 }
