@@ -3,7 +3,9 @@ package view.gui;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.*;
@@ -30,6 +32,9 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   protected final Map<Point, Shape> tiles; // a map of point on the board to tile shape
   protected final Map<Shape, Color> disks; // a map of disk shape to disk color
 
+  protected Point selectedTile; // the tile that is currently selected
+  protected final List<BoardListener> boardListeners;
+
 
 
   //          CONSTRUCTORS
@@ -52,6 +57,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
 
     setPreferredSize(new Dimension(width, height)); // set the size of the model
     setBackground(this.BACKGROUND_COLOR); // set the background color
+    boardListeners = new ArrayList<BoardListener>();
   }
 
 
@@ -84,22 +90,46 @@ public class HexagonalBoard extends JPanel implements ReversiBoard {
   //////////////////////////////////////////
   @Override
   public void selectTile(Point tileLocation) throws IllegalArgumentException, IllegalStateException {
+    if (tileLocation == null || !this.tiles.containsKey(tileLocation)) {
+      throw new IllegalArgumentException("Invalid tile location.");
+    }
 
+    if (this.selectedTile != null) {
+      throw new IllegalStateException("A tile is already selected.");
+    }
+
+    this.selectedTile = tileLocation;
+
+    // Notify listeners about tile selection
+    for (BoardListener listener : this.boardListeners) {
+      listener.tileSelected(tileLocation);
+    }
   }
 
   @Override
   public void deselectCurrentTile() {
+    if (this.selectedTile != null) {
+      this.selectedTile = null;
 
+      // Notify listeners about tile deselection
+      for (BoardListener listener : this.boardListeners) {
+        listener.tileDeselected();
+      }
+    }
   }
 
   @Override
   public Point getSelectedTile() throws IllegalStateException {
-    return null;
+    if (this.selectedTile == null) {
+      throw new IllegalStateException("No tile is currently selected.");
+    }
+
+    return this.selectedTile;
   }
 
   @Override
   public void addListener(BoardListener listener) {
-
+    this.boardListeners.add(listener);
   }
 
 
