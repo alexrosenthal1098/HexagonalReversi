@@ -11,8 +11,9 @@ public interface ReversiBoard {
   /**
    * Select the tile at the given location. Only one tile can be selected at a time.
    * @param tileLocation The point referring to the coordinates of the tile on the HexagonalBoard.
-   * @throws IllegalArgumentException if the given point is null or the point is not on the HexagonalBoard.
-   * @throws IllegalStateException if there is already a tile selected.
+   * @throws IllegalArgumentException if the given point is null
+   * @throws IllegalStateException if there is already a tile selected or the given point is
+   *                               not on the board.
    */
   void selectTile(Point tileLocation) throws IllegalArgumentException, IllegalStateException;
 
