@@ -79,8 +79,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
       public void actionPerformed(ActionEvent e) {
         System.out.println("Move made.");
         for (BoardListener listener : listeners) {
-          // inform each listener that a move has been made
-          listener.moveMade(); // pass the currently selectedTile, which can be empty
+          listener.moveMade(); // inform each listener that a move has been made
         }
       }
     };
