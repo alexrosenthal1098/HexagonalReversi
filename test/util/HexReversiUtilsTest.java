@@ -3,7 +3,7 @@ package util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +11,9 @@ import model.HexagonalReversi;
 import model.ReversiModel;
 import model.tile.ReversiTile;
 
+/**
+ * A class that contains tests for the HexReversiUtils class.
+ */
 public class HexReversiUtilsTest {
 
   // tests for getBoardSideLength

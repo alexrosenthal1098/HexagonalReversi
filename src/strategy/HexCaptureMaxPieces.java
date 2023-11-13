@@ -1,6 +1,6 @@
 package strategy;
 
-import java.awt.*;
+import java.awt.Point;
 
 import model.HexagonalReversi;
 import model.ReadOnlyReversiModel;

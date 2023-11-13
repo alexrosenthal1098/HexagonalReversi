@@ -14,15 +14,15 @@ public class PointyTopHexagon implements ReversiTile {
 
   /**
    * An empty constructor for a PointyTopHexagon that is not occupied.
-   * Used to initialize the state of the HexagonalBoard in a Reversi game before
-   *  players have made any moves.
+   * Used to initialize the state of the board in a Reversi game before
+   * players have made any moves.
    */
   public PointyTopHexagon() {
     this.hasDisk = false;
   }
 
   /**
-   * A constructor that creates a hexagonal tile with a disk with the given top and bottom color
+   * A constructor that creates a hexagonal tile with a disk with the given top and bottom color.
    * @param topColor the top color of the disk on this tile.
    * @param bottomColor the bottom color of the disk on this tile.
    */

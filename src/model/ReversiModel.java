@@ -3,7 +3,7 @@ package model;
 
 /**
  * An interface that defines the methods necessary to play the game Reversi.
- * The game can be played using any regular polygon as a tile and any HexagonalBoard arrangement
+ * The game can be played using any regular polygon as a tile and any board arrangement
  * that can be represented using two-dimensional coordinates.
  */
 public interface ReversiModel extends ReadOnlyReversiModel {
@@ -13,7 +13,7 @@ public interface ReversiModel extends ReadOnlyReversiModel {
    * @param x The x position to move at.
    * @param y The y position to move at.
    * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the HexagonalBoard.
+   *                                  the bounds of the board.
    * @throws IllegalStateException if the current player cannot make a move on that tile.
    */
   void moveAt(int x, int y) throws IllegalArgumentException, IllegalStateException;

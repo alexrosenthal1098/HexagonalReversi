@@ -83,7 +83,7 @@ public class ReversiExamples {
 
     Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor()); // black moves next
     this.model.moveAt(2, -1); // black plays a move
-    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor()); // the turn is passed to white
+    Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor()); // turn is passed to white
     this.model.passTurn(); // white passes their turn
     Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor()); // the turn is back to black
   }

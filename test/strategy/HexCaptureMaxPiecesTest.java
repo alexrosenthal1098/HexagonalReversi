@@ -4,13 +4,16 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
 
 import mocks.MockHexReversiModel;
 import mocks.MockWithLog;
 import model.HexagonalReversi;
 import model.ReversiModel;
 
+/**
+ * A class that holds tests for the HexCaptureMaxPieces strategy.
+ */
 public class HexCaptureMaxPiecesTest {
   HexCaptureMaxPieces captureMax;
   ReversiModel model;
@@ -19,11 +22,11 @@ public class HexCaptureMaxPiecesTest {
 
   @Before
   public void setUp() {
-  this.captureMax = new HexCaptureMaxPieces();
-  this.model = new HexagonalReversi(6);
-  this.mockModel = new MockHexReversiModel(6);
-  this.mockWithLog = new MockWithLog(6);
-}
+    this.captureMax = new HexCaptureMaxPieces();
+    this.model = new HexagonalReversi(6);
+    this.mockModel = new MockHexReversiModel(6);
+    this.mockWithLog = new MockWithLog(6);
+  }
 
   // tests for chooseMove
   @Test(expected = IllegalArgumentException.class)

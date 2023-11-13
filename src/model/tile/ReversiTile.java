@@ -1,9 +1,9 @@
 package model.tile;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
- * A tile of a Reversi game HexagonalBoard that can be occupied by a disk with one color on each side.
+ * A tile on a Reversi game board that can be occupied by a disk with one color on each side.
  * A tile is represented by a regular polygon, which is a shape with equal side lengths
  * and equal interior angles. (ex. equilateral triangle, square, regular pentagon, etc.)
  */

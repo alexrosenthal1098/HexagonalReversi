@@ -1,9 +1,7 @@
 package view.gui;
 
-import java.awt.Point;
-
 /**
- * An interface that describes the features that a Reversi game HexagonalBoard can provide.
+ * An interface that describes the features that a Reversi game's board can provide.
  */
 public interface BoardListener {
   /**

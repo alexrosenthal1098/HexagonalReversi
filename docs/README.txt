@@ -95,3 +95,18 @@ We removed the buildTile method from the ReversiTile interface and instead imple
 that functionality within the view itself (using a Path2D.Double instead of a Polygon). This
 helps to further decouple the tiles from the view, and allows views to represent tiles using
 whatever data types they want.
+
+    STRATEGIES
+We added the ReversiStrategy interface which requires an implementing class to choose a move to
+play on the given model. This will allow players to implement various strategies when choosing the
+move. Not allowing the strategies to modify the model and instead making them return a move helps
+to decouple the strategies/player's and the model.
+
+    VIEW
+The board supports selecting a tile by clicking on it and deselecting by clicking on the same tile
+or by clicking off of the board. Only one tile can be selected at a time, and only tiles that do
+not have a disk can be selected. The board also supports pressing the key 'm' to signify that the
+player wants to make a move at the given tile or the key 'p' to signify they want to pass the turn.
+These events do not directly mutate the model, rather they notify a listener of the board of the
+event so that they can act accordingly. For example, if a player selects a tile that is not a valid
+move but they press 'm' anyway, it is up to the controller to handle that error.

@@ -19,7 +19,7 @@ public interface ReadOnlyReversiModel {
    * @param y The y position to look at.
    * @return True if the move is possible, false if it is not.
    * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the HexagonalBoard.
+   *                                  the bounds of the board.
    */
   boolean isMovePossible(int x, int y) throws IllegalArgumentException;
 
@@ -67,7 +67,7 @@ public interface ReadOnlyReversiModel {
    * @param y The y position to look at.
    * @return The ReversiTile at that location
    * @throws IllegalArgumentException if the given x or y position are outside
-   *                                  the bounds of the HexagonalBoard.
+   *                                  the bounds of the board.
    */
   ReversiTile getTileAt(int x, int y) throws IllegalArgumentException;
 

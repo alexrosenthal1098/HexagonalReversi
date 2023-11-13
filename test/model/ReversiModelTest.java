@@ -4,7 +4,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.Map;
 
 import model.tile.ReversiTile;

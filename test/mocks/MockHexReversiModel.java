@@ -1,8 +1,6 @@
 package mocks;
 
-import java.awt.Point;
 import java.awt.Color;
-import java.util.Map;
 
 import model.HexagonalReversi;
 import model.tile.PointyTopHexagon;

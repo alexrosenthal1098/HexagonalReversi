@@ -18,7 +18,7 @@ import model.tile.ReversiTile;
  * The game has two players. Player one moves first and uses the black side of the disks while
  * player two, who moves second, uses the white side. The location of each tile is described
  * using axial coordinates (q and r in place of x and y respectively) where the center of the
- * HexagonalBoard is at the point (0, 0).
+ * board is at the point (0, 0).
  */
 public class HexagonalReversi implements ReversiModel {
   //          FIELDS
@@ -26,12 +26,12 @@ public class HexagonalReversi implements ReversiModel {
   protected final Color PLAYER_1_COLOR; // The disk color of player one
   protected final Color PLAYER_2_COLOR; // The disk color of player two
 
-  // The HexagonalBoard uses axial coordinates as described on the "Coordinate Systems" section of the
+  // The board uses axial coordinates as described on the "Coordinate Systems" section of the
   // website linked in the README.
   // The x value of a point is the q value of the tile, which is like a diagonal column
   // The y value of a point is the r value of the tile, which is a horizontal row
 
-  // A map that represents the HexagonalBoard using each hexagon's axial coordinates
+  // A map that represents the board using each hexagon's axial coordinates
   private final Map<Point, ReversiTile> tiles;
   protected Color currentPlayer; // The disk color of the current player
 
@@ -49,7 +49,7 @@ public class HexagonalReversi implements ReversiModel {
   //          CONSTRUCTORS
   //////////////////////////////////////////
   /**
-   * A constructor that takes in no arguments and initializes the HexagonalBoard with a default
+   * A constructor that takes in no arguments and initializes the board with a default
    * side length of 6.
    */
   public HexagonalReversi() {
@@ -57,13 +57,13 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   /**
-   * A constructor that specifies the side length of the HexagonalBoard, in tiles.
+   * A constructor that specifies the side length of the board, in tiles.
    * The side length must be at least 3.
-   * @param sideLength The side length, in hexagons, of each edge of the HexagonalBoard.
+   * @param sideLength The side length, in hexagons, of each edge of the board.
    */
   public HexagonalReversi(int sideLength) {
     if (sideLength < 3) { // check if the side length is at least three, guaranteeing the invariant
-      throw new IllegalArgumentException("The HexagonalBoard side length must be at least 3.");
+      throw new IllegalArgumentException("The board side length must be at least 3.");
     }
 
     // initialize the player colors as black and white
@@ -73,7 +73,7 @@ public class HexagonalReversi implements ReversiModel {
     // the currentPlayer invariant is guaranteed by the constructor because it is
     // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
-    this.tiles = this.makeBoard(sideLength); // initialize the state of the HexagonalBoard
+    this.tiles = this.makeBoard(sideLength); // initialize the state of the board
   }
 
   /**
@@ -102,7 +102,7 @@ public class HexagonalReversi implements ReversiModel {
   ///////////////////////////////////////////////
   @Override
   public void moveAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
-    // if the HexagonalBoard does not contain the given coordinate
+    // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -134,7 +134,7 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public boolean isMovePossible(int q, int r) throws IllegalArgumentException {
-    // if the HexagonalBoard does not contain the given coordinate
+    // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -213,8 +213,9 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
-    // if the HexagonalBoard does not contain the given coordinate
+  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException,
+          IllegalStateException {
+    // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
     }
@@ -253,10 +254,11 @@ public class HexagonalReversi implements ReversiModel {
 
   //          HELPER METHODS
   ////////////////////////////////////////////
-  // initializes the state of the HexagonalBoard using the given side length of the hexagon
-  // this method has the protected modifier in case a subclass wants to use a different HexagonalBoard shape
+  // initializes the state of the board using the given side length of the hexagon
+  // this method has the protected modifier in case a subclass wants to use a different
+  // board shape
   protected Map<Point, ReversiTile> makeBoard(int side) {
-    Map<Point, ReversiTile> board = new HashMap<>(); // create the HexagonalBoard
+    Map<Point, ReversiTile> board = new HashMap<>(); // create the board
 
     // this code is adapted from the "Movement Range" section of the website linked in the README
     // the "n" value is the number of tiles away from the center a tile can be, which in our case
@@ -279,7 +281,7 @@ public class HexagonalReversi implements ReversiModel {
     board.get(new Point(-1, 1)).placeDisk(this.PLAYER_1_COLOR, this.PLAYER_2_COLOR);
     board.get(new Point(-1, 0)).placeDisk(this.PLAYER_2_COLOR, this.PLAYER_1_COLOR);
 
-    return board; // return the HexagonalBoard
+    return board; // return the board
   }
 
 
@@ -302,8 +304,8 @@ public class HexagonalReversi implements ReversiModel {
   // record and return all tiles with a disk color of the player that is not the current turn
   // stop once you've reached a tile that has the current player's disk, and return the list
   // (NOT including the tile with the current player's color)
-  // if you reach the end of the HexagonalBoard or an empty tile before finding a tile with the current
-  // player's color, return an empty list.
+  // if you reach the end of the board or an empty tile before finding a tile with the
+  // current  player's color, return an empty list.
   List<ReversiTile> tilesToFlip(Point start, int delQ, int delR) {
     Objects.requireNonNull(start);
     Point curPoint = new Point(start); // copy the starting point to avoid mutating the argument
@@ -311,7 +313,7 @@ public class HexagonalReversi implements ReversiModel {
 
     List<ReversiTile> foundTiles = new ArrayList<>(); // initialize list to hold recorded tiles
 
-    while (this.tiles.containsKey(curPoint)) { // while the current point is still on the HexagonalBoard
+    while (this.tiles.containsKey(curPoint)) { // while the current point is still on the board
       ReversiTile tileAtPoint = this.tiles.get(curPoint); // get the tile at the current point
       if (!tileAtPoint.hasDisk()) { // if the tile does not have a disk
         return new ArrayList<>(); // return an empty list
@@ -327,11 +329,11 @@ public class HexagonalReversi implements ReversiModel {
       return foundTiles; // so return the tiles we've found
 
     }
-    // if we left the while loop that means we reached a point that is off the HexagonalBoard
+    // if we left the while loop that means we reached a point that is off the board
     return new ArrayList<>(); // so return an empty list
   }
 
-  // get a list representing all 6 directions that you can move in on the HexagonalBoard
+  // get a list representing all 6 directions that you can move in on the board
   // a direction is represented by a point holding the change in q and change in r
   // for a step in that direction
   List<Point> getDirections() {

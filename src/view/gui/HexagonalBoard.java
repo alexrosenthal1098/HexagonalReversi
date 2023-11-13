@@ -53,9 +53,13 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
   protected final List<BoardListener> listeners; // a list of listeners to this board
 
 
-
-  //          CONSTRUCTORS
-  //////////////////////////////////////////
+  /**
+   * A constructor for a hexagonal board that takes in the boards width and height along with
+   * a read-only model to construct the board from.
+   * @param width The width of the board in pixels.
+   * @param height The height of the board in pixels.
+   * @param model The ReadOnlyReversiModel to create a board from.
+   */
   public HexagonalBoard(int width, int height, ReadOnlyReversiModel model) {
     if (model == null) { // check if the model is null and throw exception if it is
       throw new IllegalArgumentException("Cannot create a board from a null model.");
@@ -256,7 +260,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
   //////////////////////////////////////////
   @Override
   public void mouseClicked(MouseEvent e) {
-
+    // event not used
   }
 
   @Override
@@ -291,16 +295,16 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
 
   @Override
   public void mouseReleased(MouseEvent e) {
-
+    // event not used
   }
 
   @Override
   public void mouseEntered(MouseEvent e) {
-
+    // event not used
   }
 
   @Override
   public void mouseExited(MouseEvent e) {
-
+    // event not used
   }
 }

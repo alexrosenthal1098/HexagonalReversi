@@ -4,10 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.Point;
 import java.awt.Color;
-import java.awt.Polygon;
-import java.util.Arrays;
 
 /**
  * A class that holds tests for the PointyTopHexagon class.

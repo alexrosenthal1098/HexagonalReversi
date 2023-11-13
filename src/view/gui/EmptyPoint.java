@@ -13,4 +13,9 @@ public class EmptyPoint extends Point {
   public boolean equals(Object other) {
     return other instanceof EmptyPoint;
   }
+
+  @Override
+  public int hashCode() {
+    return this.x * 31 + this.y;
+  }
 }

@@ -6,11 +6,9 @@ import org.junit.Test;
 
 import java.awt.Point;
 import java.awt.Color;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
-import model.tile.PointyTopHexagon;
 import model.tile.ReversiTile;
 import util.HexReversiUtils;
 
