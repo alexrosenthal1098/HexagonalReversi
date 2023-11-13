@@ -24,12 +24,7 @@ public class MockHexReversiModel extends HexagonalReversi {
     // used to ensure that the captureMaxPieces strategy actually chooses the move that
     // captures the most amount of pieces
     // make sure the strategy thinks a move at (2, 2) is possible and no other moves are possible
-    if (q == -1 && r == 2) {
-      return true;
-    }
-    else {
-      return false;
-    }
+    return q == -1 && r == 2;
   }
 
 
