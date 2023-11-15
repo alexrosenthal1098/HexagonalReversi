@@ -38,7 +38,7 @@ public class HexCaptureMaxPiecesTest {
   public void testChooseMoveWithMock() {
     // the mock model will make the strategy think that the only possible move is (-1, 2)
     // so the strategy should return that move
-    Assert.assertEquals(new Point(-1, 2), this.captureMax.chooseMove(this.mockModel));
+    Assert.assertEquals(new Point(-1, 2), this.captureMax.chooseMove(this.mockModel).get());
   }
 
   @Test
@@ -52,13 +52,13 @@ public class HexCaptureMaxPiecesTest {
 
   @Test
   public void testChooseMoveDoesntModifyModel() {
-    Point move = this.captureMax.chooseMove(this.model);
+    Point move = this.captureMax.chooseMove(this.model).get();
     Assert.assertFalse(this.model.getTileAt(move.x, move.y).hasDisk());
   }
 
   @Test
   public void testChooseMoveBreaksTies() {
-    Assert.assertEquals(new Point(1, -2), this.captureMax.chooseMove(this.model));
+    Assert.assertEquals(new Point(1, -2), this.captureMax.chooseMove(this.model).get());
   }
 
   @Test
@@ -66,17 +66,17 @@ public class HexCaptureMaxPiecesTest {
     this.model.moveAt(2, -1);
     this.model.passTurn();
     this.model.moveAt(-1, 2);
-    Assert.assertEquals(new Point(-1, 3), this.captureMax.chooseMove(this.model));
+    Assert.assertEquals(new Point(-1, 3), this.captureMax.chooseMove(this.model).get());
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testChooseMoveNoMovesLeft() {
     this.model.moveAt(1, 1);
     this.model.passTurn();
     this.model.moveAt(1, -2);
     this.model.passTurn();
     this.model.moveAt(-2, 1);
-    this.captureMax.chooseMove(this.model);
+    Assert.assertTrue(this.captureMax.chooseMove(this.model).isEmpty());
   }
 
 

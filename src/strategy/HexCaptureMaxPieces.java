@@ -1,6 +1,7 @@
 package strategy;
 
 import java.awt.Point;
+import java.util.Optional;
 
 import model.HexagonalReversi;
 import model.ReadOnlyReversiModel;
@@ -13,13 +14,13 @@ import model.ReadOnlyReversiModel;
 public class HexCaptureMaxPieces implements ReversiStrategy {
 
   @Override
-  public Point chooseMove(ReadOnlyReversiModel model) {
+  public Optional<Point> chooseMove(ReadOnlyReversiModel model) {
     if (model == null) { // check if the given model is null and throw exception if it is.
       throw new IllegalArgumentException("Model cannot be null.");
     }
 
     int maxCaptured = -1; // initialize a var to hold the maximum number of captured pieces
-    Point bestMove = null; // initialize the best move
+    Optional<Point> bestMove = Optional.empty(); // initialize the best move
 
     for (Point point : model.getTiles().keySet()) { // iterate over all tile points on the board
       if (model.isMovePossible(point.x, point.y)) { // if this point is a valid tile to move at
@@ -27,23 +28,19 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
         int capturedPieces = this.numCapturedPieces(point, model);
         if (capturedPieces > maxCaptured) { // if the captured pieces is greater than the max
           maxCaptured = capturedPieces; // update the maximum captured pieces
-          bestMove = point; // set the bestMove to this point;
+          bestMove = Optional.of(point); // set the bestMove to this point;
         }
         else if (capturedPieces == maxCaptured) { // if the captured pieces is equal to the max
-          if (bestMove == null) { // if there is no best move currently
-            bestMove = point; // set it to be the current point
+          if (bestMove.isEmpty()) { // if there is no best move currently
+            bestMove = Optional.of(point); // set it to be the current point
           }
           // if there is a best move, we must break the tie by choosing the uppermost-leftmost tile
-          bestMove = this.upperLeftMost(bestMove, point);
+          bestMove = Optional.of(this.upperLeftMost(bestMove.get(), point));
         }
       }
     }
 
-    if (bestMove == null) {
-      throw new IllegalStateException("No moves left for the current player.");
-    }
-
-    return bestMove;
+    return bestMove; // return the optional best move
   }
 
 
