@@ -252,6 +252,11 @@ public class HexagonalReversi implements ReversiModel {
     return clone; // return the copy of tiles
   }
 
+  @Override
+  public void addListener(ModelListener listener, boolean firstPlayer) {
+
+  }
+
   //          HELPER METHODS
   ////////////////////////////////////////////
   // initializes the state of the board using the given side length of the hexagon

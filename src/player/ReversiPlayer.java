@@ -5,15 +5,13 @@ import java.awt.Point;
 import model.ReadOnlyReversiModel;
 
 /**
- * An interface that represents player actions for the game Reversi.
+ * An interface that represents a player of a game of Reversi.
  */
 public interface ReversiPlayer {
 
   /**
-   * Returns the coordinates of the tile that this player has chosen to make the next
-   * move at on the given model.
-   * @param model The model (read-only) that the player uses to choose the next move.
-   * @return A Point representing the location of the tile to play at.
+   * Add a class to the list of those who listen to events from this player.
+   * @param listener The class to add to the list of listeners.
    */
-  Point getNextMove(ReadOnlyReversiModel model);
+  void addListener(PlayerActionListener listener);
 }

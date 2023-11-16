@@ -76,4 +76,14 @@ public interface ReadOnlyReversiModel {
    * @return A map of Point to ReversiTile.
    */
   Map<Point, ReversiTile> getTiles();
+
+  /**
+   * Register the given listener to this model so that it receives event notifications from
+   * this model. The listener can register as either the first or second player using the
+   * boolean parameter.
+   * @param listener The class that listens to this model.
+   * @param firstPlayer A boolean representing which player to listen to. True for player one
+   *                    (the one that moves first), false for player two.
+   */
+  void addListener(ModelListener listener, boolean firstPlayer);
 }
