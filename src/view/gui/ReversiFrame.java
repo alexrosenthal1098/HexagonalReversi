@@ -26,7 +26,7 @@ public class ReversiFrame extends JFrame implements ReversiView {
     add(this.board);
 
     this.titleLabel = new JLabel(title);
-    add(this.titleLabel); // todo make this north
+    //add(this.titleLabel); // todo make this north
 
     this.setVisible(true);
   }
