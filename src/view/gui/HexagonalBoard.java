@@ -83,7 +83,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
       public void actionPerformed(ActionEvent e) {
         System.out.println("Move made.");
         for (BoardListener listener : listeners) {
-          listener.moveMade(); // inform each listener that a move has been made
+          listener.moveMade(getSelectedTile()); // inform each listener that a move has been made
         }
       }
     };
@@ -169,6 +169,9 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
 
   @Override
   public void addListener(BoardListener listener) {
+    if (listener == null) { // check if listener and throw exception if it is
+      throw new IllegalArgumentException("Cannot register a null listener.");
+    }
     this.listeners.add(listener); // add the given listener to our list of listeners
   }
 

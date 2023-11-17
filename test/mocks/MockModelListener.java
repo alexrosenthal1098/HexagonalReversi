@@ -11,4 +11,9 @@ public class MockModelListener implements ModelListener {
   public void yourTurn() {
     log.append("Your turn\n");
   }
+
+  @Override
+  public void modelChanged() {
+
+  }
 }

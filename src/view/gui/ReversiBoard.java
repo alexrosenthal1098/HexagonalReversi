@@ -2,6 +2,8 @@ package view.gui;
 
 import java.awt.Point;
 
+import model.ModelListener;
+
 /**
  * A view for a Reversi game board along with the actions it can perform. A class that
  * implements this interface is free to represent the board however it likes.
@@ -34,6 +36,7 @@ public interface ReversiBoard {
   /**
    * Add a class to the list of those who listen to events from this board.
    * @param listener The class to add to the list of listeners.
+   * @throws IllegalArgumentException if the given listener is null.
    */
-  void addListener(BoardListener listener);
+  void addListener(BoardListener listener) throws IllegalArgumentException;
 }

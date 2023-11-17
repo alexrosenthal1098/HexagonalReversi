@@ -57,16 +57,14 @@ public interface ReadOnlyReversiModel {
   /**
    * Returns the color of the player whose turn it currently is.
    * @return The color of the current player.
-   * @throws IllegalStateException if the game has not started.
    */
-  Color currentPlayerColor() throws IllegalStateException;
+  Color currentPlayerColor();
 
   /**
    * Returns the color of the player whose turn it currently is NOT.
    * @return The color of the other player.
-   * @throws IllegalStateException if the game has not started.
    */
-  Color otherPlayerColor() throws IllegalStateException;
+  Color otherPlayerColor();
 
   /**
    * Returns the tile on the board at the given x and y position.
@@ -75,14 +73,19 @@ public interface ReadOnlyReversiModel {
    * @return The ReversiTile at that location
    * @throws IllegalArgumentException if the given x or y position are outside
    *                                  the bounds of the board.
-   * @throws IllegalStateException if the game has not started.
    */
-  ReversiTile getTileAt(int x, int y) throws IllegalArgumentException, IllegalStateException;
+  ReversiTile getTileAt(int x, int y) throws IllegalArgumentException;
 
   /**
    * Returns a map of points to tiles that represents the game board.
    * @return A map of Point to ReversiTile.
-   * @throws IllegalStateException if the game has not started.
    */
-  Map<Point, ReversiTile> getTiles() throws IllegalStateException;
+  Map<Point, ReversiTile> getTiles();
+
+  /**
+   * Add a listener to this model that can only view it as read-only.
+   * @param listener The listener of this read-only model.
+   * @throws IllegalArgumentException if the given listener is null.
+   */
+  void addReadOnlyListener(ModelListener listener) throws IllegalArgumentException;
 }

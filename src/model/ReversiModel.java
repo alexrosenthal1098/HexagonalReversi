@@ -32,9 +32,11 @@ public interface ReversiModel extends ReadOnlyReversiModel {
    * @param listener The class that listens to this model.
    * @param firstPlayer A boolean representing which player to listen to. True for player one
    *                    (the one that moves first), false for player two.
+   * @throws IllegalArgumentException if the given listener is null.
    * @throws IllegalStateException if the game has already started.
    */
-  void addListener(ModelListener listener, boolean firstPlayer) throws IllegalStateException;
+  void addListener(ModelListener listener, boolean firstPlayer) throws IllegalArgumentException,
+          IllegalStateException;
 
   /**
    * Starts the game, notifies listeners of the first player that their turn has started.

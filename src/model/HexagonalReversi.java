@@ -23,8 +23,11 @@ import model.tile.ReversiTile;
 public class HexagonalReversi implements ReversiModel {
   //          FIELDS
   //////////////////////////////////////////
-  private Map<ModelListener, Boolean> listeners;
-  private boolean gameStarted;
+  // a map of a player listener and a boolean representing if they listen to player one or two
+  // (true for player one, false for player two)
+  private Map<ModelListener, Boolean> playerListeners;
+  private List<ModelListener> readOnlyListeners; // a list of read-only model listeners
+  private boolean gameStarted; // true if the game has started, false if it has not
   protected final Color PLAYER_1_COLOR; // The disk color of player one
   protected final Color PLAYER_2_COLOR; // The disk color of player two
 
@@ -67,7 +70,8 @@ public class HexagonalReversi implements ReversiModel {
     if (sideLength < 3) { // check if the side length is at least three, guaranteeing the invariant
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
-    this.listeners = new HashMap<>(); // initialize empty map of listeners
+    this.playerListeners = new HashMap<>(); // initialize empty map of player listeners
+    this.readOnlyListeners = new ArrayList<>(); // initialize empty list of read-only listeners
     this.gameStarted = false; // initialize game started to false
 
     // initialize the player colors as black and white
@@ -95,7 +99,8 @@ public class HexagonalReversi implements ReversiModel {
 
     // initialize listeners to be empty because we do not want listeners of the model to copy to
     // receives notifications for this new model
-    this.listeners = new HashMap<>();
+    this.playerListeners = new HashMap<>(); // initialize empty map of player listeners
+    this.readOnlyListeners = new ArrayList<>(); // initialize empty list of read-only listeners
 
     this.gameStarted = false; // initialize gameStarted to false
 
@@ -145,7 +150,8 @@ public class HexagonalReversi implements ReversiModel {
     // either player 1's color or player 2's color.
     this.currentPlayer = this.otherPlayerColor(); // set the current player to the other player
 
-    this.notifyTurnStarted(); // notify listeners that their turn started
+    this.notifyTurnStarted(); // notify player listeners that their turn started
+    this.notifyModelChanged(); // notify read-only listeners that the model changed
   }
 
   @Override
@@ -220,16 +226,12 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public Color currentPlayerColor() throws IllegalStateException {
-    this.checkGameStarted(); // check if the game has started
-
+  public Color currentPlayerColor() {
     return new Color(this.currentPlayer.getRGB()); // copy and return the current player's color
   }
 
   @Override
-  public Color otherPlayerColor() throws IllegalStateException {
-    this.checkGameStarted(); // check if the game has started
-
+  public Color otherPlayerColor() {
     // using referential equality because currentPlayer is simply a reference to either
     // the player 1 or player 2 field, not a whole new object
     if (this.currentPlayer == this.PLAYER_1_COLOR) { // if current player is player 1
@@ -244,10 +246,7 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException,
-          IllegalStateException {
-    this.checkGameStarted(); // check if the game has started
-
+  public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException {
     // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
@@ -275,9 +274,7 @@ public class HexagonalReversi implements ReversiModel {
    * @return A map of Point to ReversiTile.
    */
   @Override
-  public Map<Point, ReversiTile> getTiles() throws IllegalStateException {
-    this.checkGameStarted(); // check if the game has started
-
+  public Map<Point, ReversiTile> getTiles() {
     // create deep copy of the tiles map
     Map<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
     for (Point point: this.tiles.keySet()) { // iterate over all the keys
@@ -288,14 +285,27 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
+  public void addReadOnlyListener(ModelListener listener) throws IllegalArgumentException {
+    if (listener == null) { // check if the listener is null and throw exception if it is
+      throw new IllegalArgumentException("Cannot register a null listener.");
+    }
+
+    // add the listener to this list of read only listeners
+    this.readOnlyListeners.add(listener);
+  }
+
+  @Override
   public void addListener(ModelListener listener, boolean firstPlayer)
-          throws IllegalStateException {
+          throws IllegalArgumentException, IllegalStateException {
     if (this.gameStarted) { // check if the game has already started and throw error
       throw new IllegalStateException("Cannot add a listener once the game has started.");
     }
+    if (listener == null) { // check if the listener is null and throw exception if it is
+      throw new IllegalArgumentException("Cannot register a null listener.");
+    }
 
     // put the listener and their firstPlayer boolean in the listeners map
-    this.listeners.put(listener, firstPlayer);
+    this.playerListeners.put(listener, firstPlayer);
   }
 
   @Override
@@ -322,11 +332,19 @@ public class HexagonalReversi implements ReversiModel {
   final void notifyTurnStarted() {
     boolean player1 = this.currentPlayer == this.PLAYER_1_COLOR; // is it player 1's turn
 
-    for (ModelListener listener : this.listeners.keySet()) { // iterate through all listeners
+    // iterate through all player listeners
+    for (ModelListener listener : this.playerListeners.keySet()) {
       // if the player they listen to is the current turn
-      if (this.listeners.get(listener) == player1) {
+      if (this.playerListeners.get(listener) == player1) {
         listener.yourTurn(); // notify them it's their turn.
       }
+    }
+  }
+
+  final void notifyModelChanged() {
+    // iterate through all readOnly listeners and notify them that the model has changed
+    for (ModelListener listener : this.readOnlyListeners) {
+      listener.modelChanged();
     }
   }
 

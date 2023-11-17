@@ -10,8 +10,9 @@ public interface PlayerActionListener {
   /**
    * An event that responds to the player attempting to move at the given tile location.
    * @param tile A point representing the location of the tile the move was made at.
+   * @throws IllegalArgumentException if the given Point is null.
    */
-  void moveMade(Point tile);
+  void moveMade(Point tile) throws IllegalArgumentException;
 
   /**
    * An event that responds to an attempt to pass the turn of the player.

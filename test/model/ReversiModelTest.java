@@ -453,6 +453,12 @@ public class ReversiModelTest {
     this.model.addListener(new MockModelListener(), false);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddListenerNull() {
+    this.model = new HexagonalReversi();
+    this.model.addListener(null, false);
+  }
+
   @Test
   public void testAddListenerBeforeGameStarted() {
     this.model = new HexagonalReversi();
