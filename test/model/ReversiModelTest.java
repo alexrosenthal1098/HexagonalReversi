@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.Color;
 import java.util.Map;
 
+import mocks.MockModelListener;
 import model.tile.ReversiTile;
 
 
@@ -21,6 +22,7 @@ public class ReversiModelTest {
   @Before
   public void setUp() {
     this.model = new HexagonalReversi(6);
+    this.model.startGame();
   }
 
 
@@ -185,6 +187,7 @@ public class ReversiModelTest {
   @Test
   public void testAnyMovesNoMovesForPlayer2ButMovesForPlayer1() {
     this.model = new HexagonalReversi(3);
+    this.model.startGame();
     this.model.moveAt(1, 1);
     this.model.moveAt(-1, 2);
     this.model.passTurn();
@@ -202,6 +205,7 @@ public class ReversiModelTest {
   @Test
   public void testAnyMovesNoMovesForPlayer1ButMovesForPlayer2() {
     this.model = new HexagonalReversi(3);
+    this.model.startGame();
     this.model.passTurn();
     this.model.moveAt(1, 1);
     this.model.passTurn();
@@ -414,6 +418,7 @@ public class ReversiModelTest {
   @Test
   public void testGetTilesCorrectSize2() {
     this.model = new HexagonalReversi(4);
+    this.model.startGame();
     Assert.assertEquals(37, this.model.getTiles().keySet().size());
     Assert.assertEquals(37, this.model.getTiles().values().size());
   }
@@ -438,5 +443,74 @@ public class ReversiModelTest {
     Assert.assertEquals(Color.WHITE, tiles.get(new Point(0, 1)).getTopColor());
     Assert.assertEquals(Color.BLACK, tiles.get(new Point(-1, 1)).getTopColor());
     Assert.assertEquals(Color.WHITE, tiles.get(new Point(-1, 0)).getTopColor());
+  }
+
+
+
+  // tests for addListener()
+  @Test(expected = IllegalStateException.class)
+  public void testAddListenerAfterGameStarted() {
+    this.model.addListener(new MockModelListener(), false);
+  }
+
+  @Test
+  public void testAddListenerBeforeGameStarted() {
+    this.model = new HexagonalReversi();
+    this.model.addListener(new MockModelListener(), false);
+    Assert.assertTrue(true);
+  }
+
+  @Test
+  public void testAddListenerPlayer1AfterStartGame() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, true);
+    this.model.startGame();
+    Assert.assertTrue(listener.log.toString().contains("Your turn"));
+  }
+
+  @Test
+  public void testAddListenerPlayer2AfterStartGame() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, false);
+    this.model.startGame();
+    Assert.assertFalse(listener.log.toString().contains("Your turn"));
+  }
+
+  @Test
+  public void testAddListenerPlayer2AfterMove() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, false);
+    this.model.startGame();
+    this.model.passTurn();
+    Assert.assertTrue(listener.log.toString().contains("Your turn"));
+  }
+
+  @Test
+  public void testAddListenerPlayer1After2Moves() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, true);
+    this.model.startGame();
+    this.model.passTurn();
+    this.model.passTurn();
+    Assert.assertTrue(listener.log.toString().contains("Your turn\nYour turn"));
+  }
+
+
+
+  // tests for startGame
+  @Test(expected = IllegalStateException.class)
+  public void testStartGameAlreadyStarted() {
+    this.model.startGame();
+  }
+
+  @Test
+  public void testStartGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.startGame();
+    Assert.assertTrue(true);
   }
 }

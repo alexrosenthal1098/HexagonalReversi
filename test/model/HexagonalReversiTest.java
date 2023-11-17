@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.Map;
 import java.util.List;
 
+import mocks.MockModelListener;
 import model.tile.ReversiTile;
 import util.HexReversiUtils;
 
@@ -21,6 +22,7 @@ public class HexagonalReversiTest {
   @Before
   public void setUp() {
     this.model = new HexagonalReversi();
+    this.model.startGame();
   }
 
 
@@ -28,6 +30,7 @@ public class HexagonalReversiTest {
   @Test
   public void testEmptyConstructor() {
     this.model = new HexagonalReversi();
+    this.model.startGame();
     Assert.assertEquals(6, HexReversiUtils.getBoardSideLength(this.model.getTiles()));
   }
 
@@ -49,12 +52,14 @@ public class HexagonalReversiTest {
   @Test
   public void testConstructorSideLength3() {
     this.model = new HexagonalReversi(3);
+    this.model.startGame();
     Assert.assertEquals(3, HexReversiUtils.getBoardSideLength(this.model.getTiles()));
   }
 
   @Test
   public void testConstructorSideLength15() {
     this.model = new HexagonalReversi(15);
+    this.model.startGame();
     Assert.assertEquals(15, HexReversiUtils.getBoardSideLength(this.model.getTiles()));
   }
 
@@ -66,6 +71,7 @@ public class HexagonalReversiTest {
   @Test
   public void testCopyBoardConstructorUsingAnotherModel() {
     ReversiModel newModel = new HexagonalReversi(this.model);
+    newModel.startGame();
     Assert.assertEquals(this.model.getTiles().keySet(), newModel.getTiles().keySet());
   }
 
@@ -293,5 +299,64 @@ public class HexagonalReversiTest {
     Assert.assertTrue(directions.contains(new Point(1, 0))); // right
     Assert.assertTrue(directions.contains(new Point(0, 1))); // down and right
     Assert.assertTrue(directions.contains(new Point(-1, 1))); // down and left
+  }
+
+
+
+  // tests for checkGameStarted
+  @Test
+  public void testCheckGameStartedWhenItIsStarted() {
+    this.model.checkGameStarted();
+    Assert.assertTrue(true);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testCheckGameStartedWhenNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.checkGameStarted();
+  }
+
+
+
+  // tests for notifyTurnStarted()
+  @Test
+  public void testNotifyTurnStartedPlayer1BeforeStartGame() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, true);
+    this.model.notifyTurnStarted();
+    Assert.assertTrue(listener.log.toString().contains("Your turn"));
+  }
+
+  @Test
+  public void testNotifyTurnStartedPlayer2BeforeStartGame() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, false);
+    this.model.notifyTurnStarted();
+    Assert.assertFalse(listener.log.toString().contains("Your turn"));
+  }
+
+  @Test
+  public void testNotifyTurnStartedPlayer2AfterMove() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, false);
+    this.model.startGame();
+    this.model.passTurn();
+    this.model.notifyTurnStarted();
+    Assert.assertTrue(listener.log.toString().contains("Your turn"));
+  }
+
+  @Test
+  public void testNotifyTurnStartedPlayer2After2Moves() {
+    this.model = new HexagonalReversi();
+    MockModelListener listener = new MockModelListener();
+    this.model.addListener(listener, true);
+    this.model.startGame();
+    this.model.passTurn();
+    this.model.passTurn();
+    this.model.notifyTurnStarted();
+    Assert.assertTrue(listener.log.toString().contains("Your turn\nYour turn"));
   }
 }

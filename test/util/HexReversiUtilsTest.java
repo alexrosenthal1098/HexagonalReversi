@@ -39,6 +39,7 @@ public class HexReversiUtilsTest {
   @Test
   public void testGetBoardSideLength6() {
     ReversiModel hexModel = new HexagonalReversi(6);
+    hexModel.startGame();
 
     Assert.assertEquals(6, HexReversiUtils.getBoardSideLength(hexModel.getTiles()));
   }

@@ -18,6 +18,7 @@ public class ReversiExamples {
   public void setUp() {
     // A HexagonalReversi model allows you to specify the side length of the HexagonalBoard in tiles
     this.model = new HexagonalReversi(6);
+    this.model.startGame();
 
     // a HexReversiTextView only accepts the type HexagonalReversi, not just any ReversiModel,
     // because that is the only type of HexagonalBoard it knows how to draw
@@ -113,6 +114,7 @@ public class ReversiExamples {
   public void testPlayingAFullGame() {
     // Here is an example of a full game being played on a smaller HexagonalBoard
     this.model = new HexagonalReversi(3);
+    this.model.startGame();
     this.view = new HexReversiTextView(this.model);
 
     // The HexagonalBoard looks like this at the start:

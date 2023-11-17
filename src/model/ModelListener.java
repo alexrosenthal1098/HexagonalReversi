@@ -6,7 +6,7 @@ package model;
 public interface ModelListener {
 
   /**
-   * Notifies the listener that it is now their turn.
+   * Notifies the listener for a certain player that it is now their turn.
    */
   void yourTurn();
 }

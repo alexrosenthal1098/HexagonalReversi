@@ -19,6 +19,7 @@ public class HexReversiTextViewTest {
   @Before
   public void setUp() {
     this.model = new HexagonalReversi(6);
+    this.model.startGame();
     this.view = new HexReversiTextView(this.model);
   }
 
@@ -57,6 +58,7 @@ public class HexReversiTextViewTest {
   @Test
   public void testToStringStartingBoardOfLength3() {
     this.model = new HexagonalReversi(3);
+    this.model.startGame();
     this.view = new HexReversiTextView(this.model);
     Assert.assertEquals("" +
             "  _ _ _ \n" +
@@ -69,6 +71,7 @@ public class HexReversiTextViewTest {
   @Test
   public void testToStringStartingBoardOfLength15() {
     HexagonalReversi model = new HexagonalReversi(10);
+    model.startGame();
     this.view = new HexReversiTextView(model);
     Assert.assertEquals("" +
             "         _ _ _ _ _ _ _ _ _ _ \n" +

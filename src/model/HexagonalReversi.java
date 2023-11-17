@@ -23,6 +23,8 @@ import model.tile.ReversiTile;
 public class HexagonalReversi implements ReversiModel {
   //          FIELDS
   //////////////////////////////////////////
+  private Map<ModelListener, Boolean> listeners;
+  private boolean gameStarted;
   protected final Color PLAYER_1_COLOR; // The disk color of player one
   protected final Color PLAYER_2_COLOR; // The disk color of player two
 
@@ -37,7 +39,7 @@ public class HexagonalReversi implements ReversiModel {
 
   // INVARIANT: currentPlayer equals PLAYER_1_COLOR or PLAYER_2_COLOR
 
-  // The color and currentPlyaer fields are declared as protected so that subclasses can change
+  // The color and currentPlayer fields are declared as protected so that subclasses can change
   // each player's color along with how the turn is decided (maybe each player goes twice in a row)
 
   // The tiles and sideLength fields are kept private because we want to ensure that the shape of
@@ -65,6 +67,8 @@ public class HexagonalReversi implements ReversiModel {
     if (sideLength < 3) { // check if the side length is at least three, guaranteeing the invariant
       throw new IllegalArgumentException("The board side length must be at least 3.");
     }
+    this.listeners = new HashMap<>(); // initialize empty map of listeners
+    this.gameStarted = false; // initialize game started to false
 
     // initialize the player colors as black and white
     this.PLAYER_1_COLOR = Color.BLACK;
@@ -89,6 +93,12 @@ public class HexagonalReversi implements ReversiModel {
       throw new IllegalArgumentException("Given model cannot be null"); // if it is, throw exception
     }
 
+    // initialize listeners to be empty because we do not want listeners of the model to copy to
+    // receives notifications for this new model
+    this.listeners = new HashMap<>();
+
+    this.gameStarted = false; // initialize gameStarted to false
+
     // set our player colors to the given model's colors, setting the current player as player 1
     this.PLAYER_1_COLOR = modelToCopy.currentPlayerColor();
     this.PLAYER_2_COLOR = modelToCopy.otherPlayerColor();
@@ -102,6 +112,8 @@ public class HexagonalReversi implements ReversiModel {
   ///////////////////////////////////////////////
   @Override
   public void moveAt(int q, int r) throws IllegalArgumentException, IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
@@ -125,15 +137,22 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public void passTurn() {
+  public void passTurn() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // the currentPlayer is only modified in the passTurn method
     // the invariant is enforced because the otherPlayerColor helper can only return
     // either player 1's color or player 2's color.
     this.currentPlayer = this.otherPlayerColor(); // set the current player to the other player
+
+    this.notifyTurnStarted(); // notify listeners that their turn started
   }
 
   @Override
-  public boolean isMovePossible(int q, int r) throws IllegalArgumentException {
+  public boolean isMovePossible(int q, int r) throws IllegalArgumentException,
+          IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
@@ -155,7 +174,9 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public boolean anyMoves() {
+  public boolean anyMoves() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     for (Point tilePoint : this.tiles.keySet()) { // iterate over all tile locations
       if (!this.tiles.get(tilePoint).hasDisk()) { // if the tile does not have a disk
         // check if a move is possible at that tile
@@ -170,7 +191,9 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public boolean isGameOver() {
+  public boolean isGameOver() throws IllegalStateException{
+    this.checkGameStarted(); // check if the game has started
+
     boolean curPlayerHasMoves = this.anyMoves(); // check if the current player has any moves
     this.passTurn(); // pass the turn to the next player
     boolean nextPlayerHasMoves = this.anyMoves(); // check if they have any moves
@@ -181,24 +204,32 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public int getCurrentPlayerScore() {
+  public int getCurrentPlayerScore() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // use a helper to find tiles with player one's disk color
     return this.tilesWithColor(this.currentPlayer);
   }
 
   @Override
-  public int getOtherPlayerScore() {
+  public int getOtherPlayerScore() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // use a helper to find tiles with player two's disk color
     return this.tilesWithColor(this.otherPlayerColor());
   }
 
   @Override
-  public Color currentPlayerColor() {
+  public Color currentPlayerColor() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     return new Color(this.currentPlayer.getRGB()); // copy and return the current player's color
   }
 
   @Override
-  public Color otherPlayerColor() {
+  public Color otherPlayerColor() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // using referential equality because currentPlayer is simply a reference to either
     // the player 1 or player 2 field, not a whole new object
     if (this.currentPlayer == this.PLAYER_1_COLOR) { // if current player is player 1
@@ -215,6 +246,8 @@ public class HexagonalReversi implements ReversiModel {
   @Override
   public ReversiTile getTileAt(int q, int r) throws IllegalArgumentException,
           IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // if the board does not contain the given coordinate
     if (!this.tiles.containsKey(new Point(q, r))) {
       throw new IllegalArgumentException("Invalid coordinates"); // throw an exception
@@ -238,11 +271,13 @@ public class HexagonalReversi implements ReversiModel {
   /**
    * Returns a map that represents the coordinate location of each hexagonal tile
    * in the board. The location of the tiles are specified using axial coordinates, with
-   * the first tile's coordinates being (0, 0).
+   * the center tile's coordinates being (0, 0).
    * @return A map of Point to ReversiTile.
    */
   @Override
-  public Map<Point, ReversiTile> getTiles() {
+  public Map<Point, ReversiTile> getTiles() throws IllegalStateException {
+    this.checkGameStarted(); // check if the game has started
+
     // create deep copy of the tiles map
     Map<Point, ReversiTile> clone = new HashMap<>(); // create a new hashmap
     for (Point point: this.tiles.keySet()) { // iterate over all the keys
@@ -253,12 +288,49 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public void addListener(ModelListener listener, boolean firstPlayer) {
+  public void addListener(ModelListener listener, boolean firstPlayer)
+          throws IllegalStateException {
+    if (this.gameStarted) { // check if the game has already started and throw error
+      throw new IllegalStateException("Cannot add a listener once the game has started.");
+    }
 
+    // put the listener and their firstPlayer boolean in the listeners map
+    this.listeners.put(listener, firstPlayer);
+  }
+
+  @Override
+  public void startGame() throws IllegalStateException {
+    if (this.gameStarted) { // check if the game has already started and throw error
+      throw new IllegalStateException("The game has already started.");
+    }
+
+    this.gameStarted = true; // set gameStarted to true
+    this.notifyTurnStarted(); // notify listeners that their turn started
   }
 
   //          HELPER METHODS
   ////////////////////////////////////////////
+
+  // throws an exception if the game has not started
+  final void checkGameStarted() {
+    if (!this.gameStarted) {
+      throw new IllegalStateException("Game has not started.");
+    }
+  }
+
+  // notifies the listeners of the current player that their turn has started
+  final void notifyTurnStarted() {
+    boolean player1 = this.currentPlayer == this.PLAYER_1_COLOR; // is it player 1's turn
+
+    for (ModelListener listener : this.listeners.keySet()) { // iterate through all listeners
+      // if the player they listen to is the current turn
+      if (this.listeners.get(listener) == player1) {
+        listener.yourTurn(); // notify them it's their turn.
+      }
+    }
+  }
+
+
   // initializes the state of the board using the given side length of the hexagon
   // this method has the protected modifier in case a subclass wants to use a different
   // board shape

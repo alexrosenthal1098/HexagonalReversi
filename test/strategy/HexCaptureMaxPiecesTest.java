@@ -24,8 +24,11 @@ public class HexCaptureMaxPiecesTest {
   public void setUp() {
     this.captureMax = new HexCaptureMaxPieces();
     this.model = new HexagonalReversi(6);
+    this.model.startGame();
     this.mockModel = new MockHexReversiModel(6);
+    this.mockModel.startGame();
     this.mockWithLog = new MockWithLog(6);
+    this.mockWithLog.startGame();
   }
 
   // tests for chooseMove
