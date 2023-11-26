@@ -1,6 +1,6 @@
 package view.gui;
 
-import java.awt.Dimension;
+import java.awt.*;
 
 import javax.swing.*;
 
@@ -10,8 +10,8 @@ import model.ReadOnlyReversiModel;
  * The frame of a GUI for a game of Reversi.
  */
 public class ReversiFrame extends JFrame implements ReversiView {
-  private final HexagonalBoard board;
-  private final JLabel titleLabel;
+  private final HexagonalBoard board; // the display of the board
+  private final JLabel titleLabel; // the title label
 
   /**
    * A constructor for a ReversiFrame that takes in a reversi model to display.
@@ -21,13 +21,18 @@ public class ReversiFrame extends JFrame implements ReversiView {
     super();
     setSize(new Dimension(800, 800));
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    // todo figure out the layout thing
+    this.setLayout(new BorderLayout());
     this.board = new HexagonalBoard(800, 800, model);
-    add(this.board);
+    add(this.board, BorderLayout.CENTER);
 
-    this.titleLabel = new JLabel(title);
-    //add(this.titleLabel); // todo make this north
+    this.titleLabel = new JLabel(title, SwingConstants.CENTER);
+    this.titleLabel.setBackground(new Color(50, 50, 50));
+    this.titleLabel.setOpaque(true);
+    this.titleLabel.setForeground(Color.WHITE);
+    this.titleLabel.setFont(new Font("Comic Sans", Font.PLAIN, 30));
+    add(this.titleLabel, BorderLayout.NORTH);
 
+    this.pack();
     this.setVisible(true);
   }
 
