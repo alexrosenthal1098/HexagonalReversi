@@ -201,9 +201,12 @@ public class HexagonalReversi implements ReversiModel {
     this.checkGameStarted(); // check if the game has started
 
     boolean curPlayerHasMoves = this.anyMoves(); // check if the current player has any moves
-    this.passTurn(); // pass the turn to the next player
-    boolean nextPlayerHasMoves = this.anyMoves(); // check if they have any moves
-    this.passTurn(); // pass the turn back to the first player to avoid messing up turns
+    // manually change the turn to the next player to avoid sending model changed event
+    this.currentPlayer = this.otherPlayerColor();
+
+    boolean nextPlayerHasMoves = this.anyMoves(); // check if the other player has any moves
+    // change the turn back to the first player to avoid messing up turns
+    this.currentPlayer = this.otherPlayerColor();
 
     // if neither player has any moves, return true
     return !curPlayerHasMoves && !nextPlayerHasMoves;
@@ -227,7 +230,8 @@ public class HexagonalReversi implements ReversiModel {
 
   @Override
   public Color currentPlayerColor() {
-    return new Color(this.currentPlayer.getRGB()); // copy and return the current player's color
+    return this.currentPlayer; // return the current player's color
+    // we don't need a copy because the color class is immutable
   }
 
   @Override
@@ -289,9 +293,11 @@ public class HexagonalReversi implements ReversiModel {
     if (listener == null) { // check if the listener is null and throw exception if it is
       throw new IllegalArgumentException("Cannot register a null listener.");
     }
-
-    // add the listener to this list of read only listeners
-    this.readOnlyListeners.add(listener);
+    // if the list of listeners does not already contain this listener, add it to the list
+    // this avoids notifying a listener more than one time for the same event
+    if (!this.readOnlyListeners.contains(listener)) {
+      this.readOnlyListeners.add(listener);
+    }
   }
 
   @Override
@@ -304,8 +310,11 @@ public class HexagonalReversi implements ReversiModel {
       throw new IllegalArgumentException("Cannot register a null listener.");
     }
 
-    // put the listener and their firstPlayer boolean in the listeners map
-    this.playerListeners.put(listener, firstPlayer);
+    // if the listener is not already in the map, put it and their firstPlayer boolean
+    // in the listeners map
+    if (!playerListeners.containsKey(listener)) {
+      this.playerListeners.put(listener, firstPlayer);
+    }
   }
 
   @Override

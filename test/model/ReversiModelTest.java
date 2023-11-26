@@ -27,6 +27,11 @@ public class ReversiModelTest {
 
 
   // tests for moveAt
+  @Test(expected = IllegalStateException.class)
+  public void testMoveAtGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.moveAt(1, 1);
+  }
   @Test(expected = IllegalArgumentException.class)
   public void testMoveAtIllegalCoordinatesTooHigh() {
     this.model.moveAt(10, 10);
@@ -59,7 +64,6 @@ public class ReversiModelTest {
     this.model.moveAt(1, 1);
     Assert.assertEquals(Color.WHITE, this.model.getTileAt(1, 1).getTopColor());
   }
-
 
   @Test
   public void testMoveAtFlipsTilesToTheRight() {
@@ -110,6 +114,12 @@ public class ReversiModelTest {
 
 
   // tests for passTurn
+  @Test(expected = IllegalStateException.class)
+  public void testPassTurnGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.passTurn();
+  }
+
   @Test
   public void testPassTurnBlackToWhite() {
     Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
@@ -128,6 +138,12 @@ public class ReversiModelTest {
 
 
   // tests for isMovePossible
+  @Test(expected = IllegalStateException.class)
+  public void testIsMovePossibleGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.isMovePossible(1, 1);
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testIsMovePossibleCoordinatesTooHigh() {
     this.model.isMovePossible(8, 2);
@@ -172,6 +188,12 @@ public class ReversiModelTest {
 
 
   // tests for anyMoves()
+  @Test(expected = IllegalStateException.class)
+  public void testAnyMovesGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.anyMoves();
+  }
+
   @Test
   public void testAnyMovesYesForPlayer1() {
     Assert.assertTrue(this.model.anyMoves());
@@ -237,6 +259,12 @@ public class ReversiModelTest {
 
 
   // tests for isGameOver
+  @Test(expected = IllegalStateException.class)
+  public void testIsGameOverGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.isGameOver();
+  }
+
   @Test
   public void testIsGameOverJustStarted() {
     Assert.assertFalse(this.model.isGameOver());
@@ -262,8 +290,14 @@ public class ReversiModelTest {
 
 
   // tests for getCurrentPlayerScore
+  @Test(expected = IllegalStateException.class)
+  public void testGetCurrentPlayerScoreGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.getCurrentPlayerScore();
+  }
+
   @Test
-  public void testGetCurrentPlayerScoreAtStart() {
+  public void testGetCurrentPlayerScoreAfterStart() {
     Assert.assertEquals(3, this.model.getCurrentPlayerScore());
   }
 
@@ -301,8 +335,14 @@ public class ReversiModelTest {
 
 
   // tests for getOtherPlayerScore
+  @Test(expected = IllegalStateException.class)
+  public void testGetOtherPlayerScoreGameNotStarted() {
+    this.model = new HexagonalReversi();
+    this.model.getOtherPlayerScore();
+  }
+
   @Test
-  public void testGetOtherPlayerScoreAtStart() {
+  public void testGetOtherPlayerScoreAfterStart() {
     Assert.assertEquals(3, this.model.getOtherPlayerScore());
   }
 
@@ -339,23 +379,30 @@ public class ReversiModelTest {
 
 
 
-  // test getCurrentPlayer() {
+  // test currentPlayerColor() {
   @Test
-  public void testGetCurrentPlayerMakesACopy() {
-    Color firstCall = this.model.currentPlayerColor();
-    Color secondCall = this.model.currentPlayerColor();
-    Assert.assertNotSame(firstCall, secondCall);
-  }
-
-  @Test
-  public void testGetCurrentPlayerBlack() {
+  public void testCurrentPlayerColorBlack() {
     Assert.assertEquals(Color.BLACK, this.model.currentPlayerColor());
   }
 
   @Test
-  public void testGetCurrentPlayerWHITE() {
+  public void testCurrentPlayerColorWhite() {
     this.model.passTurn();
     Assert.assertEquals(Color.WHITE, this.model.currentPlayerColor());
+  }
+
+
+
+  // test otherPlayerColor() {
+  @Test
+  public void testOtherPlayerColorWhite() {
+    Assert.assertEquals(Color.WHITE, this.model.otherPlayerColor());
+  }
+
+  @Test
+  public void testOtherPlayerColorBlack() {
+    this.model.passTurn();
+    Assert.assertEquals(Color.BLACK, this.model.otherPlayerColor());
   }
 
 
@@ -503,6 +550,57 @@ public class ReversiModelTest {
     this.model.passTurn();
     this.model.passTurn();
     Assert.assertTrue(listener.log.toString().contains("Your turn\nYour turn"));
+  }
+
+
+
+  // test for addReadOnlyListener
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddReadOnlyListenerNull() {
+    this.model.addReadOnlyListener(null);
+  }
+
+  @Test
+  public void testAddReadOnlyListenerIsNotifiedAfterPassTurn() {
+    MockModelListener listener = new MockModelListener();
+    this.model.addReadOnlyListener(listener);
+    this.model.passTurn();
+    Assert.assertTrue(listener.log.toString().contains("Model changed"));
+  }
+
+  @Test
+  public void testAddReadOnlyListenerIsNotifiedAfterValidMove() {
+    MockModelListener listener = new MockModelListener();
+    this.model.addReadOnlyListener(listener);
+    this.model.moveAt(1, 1);
+    Assert.assertTrue(listener.log.toString().contains("Model changed"));
+  }
+
+  @Test
+  public void testAddReadOnlyListenerNotNotifiedAfterInvalidMove() {
+    MockModelListener listener = new MockModelListener();
+    this.model.addReadOnlyListener(listener);
+    try {
+      this.model.moveAt(0, 0);
+    }
+    catch (Exception ignored) { }
+    Assert.assertFalse(listener.log.toString().contains("Model changed"));
+  }
+
+  @Test
+  public void testAddReadOnlyListenerNotNotifiedAfterNonMutationMethod() {
+    MockModelListener listener = new MockModelListener();
+    this.model.addReadOnlyListener(listener);
+    this.model.isMovePossible(0, 0);
+    this.model.anyMoves();
+    this.model.isGameOver();
+    this.model.getOtherPlayerScore();
+    this.model.getCurrentPlayerScore();
+    this.model.currentPlayerColor();
+    this.model.otherPlayerColor();
+    this.model.getTileAt(0, 0);
+    this.model.getTiles();
+    Assert.assertFalse(listener.log.toString().contains("Model changed"));
   }
 
 

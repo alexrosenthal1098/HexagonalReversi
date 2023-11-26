@@ -9,11 +9,11 @@ public class MockModelListener implements ModelListener {
   public final StringBuilder log = new StringBuilder();
   @Override
   public void yourTurn() {
-    log.append("Your turn\n");
+    this.log.append("Your turn\n");
   }
 
   @Override
   public void modelChanged() {
-
+    this.log.append("Model changed\n");
   }
 }
