@@ -1,6 +1,7 @@
 package view.gui;
 
 import java.awt.Point;
+import java.util.Optional;
 
 import model.ModelListener;
 
@@ -27,10 +28,10 @@ public interface ReversiBoard {
 
   /**
    * Get the tile that is currently selected.
-   * @return A Points representing the tile that is selected.
-   * @throws IllegalStateException if there is no tile selected.
+   * @return An optional point representing the tile that is selected. If it is empty, then no
+   *         tile is selected.
    */
-  Point getSelectedTile() throws IllegalStateException;
+  Optional<Point> getSelectedTile();
 
 
   /**

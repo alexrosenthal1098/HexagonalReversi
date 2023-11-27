@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.JPanel;
 import javax.swing.Action;
@@ -49,7 +50,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
   protected final Map<Shape, Color> disks; // a map of disk shape to disk color
 
   // the location of the tile that is currently selected, or an empty point if no tile is selected
-  protected Point selectedTile;
+  protected Optional<Point> selectedTile;
   protected final List<BoardListener> listeners; // a list of listeners to this board
 
 
@@ -70,7 +71,7 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     this.model = model; // set the model
     this.tiles = new HashMap<>(); // initialize the tile map
     this.disks = new HashMap<>(); // initialize the disk map
-    this.selectedTile = new EmptyPoint(); // set the selectedTile to an empty point
+    this.selectedTile = Optional.empty(); // set the selectedTile to an empty point
     this.listeners = new ArrayList<>(); // initialize the listeners list
 
     // initialize the keySet of the tiles map using the model
@@ -81,7 +82,6 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     // add actions for the 'm' and 'p' keys
     Action makeMove = new AbstractAction() { // define an action for making a move
       public void actionPerformed(ActionEvent e) {
-        System.out.println("Move made.");
         for (BoardListener listener : listeners) {
           listener.moveMade(getSelectedTile()); // inform each listener that a move has been made
         }
@@ -89,7 +89,6 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     };
     Action passTurn = new AbstractAction() { // define an action for passing the turn
       public void actionPerformed(ActionEvent e) {
-        System.out.println("Turn passed.");
         for (BoardListener listener : listeners) {
           listener.turnPassed(); // inform each listener that the turn has been passed
         }
@@ -119,8 +118,16 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     this.updateBoard(); // update the state of the board
 
     for (Point tilePoint : this.tiles.keySet()) { // iterate over all the tile points
-      g2d.setColor( // change color to the tile or selected tile color if this point is selected
-              this.selectedTile.equals(tilePoint) ? this.SELECTED_TILE_COLOR : this.TILE_COLOR);
+      if (this.selectedTile.isEmpty()) { // if there is no tile selected
+        g2d.setColor(this.TILE_COLOR); // set the color to normal tile color
+      }
+      // if there is a tile selected
+      else {
+        g2d.setColor( // change color depending on if the current tile point is the selected one
+                this.selectedTile.get().equals(tilePoint)
+                        ? this.SELECTED_TILE_COLOR : this.TILE_COLOR);
+      }
+
       g2d.fill(this.tiles.get(tilePoint)); // fill in the shape of the tile
       g2d.setColor(this.OUTLINE_COLOR); // change color to the outline color
       g2d.draw(this.tiles.get(tilePoint)); // draw the outline of the tile
@@ -145,26 +152,28 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     if (!this.tiles.containsKey(tileLocation)) { // check if the given point is on the board
       throw new IllegalStateException("The given tile location is not on the board.");
     }
-    if (!this.selectedTile.equals(new EmptyPoint())) { // check if there already is a tile selected
+    if (this.selectedTile.isPresent()) { // check if there already is a tile selected
       throw new IllegalStateException("There is already a tile selected.");
     }
 
     // copy the given point and set our selected tile to it
-    this.selectedTile = new Point(tileLocation.x, tileLocation.y);
+    this.selectedTile = Optional.of(new Point(tileLocation.x, tileLocation.y));
   }
 
   @Override
   public void deselectCurrentTile() {
-    this.selectedTile = new EmptyPoint(); // replace the currently selected tile with an empty point
+    this.selectedTile = Optional.empty(); // replace the currently selected tile with an empty point
   }
 
   @Override
-  public Point getSelectedTile() throws IllegalStateException {
-    if (this.selectedTile.equals(new EmptyPoint())) { // check if there is no selected tile
-      throw new IllegalStateException("There is no tile currently selected.");
+  public Optional<Point> getSelectedTile() {
+    if (this.selectedTile.isEmpty()) { // check if there is no selected tile
+      return Optional.empty(); // return empty optional if it is
     }
-    // return a copy of the selected tile point
-    return new Point(this.selectedTile.x, this.selectedTile.y);
+
+    // if there is a selected tile, return a copy of the optional point
+    Point tilePoint = this.selectedTile.get();
+    return Optional.of(new Point(tilePoint.x, tilePoint.y));
   }
 
   @Override
@@ -273,11 +282,12 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
       // if the shape of the tile contains the position of the mouse click
       if (this.tiles.get(tilePoint).contains(e.getPoint())) {
         clickedOnBoard = true; // the board has been clicked on
-        System.out.printf("User clicked on the tile at (%d, %d)\n", tilePoint.x, tilePoint.y);
+
         // only tiles without a disk can be selected, so
         // if the tile that was clicked does not have a disk
         if (!this.model.getTileAt(tilePoint.x, tilePoint.y).hasDisk()) {
-          if (this.selectedTile.equals(tilePoint)) { // if the clicked tile is the selected one
+          // if the clicked tile is the selected one
+          if (this.selectedTile.isPresent() && this.selectedTile.get().equals(tilePoint)) {
             this.deselectCurrentTile(); // deselect the tile
           }
           else { // if the clicked tile is NOT the selected one
@@ -290,7 +300,6 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     }
 
     if (!clickedOnBoard) { // if the user did not click on the board
-      System.out.println("User clicked off the board.");
       this.deselectCurrentTile(); // deselect the current tile
     }
     this.repaint(); // repaint the board to show the changes

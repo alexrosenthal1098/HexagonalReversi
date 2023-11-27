@@ -19,18 +19,18 @@ public class ReversiFrame extends JFrame implements ReversiView {
    */
   public ReversiFrame(ReadOnlyReversiModel model, String title) {
     super();
-    setSize(new Dimension(800, 800));
-    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    this.setSize(new Dimension(800, 800));
+    this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     this.setLayout(new BorderLayout());
     this.board = new HexagonalBoard(800, 800, model);
-    add(this.board, BorderLayout.CENTER);
+    this.add(this.board, BorderLayout.CENTER);
 
     this.titleLabel = new JLabel(title, SwingConstants.CENTER);
     this.titleLabel.setBackground(new Color(50, 50, 50));
     this.titleLabel.setOpaque(true);
     this.titleLabel.setForeground(Color.WHITE);
     this.titleLabel.setFont(new Font("Comic Sans", Font.PLAIN, 30));
-    add(this.titleLabel, BorderLayout.NORTH);
+    this.add(this.titleLabel, BorderLayout.NORTH);
 
     this.pack();
     this.setVisible(true);
@@ -52,5 +52,10 @@ public class ReversiFrame extends JFrame implements ReversiView {
   @Override
   public void update() {
     this.board.repaint();
+  }
+
+  @Override
+  public void showErrorMessage(String message) {
+    JOptionPane.showMessageDialog(this, message);
   }
 }

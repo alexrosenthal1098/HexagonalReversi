@@ -18,4 +18,10 @@ public interface PlayerActionListener {
    * An event that responds to an attempt to pass the turn of the player.
    */
   void turnPassed();
+
+  /**
+   * An event that triggers when an error occurs with the player.
+   * @param message A message explaining the error.
+   */
+  void errorOccurred(String message);
 }

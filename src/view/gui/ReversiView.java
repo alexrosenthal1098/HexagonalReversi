@@ -23,8 +23,9 @@ public interface ReversiView {
    */
   void update();
 
-  // leaving this empty for now because we don't know what the overall ReversiFrame for the
-  // game is going to look like (or if we will need to make one)
-
-  // could include things like exitGame, displayControls, etc.
+  /**
+   * Displays an error message.
+   * @param message The string of the error message to be displayed.
+   */
+  void showErrorMessage(String message);
 }

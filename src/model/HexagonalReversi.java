@@ -125,7 +125,7 @@ public class HexagonalReversi implements ReversiModel {
     }
 
     if (!this.isMovePossible(q, r)) { // if the move is not possible
-      throw new IllegalStateException("This move is not possible. " + q + " " + r);
+      throw new IllegalStateException("This move is not possible.");
     }
 
     // place a disk on the tile that was moved at with the current player's color face up

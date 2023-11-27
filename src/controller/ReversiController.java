@@ -46,8 +46,12 @@ public class ReversiController implements ModelListener, PlayerActionListener {
 
   @Override
   public void yourTurn() {
-    this.player.makeMove(); // tell the player to make a move
-    System.out.println("your turn!");
+    try {
+      this.player.makeMove(); // tell the player to make a move
+    }
+    catch (Exception e) {
+      this.view.showErrorMessage(e.getMessage()); // if an error occurred, display the message
+    }
   }
 
   @Override
@@ -63,12 +67,25 @@ public class ReversiController implements ModelListener, PlayerActionListener {
       this.model.moveAt(tile.x, tile.y); // try the move given to us from the player
     }
     catch (IllegalStateException | IllegalArgumentException e) {
-      throw new IllegalArgumentException(e.getMessage());
+      this.view.showErrorMessage(e.getMessage()); // if an error occurred, display the message
+      this.player.makeMove(); // and tell the player to try again
     }
   }
 
   @Override
   public void turnPassed() {
-    this.model.passTurn(); // pass the turn
+    try {
+      this.model.passTurn(); // pass the turn
+    }
+    catch (IllegalStateException e) {
+      this.view.showErrorMessage(e.getMessage()); // if an error occurred, display the message
+      this.player.makeMove(); // and tell the player to try again
+    }
+  }
+
+  @Override
+  public void errorOccurred(String message) {
+    // display the error message
+    this.view.showErrorMessage(message);
   }
 }

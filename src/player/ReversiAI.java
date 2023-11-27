@@ -60,7 +60,7 @@ public class ReversiAI implements ReversiPlayer {
 
   // since this is an AI player, ignore actions from the board
   @Override
-  public void moveMade(Point tilePoint) {
+  public void moveMade(Optional<Point> tilePoint) {
 
   }
 

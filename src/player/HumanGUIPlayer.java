@@ -3,9 +3,9 @@ package player;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import model.ReadOnlyReversiModel;
-import view.gui.BoardListener;
 
 /**
  * A human player of the game Reversi that interacts with the game using a GUI.
@@ -43,25 +43,34 @@ public final class HumanGUIPlayer implements ReversiPlayer {
   }
 
   @Override
-  public void moveMade(Point tilePoint) {
-    if (tilePoint == null) { // check if the given tilePoint is null and throw exception if it is
-      throw new IllegalArgumentException("Given tile point cannot be null.");
-    }
-    if (!this.makingMove) { // if this player isn't supposed to be making a move, throw exception
-      throw new IllegalStateException("It is not your turn!");
-    }
-    // iterate through all listeners and notify them that a move has been made at the tile point
-    for (PlayerActionListener listener : this.listeners) {
-      listener.moveMade(tilePoint);
+  public void moveMade(Optional<Point> tilePoint) {
+    // if this player isn't supposed to be making a move, notify listeners of an error
+    if (!this.makingMove) {
+      this.notifyOfError("It is not your turn!");
+      return; // exit the method
     }
 
-    this.makingMove = false; // after all listeners have been notified, set makingMove to false
+    // if the given tilePoint is null, notify listeners of an error
+    if (tilePoint.isEmpty()) {
+      this.notifyOfError("There is no tile selected.");
+      return; // exit the method
+    }
+
+    this.makingMove = false; // set makingMove to false before notifying listeners
+    // if the move is invalid, then the listener will tell the player to try again
+
+    // iterate through all listeners and notify them that a move has been made at the tile point
+    for (PlayerActionListener listener : this.listeners) {
+      listener.moveMade(tilePoint.get());
+    }
   }
 
   @Override
   public void turnPassed() {
-    if (!this.makingMove) { // if this player isn't supposed to be making a move, throw exception
-      throw new IllegalStateException("It is not your turn!");
+    // if this player isn't supposed to be making a move, notify listeners of an error
+    if (!this.makingMove) {
+      this.notifyOfError("It is not your turn!");
+      return; // exit the method
     }
 
     // iterate through all listeners and notify them that the turn has been passed
@@ -70,5 +79,12 @@ public final class HumanGUIPlayer implements ReversiPlayer {
     }
 
     this.makingMove = false; // after all listeners have been notified, set makingMove to false
+  }
+
+  // notifies all listeners of this player that an error occurred with the given message
+  private void notifyOfError(String message) {
+    for (PlayerActionListener listener : this.listeners) {
+      listener.errorOccurred(message);
+    }
   }
 }
