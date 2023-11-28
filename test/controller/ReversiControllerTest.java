@@ -150,4 +150,9 @@ public class ReversiControllerTest {
 
 
   // tests for errorOccurred
+  @Test
+  public void testErrorOccurred() {
+    this.controller.errorOccurred("something bad happened");
+    Assert.assertEquals("something bad happened\n", this.view.log.toString());
+  }
 }
