@@ -110,3 +110,39 @@ player wants to make a move at the given tile or the key 'p' to signify they wan
 These events do not directly mutate the model, rather they notify a listener of the board of the
 event so that they can act accordingly. For example, if a player selects a tile that is not a valid
 move but they press 'm' anyway, it is up to the controller to handle that error.
+
+
+
+    CHANGES FOR PART 3
+Added a startGame method to the model so that initial setup, like registering listeners, can occur
+before the game starts and the model can be mutated.
+
+Added a label to the ReversiFrame and changed the constructor to take in a title that is displayed
+at the top of the frame via the label.
+
+    MODEL LISTENERS
+Added two ways for classes to register as a listener for the model. If the listener wants to be
+notified when a specific player's turn has started, then they can use the addListener method along
+with a boolean to represent whether they are listening to player 1 (true) or player 2 (false). All
+player listeners must be registered before the game starts. If the listener wants to be notified
+when the model changes, they can use the addReadOnlyListener method. These listeners can be added
+at any point.
+
+    PLAYER-ACTION LISTENERS
+Updated the ReversiPlayer interface to allow for player action events and to ensure that the
+players are interacting with the view in which they are registered to by the controller if they
+need to. This allows the controller to handle both synchronous player moves, like for an AI player,
+and asynchronous moves, like for a human player by listening for player action events.
+
+    CONTROLLER
+The controller works as a mediator between the model and the players plus their view's. It does this
+by listening to events from the model, asking the player for a move when necessary, and then acting
+on the model depending on the player's chosen move. It also is capable of handling exceptions
+without letting the program crash by displaying error messages to the view and re-prompting player's
+to make a move.
+
+    MAIN METHOD
+The main method takes in 2 string arguments from the command line that represent the strategy that
+each of the two player's will use. Currently, the only supported players are "human", for a human
+player that interacts with the view to move, and "capture-max", which is an AI player that uses
+the strategy of capturing the most pieces every turn.
