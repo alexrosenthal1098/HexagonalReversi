@@ -339,10 +339,10 @@ public class HexagonalReversi implements ReversiModel {
 
   // notifies the listeners of the current player that their turn has started
   final void notifyTurnStarted() {
-    boolean player1 = this.currentPlayer == this.PLAYER_1_COLOR; // is it player 1's turn
-
     // iterate through all player listeners
     for (ModelListener listener : this.playerListeners.keySet()) {
+      boolean player1 = this.currentPlayer == this.PLAYER_1_COLOR; // is it player 1's turn
+
       // if the player they listen to is the current turn
       if (this.playerListeners.get(listener) == player1) {
         listener.yourTurn(); // notify them it's their turn.

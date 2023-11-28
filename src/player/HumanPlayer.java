@@ -69,12 +69,12 @@ public final class HumanPlayer implements ReversiPlayer {
       return; // exit the method
     }
 
+    this.makingMove = false; // set makingMove to false
+
     // iterate through all listeners and notify them that the turn has been passed
     for (PlayerActionListener listener : this.listeners) {
       listener.turnPassed();
     }
-
-    this.makingMove = false; // after all listeners have been notified, set makingMove to false
   }
 
   // notifies all listeners of this player that an error occurred with the given message
