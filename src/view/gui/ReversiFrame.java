@@ -18,7 +18,6 @@ import model.ReadOnlyReversiModel;
  */
 public class ReversiFrame extends JFrame implements ReversiView {
   private final HexagonalBoard board; // the display of the board
-  private final JLabel titleLabel; // the title label
 
   /**
    * A constructor for a ReversiFrame that takes in a reversi model to display.
@@ -32,12 +31,13 @@ public class ReversiFrame extends JFrame implements ReversiView {
     this.board = new HexagonalBoard(800, 800, model);
     this.add(this.board, BorderLayout.CENTER);
 
-    this.titleLabel = new JLabel(title, SwingConstants.CENTER);
-    this.titleLabel.setBackground(new Color(50, 50, 50));
-    this.titleLabel.setOpaque(true);
-    this.titleLabel.setForeground(Color.WHITE);
-    this.titleLabel.setFont(new Font("Comic Sans", Font.PLAIN, 30));
-    this.add(this.titleLabel, BorderLayout.NORTH);
+    // the title label
+    JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
+    titleLabel.setBackground(new Color(50, 50, 50));
+    titleLabel.setOpaque(true);
+    titleLabel.setForeground(Color.WHITE);
+    titleLabel.setFont(new Font("Comic Sans", Font.PLAIN, 30));
+    this.add(titleLabel, BorderLayout.NORTH);
 
     this.pack();
     this.setVisible(true);
