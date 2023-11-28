@@ -197,7 +197,7 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
-  public boolean isGameOver() throws IllegalStateException{
+  public boolean isGameOver() throws IllegalStateException {
     this.checkGameStarted(); // check if the game has started
 
     boolean curPlayerHasMoves = this.anyMoves(); // check if the current player has any moves

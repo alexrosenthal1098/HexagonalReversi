@@ -1,6 +1,6 @@
 package player;
 
-import java.awt.*;
+import java.awt.Point;
 
 /**
  * An interface that describes the player actions that can be emitted for the game Reversi. A

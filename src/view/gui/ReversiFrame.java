@@ -1,8 +1,15 @@
 package view.gui;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.WindowConstants;
+import javax.swing.SwingConstants;
+import javax.swing.JOptionPane;
 
 import model.ReadOnlyReversiModel;
 

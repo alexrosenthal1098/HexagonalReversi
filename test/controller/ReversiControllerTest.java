@@ -5,7 +5,8 @@ import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 
 import mocks.MockView;
 import model.HexagonalReversi;
@@ -15,7 +16,7 @@ import player.ReversiPlayer;
 import strategy.HexCaptureMaxPieces;
 
 /**
- * A class that holds tests for a ReversiController
+ * A class that holds tests for a ReversiController.
  */
 public class ReversiControllerTest {
   ReversiController controller;
@@ -33,7 +34,6 @@ public class ReversiControllerTest {
 
 
 
-  // todo tests methods using a controller with an ai player and manually modifying the model to trigger events
   // tests for constructors
   @Test(expected = IllegalArgumentException.class)
   public void testReversiControllerNullModel() {

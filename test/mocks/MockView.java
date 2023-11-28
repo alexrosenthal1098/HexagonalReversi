@@ -8,9 +8,10 @@ import view.gui.ReversiView;
  */
 public class MockView implements ReversiView {
   public StringBuilder log = new StringBuilder();
+
   @Override
   public void addBoardListener(BoardListener listener) throws IllegalArgumentException {
-
+    // this method does not need to be supported for this mock.
   }
 
   @Override

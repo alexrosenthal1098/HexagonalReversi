@@ -1,6 +1,6 @@
 package mocks;
 
-import java.awt.*;
+import java.awt.Point;
 
 import player.PlayerActionListener;
 

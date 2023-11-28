@@ -8,7 +8,6 @@ import mocks.MockPlayerActionListener;
 import model.HexagonalReversi;
 import model.ReversiModel;
 import strategy.HexCaptureMaxPieces;
-import strategy.ReversiStrategy;
 
 /**
  * A class that holds tests for a ReversiPlayer.

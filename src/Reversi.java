@@ -26,7 +26,7 @@ public final class Reversi {
     ReversiPlayer player1;
     ReversiPlayer player2;
 
-    switch(args[0]) {
+    switch (args[0]) {
       case "human":
         player1 = new HumanPlayer();
         break;
@@ -37,7 +37,7 @@ public final class Reversi {
         throw new IllegalArgumentException("Unsupported player type \"" + args[0] + "\"");
     }
 
-    switch(args[1]) {
+    switch (args[1]) {
       case "human":
         player2 = new HumanPlayer();
         break;

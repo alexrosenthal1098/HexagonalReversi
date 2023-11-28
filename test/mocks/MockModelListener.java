@@ -7,6 +7,7 @@ import model.ModelListener;
  */
 public class MockModelListener implements ModelListener {
   public final StringBuilder log = new StringBuilder();
+
   @Override
   public void yourTurn() {
     this.log.append("Your turn\n");

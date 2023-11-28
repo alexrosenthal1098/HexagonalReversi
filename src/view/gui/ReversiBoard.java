@@ -3,8 +3,6 @@ package view.gui;
 import java.awt.Point;
 import java.util.Optional;
 
-import model.ModelListener;
-
 /**
  * A view for a Reversi game board along with the actions it can perform. A class that
  * implements this interface is free to represent the board however it likes.

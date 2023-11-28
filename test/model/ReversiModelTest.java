@@ -32,6 +32,7 @@ public class ReversiModelTest {
     this.model = new HexagonalReversi();
     this.model.moveAt(1, 1);
   }
+
   @Test(expected = IllegalArgumentException.class)
   public void testMoveAtIllegalCoordinatesTooHigh() {
     this.model.moveAt(10, 10);
