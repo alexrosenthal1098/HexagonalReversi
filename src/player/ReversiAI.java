@@ -39,7 +39,10 @@ public class ReversiAI implements ReversiPlayer {
     if (listener == null) { // check if the listener is null and throw exception if it is
       throw new IllegalArgumentException("Given listener cannot be null.");
     }
-    this.listeners.add(listener); // add the listener to the list of listeners
+
+    if (!this.listeners.contains(listener)) {
+      this.listeners.add(listener); // add the listener to the list of listeners
+    }
   }
 
   @Override

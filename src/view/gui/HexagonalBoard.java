@@ -181,7 +181,9 @@ public class HexagonalBoard extends JPanel implements ReversiBoard, MouseListene
     if (listener == null) { // check if listener and throw exception if it is
       throw new IllegalArgumentException("Cannot register a null listener.");
     }
-    this.listeners.add(listener); // add the given listener to our list of listeners
+    if (!this.listeners.contains(listener)) { // if the given listener has not already been added
+      this.listeners.add(listener); // add the listener to our list of listeners
+    }
   }
 
 

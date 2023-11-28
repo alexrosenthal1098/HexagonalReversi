@@ -10,7 +10,7 @@ import view.textview.HexReversiTextView;
 /**
  * A class that shows examples of how to play the game Reversi using this codebase.
  */
-public class ReversiExamples {
+public class ReversiModelExamples {
   HexagonalReversi model;
   HexReversiTextView view;
 
@@ -154,6 +154,4 @@ public class ReversiExamples {
     Assert.assertEquals(7, this.model.getOtherPlayerScore());
     Assert.assertEquals(5, this.model.getCurrentPlayerScore());
   }
-
-
 }
