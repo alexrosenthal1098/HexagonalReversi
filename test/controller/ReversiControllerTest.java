@@ -13,7 +13,6 @@ import model.ReversiModel;
 import player.ReversiAI;
 import player.ReversiPlayer;
 import strategy.HexCaptureMaxPieces;
-import view.gui.ReversiView;
 
 /**
  * A class that holds tests for a ReversiController
