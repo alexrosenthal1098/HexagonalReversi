@@ -13,7 +13,7 @@ import model.HexagonalReversi;
 import model.ReversiModel;
 import player.ReversiAI;
 import player.ReversiPlayer;
-import strategy.HexCaptureMaxPieces;
+import strategy.CaptureMaxPieces;
 
 /**
  * A class that holds tests for a ReversiController.
@@ -27,7 +27,7 @@ public class ReversiControllerTest {
   @Before
   public void setUp() {
     this.model = new HexagonalReversi();
-    this.aiPlayer = new ReversiAI(this.model, new HexCaptureMaxPieces());
+    this.aiPlayer = new ReversiAI(this.model, new CaptureMaxPieces());
     this.view = new MockView();
     this.controller = new ReversiController(this.model, this.aiPlayer, this.view, true);
   }

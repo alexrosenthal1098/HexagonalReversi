@@ -572,4 +572,18 @@ public class ReversiModelTest {
     this.model.startGame();
     Assert.assertTrue(true);
   }
+
+
+
+  // tests for copyModel
+  @Test
+  public void testCopyModelIsACopy() {
+    Assert.assertNotSame(this.model, this.model.copyModel());
+  }
+
+  @Test(expected=IllegalStateException.class)
+  public void testCopyModelHasNotStarted() {
+    ReversiModel copy = this.model.copyModel();
+    copy.passTurn();
+  }
 }

@@ -289,6 +289,11 @@ public class HexagonalReversi implements ReversiModel {
   }
 
   @Override
+  public ReversiModel copyModel() {
+    return new HexagonalReversi(this);
+  }
+
+  @Override
   public void addReadOnlyListener(ModelListener listener) throws IllegalArgumentException {
     if (listener == null) { // check if the listener is null and throw exception if it is
       throw new IllegalArgumentException("Cannot register a null listener.");

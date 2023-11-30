@@ -3,15 +3,15 @@ package strategy;
 import java.awt.Point;
 import java.util.Optional;
 
-import model.HexagonalReversi;
 import model.ReadOnlyReversiModel;
+import model.ReversiModel;
 
 /**
- * A strategy for determining the next move to play in a game of HexagonalReversi.
+ * A strategy for determining the next move to play in a game of Reversi.
  * Finds the move that would capture the most pieces for the current player, and breaks ties
  * by selecting the uppermost-leftmost tile.
  */
-public class HexCaptureMaxPieces implements ReversiStrategy {
+public class CaptureMaxPieces implements ReversiStrategy {
 
   @Override
   public Optional<Point> chooseMove(ReadOnlyReversiModel model) {
@@ -57,7 +57,7 @@ public class HexCaptureMaxPieces implements ReversiStrategy {
 
     // make a copy of the model so that we can make the move and let the model handle the logic
     // of how many pieces were captured
-    HexagonalReversi modelCopy = new HexagonalReversi(model);
+    ReversiModel modelCopy = model.copyModel();
     modelCopy.startGame();
 
     int scoreBefore = modelCopy.getCurrentPlayerScore(); // get the current player's score before

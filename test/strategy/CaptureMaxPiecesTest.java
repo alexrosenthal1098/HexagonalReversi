@@ -12,17 +12,17 @@ import model.HexagonalReversi;
 import model.ReversiModel;
 
 /**
- * A class that holds tests for the HexCaptureMaxPieces strategy.
+ * A class that holds tests for the CaptureMaxPieces strategy.
  */
-public class HexCaptureMaxPiecesTest {
-  HexCaptureMaxPieces captureMax;
+public class CaptureMaxPiecesTest {
+  CaptureMaxPieces captureMax;
   ReversiModel model;
   ReversiModel mockModel;
   MockWithLog mockWithLog;
 
   @Before
   public void setUp() {
-    this.captureMax = new HexCaptureMaxPieces();
+    this.captureMax = new CaptureMaxPieces();
     this.model = new HexagonalReversi(6);
     this.model.startGame();
     this.mockModel = new MockHexReversiModel(6);

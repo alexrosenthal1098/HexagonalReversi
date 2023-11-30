@@ -7,7 +7,7 @@ import org.junit.Test;
 import mocks.MockPlayerActionListener;
 import model.HexagonalReversi;
 import model.ReversiModel;
-import strategy.HexCaptureMaxPieces;
+import strategy.CaptureMaxPieces;
 
 /**
  * A class that holds tests for a ReversiPlayer.
@@ -22,7 +22,7 @@ public class ReversiPlayerTest {
   public void setUp() {
     this.humanPlayer = new HumanPlayer();
     this.model = new HexagonalReversi();
-    this.aiPlayer = new ReversiAI(this.model, new HexCaptureMaxPieces());
+    this.aiPlayer = new ReversiAI(this.model, new CaptureMaxPieces());
     this.listener = new MockPlayerActionListener();
     this.model.startGame();
   }

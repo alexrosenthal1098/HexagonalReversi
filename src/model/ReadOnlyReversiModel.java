@@ -83,6 +83,12 @@ public interface ReadOnlyReversiModel {
   Map<Point, ReversiTile> getTiles();
 
   /**
+   * Creates and returns a mutable copy of this model.
+   * @return A mutable copy of the model where the game has not yet started.
+   */
+  ReversiModel copyModel();
+
+  /**
    * Add a listener to this model that can only view it as read-only.
    * @param listener The listener of this read-only model.
    * @throws IllegalArgumentException if the given listener is null.

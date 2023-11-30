@@ -114,6 +114,11 @@ move but they press 'm' anyway, it is up to the controller to handle that error.
 
 
     CHANGES FOR PART 3
+Added a method to the read-only model interface called 'copyModel' that returns a copy of the model.
+This ensures that strategies, which need a copy of the model in order to test various moves, do not
+need to know which implementation they are given. This allows the model to stay encapsulated when
+given to a strategy.
+
 Added a startGame method to the model so that initial setup, like registering listeners, can occur
 before the game starts and the model can be mutated.
 

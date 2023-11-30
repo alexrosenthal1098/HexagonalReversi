@@ -4,7 +4,7 @@ import model.ReversiModel;
 import player.HumanPlayer;
 import player.ReversiAI;
 import player.ReversiPlayer;
-import strategy.HexCaptureMaxPieces;
+import strategy.CaptureMaxPieces;
 import view.gui.ReversiFrame;
 import view.gui.ReversiView;
 
@@ -31,7 +31,7 @@ public final class Reversi {
         player1 = new HumanPlayer();
         break;
       case "capture-max":
-        player1 = new ReversiAI(model, new HexCaptureMaxPieces());
+        player1 = new ReversiAI(model, new CaptureMaxPieces());
         break;
       default:
         throw new IllegalArgumentException("Unsupported player type \"" + args[0] + "\"");
@@ -42,7 +42,7 @@ public final class Reversi {
         player2 = new HumanPlayer();
         break;
       case "capture-max":
-        player2 = new ReversiAI(model, new HexCaptureMaxPieces());
+        player2 = new ReversiAI(model, new CaptureMaxPieces());
         break;
       default:
         throw new IllegalArgumentException("Unsupported player type \"" + args[0] + "\"");
