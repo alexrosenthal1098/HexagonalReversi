@@ -26,7 +26,7 @@ public class ReversiGraphicsView extends JFrame implements IView {
   private List<ViewListener> listeners = new ArrayList<>();
   private final ReversiPanel panel;
 
-  private Cell current;
+  private ICell current;
 
   /**
    * Constructs a ReversiGraphicsView.
@@ -104,7 +104,10 @@ public class ReversiGraphicsView extends JFrame implements IView {
       @Override
       public void mouseReleased(MouseEvent e) {
         // calling the clickhelper within the panel
-        Cell cell = panel.clickHelper(getMousePosition());
+        ICell cell = panel.clickHelper(getMousePosition());
+        if (cell == null) {
+          current = null;
+        }
         cell.setClicked(true);
         refresh();
         current = cell;

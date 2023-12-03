@@ -19,9 +19,13 @@ public class ToProviderCell implements ICell {
 
   /**
    * A constructor for ToProviderCell that uses a ReversiTile as an adaptee.
+   * @param ourTile A ReversiTile to adapt to an ICell.
    */
-  public ToProviderCell() {
-    this.ourTile = new PointyTopHexagon();
+  public ToProviderCell(ReversiTile ourTile) {
+    if (ourTile == null) {
+      throw new IllegalArgumentException("Given tile cannot be null.");
+    }
+    this.ourTile = ourTile;
     this.clicked = false;
   }
 
@@ -140,7 +144,24 @@ public class ToProviderCell implements ICell {
     return y;
   }
 
+  @Override
+  public boolean equals(Object other) {
+    if (other instanceof ToProviderCell) {
+      ToProviderCell that = (ToProviderCell) other;
+      return this.x == that.x & this.y == that.y && this.clicked == that.clicked &&
+              this.ourTile == that.ourTile;
+    }
+    return false;
+  }
 
+  @Override
+  public int hashCode() {
+    return (this.x * 37 + this.y * 37 + Boolean.hashCode(this.clicked) + this.ourTile.hashCode());
+  }
+
+
+  // returns the Fill.FillColor that corresponds to the given color
+  // returns empty if the color is not black or white
   private Fill.FillColor colorToFill(Color color) {
     if (color.equals(Color.BLACK)) {
       return Fill.FillColor.BLACK;

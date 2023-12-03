@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import providers.model.board.Fill;
+import providers.model.board.ICell;
 import providers.model.board.Posn;
 import providers.model.board.ReadonlyReversiModel;
 
@@ -39,11 +40,11 @@ public class ReversiPanel extends JPanel {
    * @param xy is the point that has been clicked
    * @return the cell that has been clicked
    */
-  protected Cell clickHelper(Point xy) {
-    List<List<Cell>> board = model.getBoard();
+  protected ICell clickHelper(Point xy) {
+    List<List<ICell>> board = model.getBoard();
     double dist = dist(board.get(0).get(0).getCenter(board.get(0).size(),
             this.getWidth()), new Posn(xy.x, xy.y - a));
-    Cell closest = board.get(0).get(0);
+    ICell closest = board.get(0).get(0);
     // goes through the board and sees which cells it is in the distance of
     for (int row = 0; row < board.size(); row++) {
       for (int column = 0; column < board.get(row).size(); column++) {
@@ -58,7 +59,7 @@ public class ReversiPanel extends JPanel {
     if (closest.clicked()) {
       resetCells();
       closest.setClicked(false);
-      return new Cell();
+      return null;
     }
     // makes sure this distance is less than the value of a
     if (dist < a) {
@@ -69,7 +70,7 @@ public class ReversiPanel extends JPanel {
       // if its not then u didnt click on an adequate cell
       resetCells();
       System.out.println("You didnt click on a cell!");
-      return new Cell();
+      return null;
     }
   }
 
@@ -77,7 +78,7 @@ public class ReversiPanel extends JPanel {
    * resets the cells to not be clicked.
    */
   private void resetCells() {
-    List<List<Cell>> board = model.getBoard();
+    List<List<ICell>> board = model.getBoard();
     // resets the whole board to having no cells clicked
     for (int row = 0; row < board.size(); row++) {
       for (int column = 0; column < board.get(row).size(); column++) {
@@ -110,7 +111,7 @@ public class ReversiPanel extends JPanel {
 
     // paints the board
     Graphics2D g2d = (Graphics2D) g;
-    List<List<Cell>> board = model.getBoard();
+    List<List<ICell>> board = model.getBoard();
 
     String scoreText = "Player1 Score: " + model.getScore(board, "BLACK") + "    Player2 Score: "
             + model.getScore(board, "WHITE");
@@ -211,7 +212,7 @@ public class ReversiPanel extends JPanel {
    * @param board is the board
    * @return the initial hexagon
    */
-  private CreateInitialHexagon getCreateInitialHexagon(List<List<Cell>> board) {
+  private CreateInitialHexagon getCreateInitialHexagon(List<List<ICell>> board) {
     int yDistFromCenter = Math.abs(((board.size() - 1) / 2));
     double center = a * Math.sqrt(3) * (yDistFromCenter / 2.0);
     double shifter = (a * Math.sqrt(3) / 2);

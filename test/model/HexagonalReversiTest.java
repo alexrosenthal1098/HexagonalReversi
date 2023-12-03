@@ -80,21 +80,21 @@ public class HexagonalReversiTest {
   // tests for makeBoard()
   @Test
   public void testMakeBoardCorrectSize() {
-    Map<Point, ReversiTile> tiles = this.model.makeBoard(6);
+    Map<Point, ReversiTile> tiles = this.model.initBoard(6);
     Assert.assertEquals(91, tiles.keySet().size());
     Assert.assertEquals(91, tiles.values().size());
   }
 
   @Test
   public void testMakeBoardCorrectSize2() {
-    Map<Point, ReversiTile> tiles = this.model.makeBoard(4);
+    Map<Point, ReversiTile> tiles = this.model.initBoard(4);
     Assert.assertEquals(37, tiles.keySet().size());
     Assert.assertEquals(37, tiles.values().size());
   }
 
   @Test
   public void testMakeBoardCorrectTileLocations() {
-    Map<Point, ReversiTile> tiles = this.model.makeBoard(3);
+    Map<Point, ReversiTile> tiles = this.model.initBoard(3);
     this.model = new HexagonalReversi(3);
     for (int q = -2; q <= 2; q++) {
       for (int r = Math.max(-2, -q - 2); r < Math.min(2, -q + 2); r++) {
@@ -105,7 +105,7 @@ public class HexagonalReversiTest {
 
   @Test
   public void testMakeBoardHasStartingTiles() {
-    Map<Point, ReversiTile> tiles = this.model.makeBoard(6);
+    Map<Point, ReversiTile> tiles = this.model.initBoard(6);
     Assert.assertEquals(Color.BLACK, tiles.get(new Point(0, -1)).getTopColor());
     Assert.assertEquals(Color.WHITE, tiles.get(new Point(1, -1)).getTopColor());
     Assert.assertEquals(Color.BLACK, tiles.get(new Point(1, 0)).getTopColor());

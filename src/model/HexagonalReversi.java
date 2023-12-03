@@ -81,7 +81,7 @@ public class HexagonalReversi implements ReversiModel {
     // the currentPlayer invariant is guaranteed by the constructor because it is
     // initialized as player 1 color.
     this.currentPlayer = this.PLAYER_1_COLOR; // set the current player to player 1 (they go first)
-    this.tiles = this.makeBoard(sideLength); // initialize the state of the board
+    this.tiles = this.initBoard(sideLength); // initialize the state of the board
   }
 
   /**
@@ -366,7 +366,7 @@ public class HexagonalReversi implements ReversiModel {
   // initializes the state of the board using the given side length of the hexagon
   // this method has the protected modifier in case a subclass wants to use a different
   // board shape
-  protected Map<Point, ReversiTile> makeBoard(int side) {
+  protected Map<Point, ReversiTile> initBoard(int side) {
     Map<Point, ReversiTile> board = new HashMap<>(); // create the board
 
     // this code is adapted from the "Movement Range" section of the website linked in the README

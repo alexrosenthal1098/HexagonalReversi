@@ -1,3 +1,16 @@
+import adapters.BothModels;
+import adapters.ToOurView;
+import adapters.ToProviderModel;
+import controller.ReversiController;
+import model.HexagonalReversi;
+import model.ReversiModel;
+import player.HumanPlayer;
+import player.ReversiAI;
+import player.ReversiPlayer;
+import strategy.CaptureMaxPieces;
+import view.gui.ReversiFrame;
+import view.gui.ReversiView;
+
 /**
  * Main class for Reversi.
  */
@@ -13,7 +26,7 @@ public final class Reversi {
       throw new IllegalArgumentException("Two players must be specified.");
     }
     // initialize the model and declare players
-    ReversiModel model = new HexagonalReversi();
+    ReversiModel model = new HexagonalReversi(3);
     ReversiPlayer player1;
     ReversiPlayer player2;
 
@@ -49,8 +62,20 @@ public final class Reversi {
 
     // start the game
     model.startGame();
+
      */
 
+    BothModels theirModel = new ToProviderModel(3);
+    ReversiPlayer human1 = new HumanPlayer();
+    ReversiPlayer human2 = new HumanPlayer();
 
+
+    ReversiView ourViewPlayer1 = new ReversiFrame(theirModel, "Player 1");
+    ReversiView theirViewPlayer2 = new ToOurView(theirModel);
+    ReversiController controller1 =
+            new ReversiController(theirModel, human1, ourViewPlayer1, true);
+    ReversiController controller2 =
+            new ReversiController(theirModel, human2, theirViewPlayer2, false);
+    theirModel.startGame();
   }
 }
