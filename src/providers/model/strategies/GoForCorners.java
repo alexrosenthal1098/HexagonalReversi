@@ -3,7 +3,7 @@ package providers.model.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
-import providers.model.board.Cell;
+import providers.model.board.ICell;
 import providers.model.board.ReversiModel;
 
 /**
@@ -21,11 +21,11 @@ public class GoForCorners implements IStrategies {
    * @return the cell that is the best move for the player
    */
   @Override
-  public Cell strategicMove(ReversiModel model, List<List<Cell>> board, String color) {
-    Cell upperLeftMost = new Cell(board.size() * 100, board.size() * 100);
+  public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
+    ICell upperLeftMost = null;
 
     //gets a list of all teh valid moves that the player can make
-    List<Cell> validMoves = new ArrayList<>();
+    List<ICell> validMoves = new ArrayList<>();
     for (int row = 0; row < board.size(); row++) {
       for (int column = 0; column < board.get(row).size(); column++) {
         if (model.isValidMove(board.get(row).get(column), color)) {
@@ -53,7 +53,7 @@ public class GoForCorners implements IStrategies {
     }
 
     //gets a list of all the valid moves that have the max diffrence
-    List<Cell> cellsWithMax = new ArrayList<>();
+    List<ICell> cellsWithMax = new ArrayList<>();
     for (int i = 0; i < validMoves.size(); i++) {
       int diffrence = Math.abs(validMoves.get(i).getX() + validMoves.get(i).getY() - centerVal);
       if (diffrence == maxDiffrence) {
@@ -64,7 +64,7 @@ public class GoForCorners implements IStrategies {
     //gets the upper left most cell from the list of cells with the max diffrence
     if (validMoves.size() > 1) {
       upperLeftMost = validMoves.get(0);
-      for (Cell move : validMoves) {
+      for (ICell move : validMoves) {
         if (move.getX() <= upperLeftMost.getX() && move.getY() < upperLeftMost.getY()) {
           upperLeftMost = move;
         }

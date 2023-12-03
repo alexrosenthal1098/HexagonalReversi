@@ -3,8 +3,7 @@ package providers.model.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
-import providers.model.board.Cell;
-
+import providers.model.board.ICell;
 import providers.model.board.ReversiModel;
 
 /**
@@ -23,8 +22,8 @@ public class MaxNumOfCells implements IStrategies {
    * @return the cell that is the best move for the player
    */
   @Override
-  public Cell strategicMove(ReversiModel model, List<List<Cell>> board, String color) {
-    Cell biggest = new Cell(board.size() * 100, board.size() * 100);
+  public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
+    ICell biggest = null;
     int max = 0;
 
     //gets a the max number of cells that can be flipped by a move
@@ -37,7 +36,7 @@ public class MaxNumOfCells implements IStrategies {
     }
 
     //gets a list of all the cells that have the max number of cells that can be flipped by a move
-    List<Cell> cellsWithMax = new ArrayList<>();
+    List<ICell> cellsWithMax = new ArrayList<>();
     for (int row = 0; row < board.size(); row++) {
       for (int column = 0; column < board.get(row).size(); column++) {
         if (model.howManyCellsAreBeingChangedByMove(board.get(row).get(column), color) == max) {

@@ -2,8 +2,7 @@ package providers.model.strategies;
 
 import java.util.List;
 
-import providers.model.board.Cell;
-
+import providers.model.board.ICell;
 import providers.model.board.ReversiModel;
 
 /**
@@ -19,6 +18,6 @@ public interface IStrategies {
    * @param board is the board to get the corners from
    * @return the cell that is the best move for the player
    */
-  Cell strategicMove(ReversiModel model, List<List<Cell>> board, String color);
+  ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color);
 
 }

@@ -3,7 +3,7 @@ package providers.model.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
-import providers.model.board.Cell;
+import providers.model.board.ICell;
 import providers.model.board.ReversiModel;
 
 /**
@@ -21,11 +21,11 @@ public class AvoidCellsSurroundingCorners implements IStrategies {
    * @return the cell that is the best move for the player
    */
   @Override
-  public Cell strategicMove(ReversiModel model, List<List<Cell>> board, String color) {
-    Cell upperLeftMost = new Cell(board.size() * 100, board.size() * 100);
+  public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
+    ICell upperLeftMost = null;
 
     //gets a list of all teh surronding cells n the board
-    List<Cell> surroundingCorners = new ArrayList<>();
+    List<ICell> surroundingCorners = new ArrayList<>();
     surroundingCorners.addAll(model.getCellsSurrounding(board.get(0).get(0)));
     surroundingCorners.addAll(model.getCellsSurrounding(board.get(0).get(board.get(0).size() - 1)));
     surroundingCorners.addAll(model.getCellsSurrounding(board.get(model.getSize() - 1).get(0)));
@@ -37,9 +37,9 @@ public class AvoidCellsSurroundingCorners implements IStrategies {
 
 
     //gets a list of all teh valid moves that the player can make
-    List<Cell> validMoves = new ArrayList<>();
-    for (List<Cell> cells : board) {
-      for (Cell cell : cells) {
+    List<ICell> validMoves = new ArrayList<>();
+    for (List<ICell> cells : board) {
+      for (ICell cell : cells) {
         if (model.isValidMove(cell, color)) {
           validMoves.add(cell);
         }
@@ -48,7 +48,7 @@ public class AvoidCellsSurroundingCorners implements IStrategies {
 
     //removes all the valid moves that are in the list of surrounding cells
     if (validMoves.size() > 1) {
-      List<Cell> validMovesCopy = new ArrayList<>(validMoves);
+      List<ICell> validMovesCopy = new ArrayList<>(validMoves);
       for (int i = validMovesCopy.size() - 1; i >= 0; i--) {
         for (int j = surroundingCorners.size() - 1; j >= 0; j--) {
           if (validMovesCopy.get(i).equals(surroundingCorners.get(j))) {
@@ -68,7 +68,7 @@ public class AvoidCellsSurroundingCorners implements IStrategies {
     //gets the upperleft most value of teh valid moves
     if (validMoves.size() > 1) {
       upperLeftMost = validMoves.get(0);
-      for (Cell move : validMoves) {
+      for (ICell move : validMoves) {
         if (move.getX() <= upperLeftMost.getX() && move.getY() < upperLeftMost.getY()) {
           upperLeftMost = move;
         }

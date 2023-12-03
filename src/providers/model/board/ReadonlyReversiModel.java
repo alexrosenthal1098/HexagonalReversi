@@ -13,7 +13,7 @@ public interface ReadonlyReversiModel {
    *
    * @return the board.
    */
-  List<List<Cell>> getBoard();
+  List<List<ICell>> getBoard();
 
   /**
    * Needs to check to see if two players have passed there turns in a row.
@@ -53,7 +53,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell in the middle trying to find the surrounding of.
    * @return a list of the surrounding cells.
    */
-  List<Cell> getCellsSurrounding(ICell cell);
+  List<ICell> getCellsSurrounding(ICell cell);
 
   /**
    * Gets the upper left cell of a given cell.
@@ -61,7 +61,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell we want to get the upper left of
    * @return the upper left cell
    */
-  Cell getUpperLeftCell(ICell cell);
+  ICell getUpperLeftCell(ICell cell);
 
   /**
    * Gets the upper right cell of a given cell.
@@ -69,7 +69,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell we want to get the upper right of
    * @return the upper right cell
    */
-  Cell getUpperRightCell(ICell cell);
+  ICell getUpperRightCell(ICell cell);
 
   /**
    * Gets the right cell of a given cell.
@@ -77,7 +77,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell we want to get the right of
    * @return the right cell
    */
-  Cell getRightCell(ICell cell);
+  ICell getRightCell(ICell cell);
 
   /**
    * Gets the lower right cell of a given cell.
@@ -85,7 +85,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell we want to get the lower right of
    * @return the lower right cell
    */
-  Cell getLowerRightCell(ICell cell);
+  ICell getLowerRightCell(ICell cell);
 
   /**
    * Gets the lower left cell of a given cell.
@@ -93,7 +93,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell we want to get the lower left of
    * @return the lower left cell
    */
-  Cell getLowerLeftCell(ICell cell);
+  ICell getLowerLeftCell(ICell cell);
 
   /**
    * Gets the left cell of a given cell.
@@ -101,7 +101,7 @@ public interface ReadonlyReversiModel {
    * @param cell is the cell we want to get the left of
    * @return the left cell
    */
-  Cell getLeftCell(ICell cell);
+  ICell getLeftCell(ICell cell);
 
 
   /**
@@ -122,7 +122,7 @@ public interface ReadonlyReversiModel {
    * @param board       is the board.
    * @return the score of the player.
    */
-  int getScore(List<List<Cell>> board, String playerColor);
+  int getScore(List<List<ICell>> board, String playerColor);
 
 
   /**

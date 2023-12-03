@@ -1,13 +1,3 @@
-import controller.ReversiController;
-import model.HexagonalReversi;
-import model.ReversiModel;
-import player.HumanPlayer;
-import player.ReversiAI;
-import player.ReversiPlayer;
-import strategy.CaptureMaxPieces;
-import view.gui.ReversiFrame;
-import view.gui.ReversiView;
-
 /**
  * Main class for Reversi.
  */
@@ -18,6 +8,7 @@ public final class Reversi {
    * @param args Command line inputs.
    */
   public static void main(String[] args) {
+    /*
     if (args.length != 2) { // ensure there are 2 command line arguments
       throw new IllegalArgumentException("Two players must be specified.");
     }
@@ -58,5 +49,8 @@ public final class Reversi {
 
     // start the game
     model.startGame();
+     */
+
+
   }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import providers.model.board.Cell;
 import providers.model.board.Fill;
 import providers.model.board.Posn;
 import providers.model.board.ReadonlyReversiModel;

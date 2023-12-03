@@ -3,7 +3,6 @@ package providers.view;
 import java.util.List;
 
 import providers.controller.ViewListener;
-import providers.model.board.Cell;
 import providers.model.board.ICell;
 
 /**
@@ -35,7 +34,7 @@ public interface IView {
    *
    * @param board is the board
    */
-  void setBoard(List<List<Cell>> board);
+  void setBoard(List<List<ICell>> board);
 
 
   /**

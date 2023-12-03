@@ -3,7 +3,7 @@ package providers.model.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
-import providers.model.board.Cell;
+import providers.model.board.ICell;
 import providers.model.board.ReversiModel;
 
 /**
@@ -16,7 +16,7 @@ public class TryStrat implements IStrategies {
   IStrategies miniMax = new MiniMax();
 
   int maxDiff;
-  List<Cell> maxDiffCells;
+  List<ICell> maxDiffCells;
 
 
   /**
@@ -27,17 +27,17 @@ public class TryStrat implements IStrategies {
    * @return
    */
   @Override
-  public Cell strategicMove(ReversiModel model, List<List<Cell>> board, String color) {
+  public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
 
     //gets the cells that each diffrent type of strtegy would make
-    Cell biggest = new Cell(board.size() * 100, board.size() * 100);
-    Cell maxCell = maxNumOfCells.strategicMove(model, board, color);
-    Cell avoidNeighborsCell = avoidCellsSurroundingCorners.strategicMove(model, board, color);
-    Cell cornersCell = goForCorners.strategicMove(model, board, color);
-    Cell miniMaxCell = miniMax.strategicMove(model, board, color);
+    ICell biggest = null;
+    ICell maxCell = maxNumOfCells.strategicMove(model, board, color);
+    ICell avoidNeighborsCell = avoidCellsSurroundingCorners.strategicMove(model, board, color);
+    ICell cornersCell = goForCorners.strategicMove(model, board, color);
+    ICell miniMaxCell = miniMax.strategicMove(model, board, color);
 
     //puts all the cells into a list
-    List<Cell> cells = new ArrayList<Cell>();
+    List<ICell> cells = new ArrayList<ICell>();
     cells.add(maxCell);
     cells.add(avoidNeighborsCell);
     cells.add(cornersCell);
@@ -45,19 +45,16 @@ public class TryStrat implements IStrategies {
 
 
     maxDiff = Integer.MIN_VALUE;
-    maxDiffCells = new ArrayList<Cell>();
+    maxDiffCells = new ArrayList<ICell>();
 
     //gets the max diffrence of the scores of the player and the opponent would make
     // with each type of move from the diffrent strategies
     for (int i = 0; i < cells.size(); i++) {
-      List<List<Cell>> tempBoard = new ArrayList<>();
+      List<List<ICell>> tempBoard = new ArrayList<>();
       for (int row = 0; row < board.size(); row++) {
-        tempBoard.add(new ArrayList<Cell>());
+        tempBoard.add(new ArrayList<ICell>());
         for (int column = 0; column < board.get(row).size(); column++) {
-          Cell cell = new Cell();
-          cell.changeX(board.get(row).get(column).getX());
-          cell.changeY(board.get(row).get(column).getY());
-          cell.changeFill(board.get(row).get(column).getFill());
+          ICell cell = board.get(row).get(column);
           tempBoard.get(row).add(cell);
         }
       }

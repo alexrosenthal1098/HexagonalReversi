@@ -15,11 +15,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import providers.controller.IEvent;
-import providers.controller.Move;
-import providers.controller.Pass;
 import providers.controller.ViewListener;
-import providers.model.board.Cell;
 import providers.model.board.ICell;
 import providers.model.board.ReadonlyReversiModel;
 
@@ -69,9 +65,8 @@ public class ReversiGraphicsView extends JFrame implements IView {
       public void keyReleased(KeyEvent e) {
         System.out.println("pressed");
         if (e.getKeyChar() == 'p') {
-          IEvent event = new Pass();
           for (ViewListener listener : listeners) {
-            listener.onViewEvent(event);
+            listener.onViewEvent(null);
           }
         }
         if (e.getKeyChar() == 'e') {
@@ -167,7 +162,7 @@ public class ReversiGraphicsView extends JFrame implements IView {
    * @param board is the board
    */
   @Override
-  public void setBoard(List<List<Cell>> board) {
+  public void setBoard(List<List<ICell>> board) {
     // do nothing
   }
 
@@ -178,9 +173,8 @@ public class ReversiGraphicsView extends JFrame implements IView {
 
   @Override
   public void notifyListener(ICell cell) {
-    IEvent event = new Move(cell);
     for (ViewListener listener : listeners) {
-      listener.onViewEvent(event);
+      listener.onViewEvent(cell);
     }
   }
 }

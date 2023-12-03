@@ -3,7 +3,7 @@ package providers.model.strategies;
 import java.util.ArrayList;
 import java.util.List;
 
-import providers.model.board.Cell;
+import providers.model.board.ICell;
 import providers.model.board.ReversiModel;
 
 /**
@@ -14,7 +14,7 @@ public class MiniMax implements IStrategies {
   int numStrat2 = 0;
   int numStrat3 = 0;
 
-  List<List<Cell>> pastBoard = new ArrayList<List<Cell>>();
+  List<List<ICell>> pastBoard = new ArrayList<List<ICell>>();
 
   /**
    * gets the cell for a player that gets them the most amount of cells.
@@ -25,7 +25,7 @@ public class MiniMax implements IStrategies {
    * @return the cell that is the best move for the player
    */
   @Override
-  public Cell strategicMove(ReversiModel model, List<List<Cell>> board, String color) {
+  public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
     //needs to access opponent's past moves and try to guess what strategy they are using
     //then make a decision that is best based on minimizing ur opponent's moves
 
@@ -37,9 +37,9 @@ public class MiniMax implements IStrategies {
 
     //getting the diffrent cells that the thre strategies would
     // make to see what startegty the oponent is using
-    Cell moveIfStrat1;
-    Cell moveIfStrat2;
-    Cell moveIfStrat3;
+    ICell moveIfStrat1;
+    ICell moveIfStrat2;
+    ICell moveIfStrat3;
     moveIfStrat1 = new MaxNumOfCells().strategicMove(model,
             pastBoard, model.oppositePlayerColor(color));
     moveIfStrat2 = new AvoidCellsSurroundingCorners().
@@ -70,20 +70,20 @@ public class MiniMax implements IStrategies {
 
     // making move based on which one is highest
     if (numStrat1 >= numStrat2 && numStrat1 >= numStrat3) {
-      Cell cell = new MaxNumOfCells().strategicMove(model, board, model.oppositePlayerColor(color));
+      ICell cell = new MaxNumOfCells().strategicMove(model, board, model.oppositePlayerColor(color));
       if (model.isValidMove(cell, color)) {
         return cell;
       }
       return new MaxNumOfCells().strategicMove(model, board, color);
     } else if (numStrat2 > numStrat1 && numStrat2 > numStrat3) {
-      Cell cell = new AvoidCellsSurroundingCorners().strategicMove(model, board,
+      ICell cell = new AvoidCellsSurroundingCorners().strategicMove(model, board,
               model.oppositePlayerColor(color));
       if (model.isValidMove(cell, color)) {
         return cell;
       }
       return new MaxNumOfCells().strategicMove(model, board, color);
     } else if (numStrat3 > numStrat2) {
-      Cell cell = new GoForCorners().strategicMove(model, board, model.oppositePlayerColor(color));
+      ICell cell = new GoForCorners().strategicMove(model, board, model.oppositePlayerColor(color));
       if (model.isValidMove(cell, color)) {
         return cell;
       }
