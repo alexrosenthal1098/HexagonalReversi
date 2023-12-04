@@ -50,7 +50,8 @@ public class ReversiController implements ModelListener, PlayerActionListener {
       this.player.makeMove(); // tell the player to make a move
     }
     catch (Exception e) {
-      this.view.showErrorMessage(e.getMessage()); // if an error occurred, display the message
+      // if an error occurred, display the message
+      this.view.showErrorMessage("AI Player failed: " + e.getMessage());
     }
   }
 

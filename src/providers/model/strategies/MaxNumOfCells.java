@@ -48,6 +48,7 @@ public class MaxNumOfCells implements IStrategies {
     //gets the cell that is the upperleft most from the list of cells with max number of
     // cells that can be flipped by a move
     if (cellsWithMax.size() > 1) {
+      biggest = cellsWithMax.get(0);
       for (int i = 0; i < cellsWithMax.size(); i++) {
         if (cellsWithMax.get(i).getX() <= biggest.getX() &&
                 cellsWithMax.get(i).getY() < biggest.getY()) {

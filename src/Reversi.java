@@ -1,13 +1,12 @@
 import adapters.BothModels;
+import adapters.ProviderStrategyAIPlayer;
 import adapters.ToOurView;
 import adapters.ToProviderModel;
 import controller.ReversiController;
-import model.HexagonalReversi;
-import model.ReversiModel;
 import player.HumanPlayer;
-import player.ReversiAI;
 import player.ReversiPlayer;
-import strategy.CaptureMaxPieces;
+import providers.model.strategies.MaxNumOfCells;
+import providers.model.strategies.MiniMax;
 import view.gui.ReversiFrame;
 import view.gui.ReversiView;
 
@@ -67,7 +66,7 @@ public final class Reversi {
 
     BothModels theirModel = new ToProviderModel(3);
     ReversiPlayer human1 = new HumanPlayer();
-    ReversiPlayer human2 = new HumanPlayer();
+    ReversiPlayer human2 = new ProviderStrategyAIPlayer(theirModel, new MaxNumOfCells());
 
 
     ReversiView ourViewPlayer1 = new ReversiFrame(theirModel, "Player 1");

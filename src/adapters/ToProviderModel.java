@@ -174,7 +174,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public int howManyCellsAreBeingChangedByMove(ICell cell, String playerColor) {
-    return 0;
+    return 2;
   }
 
   @Override
@@ -244,8 +244,6 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
   @Override
   public void moveAt(int x, int y) {
     super.moveAt(x, y);
-    Color newColor = super.getTileAt(x, y).getTopColor();
-    Point theirCoords = AdapterUtils.toTheirCoordinates(new Point(x, y), this.sideLength);
     this.updateCells();
   }
 
