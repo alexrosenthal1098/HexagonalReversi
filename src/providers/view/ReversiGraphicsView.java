@@ -107,6 +107,7 @@ public class ReversiGraphicsView extends JFrame implements IView {
         ICell cell = panel.clickHelper(getMousePosition());
         if (cell == null) {
           current = null;
+          return;
         }
         cell.setClicked(true);
         refresh();

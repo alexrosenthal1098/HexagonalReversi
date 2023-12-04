@@ -116,17 +116,21 @@ public class ToProviderCell implements ICell {
   @Override
   public double getA(int size, int boardSize) {
     // using the same formula as in HexagonalBoard.getTileSideLength()
-    return (double) boardSize / ((double) (size * 2 - 1) * Math.sqrt(3));
+    return (double) boardSize / ((size * 2 - 1) * Math.sqrt(3));
   }
 
   @Override
   public Posn getCenter(int size, int boardSize) {
     // using roughly the same formula as in HexagonalBoard.updateBoard()
-    double tileSideL = this.getA(size, boardSize);
+    double tileSide = getA(size, boardSize);
     double rowDif = Math.abs(size - 1 - this.y);
-    double x = (tileSideL * rowDif * Math.sqrt(3) / 2.0 ) + (this.x * 3 * tileSideL);
-    double y = tileSideL + (this.y * 1.5 * tileSideL);
+    double x = tileSide * Math.sqrt(3) * (rowDif / 2.0) + this.x * tileSide * Math.sqrt(3)
+            + Math.sqrt(3) * tileSide * .5;
+    double y = tileSide + (this.y * ((1.5) * tileSide));
     return new Posn(x, y);
+
+
+
   }
 
   @Override
@@ -157,6 +161,12 @@ public class ToProviderCell implements ICell {
   @Override
   public int hashCode() {
     return (this.x * 37 + this.y * 37 + Boolean.hashCode(this.clicked) + this.ourTile.hashCode());
+  }
+
+  @Override
+  public String toString() {
+    return String.format("Clicked: %b Color: %s Location: (%d, %d)\n",
+            this.clicked, this.getFill(), this.x, this.y);
   }
 
 

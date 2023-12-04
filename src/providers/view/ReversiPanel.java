@@ -59,7 +59,6 @@ public class ReversiPanel extends JPanel {
     if (closest.clicked()) {
       resetCells();
       closest.setClicked(false);
-      return null;
     }
     // makes sure this distance is less than the value of a
     if (dist < a) {
@@ -80,9 +79,9 @@ public class ReversiPanel extends JPanel {
   private void resetCells() {
     List<List<ICell>> board = model.getBoard();
     // resets the whole board to having no cells clicked
-    for (int row = 0; row < board.size(); row++) {
-      for (int column = 0; column < board.get(row).size(); column++) {
-        board.get(row).get(column).setClicked(false);
+    for (List<ICell> iCells : board) {
+      for (ICell iCell : iCells) {
+        iCell.setClicked(false);
       }
     }
   }
@@ -113,8 +112,8 @@ public class ReversiPanel extends JPanel {
     Graphics2D g2d = (Graphics2D) g;
     List<List<ICell>> board = model.getBoard();
 
-    String scoreText = "Player1 Score: " + model.getScore(board, "BLACK") + "    Player2 Score: "
-            + model.getScore(board, "WHITE");
+    String scoreText = "Player1 Score: " + model.getScore(board, "BLACK") +
+            "    Player2 Score: " + model.getScore(board, "WHITE");
     g2d.drawString(scoreText, 0, this.getHeight() - (this.getWidth() / 10) + 15);
 
     a = board.get(0).get(0).getA(board.get(0).size(), this.getWidth());

@@ -1,6 +1,8 @@
 package adapters;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -26,6 +28,33 @@ public class ToOurView extends ReversiGraphicsView implements ReversiView, ViewL
     super.addListener(this);
     this.listeners = new ArrayList<>();
     super.setVisible(true);
+
+    this.addMouseListener(new MouseListener() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        refresh();
+      }
+
+      @Override
+      public void mousePressed(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+
+      }
+    });
   }
 
   @Override

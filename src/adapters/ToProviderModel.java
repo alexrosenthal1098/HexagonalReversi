@@ -18,6 +18,9 @@ import util.HexReversiUtils;
  */
 public class ToProviderModel extends HexagonalReversi implements BothModels  {
   private final int sideLength; // the side length, in tiles, of the board
+  private final List<List<ICell>> board; // a 2d list of cells on the board
+  // this field is needed so that only one new cell is created for each position and the references
+  // to the cells are passed around, not copies
 
   /**
    * A constructor that specifies the board's side length in number of tiles
@@ -26,6 +29,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
   public ToProviderModel(int sideLength) {
     super(sideLength);
     this.sideLength = sideLength;
+    this.board = this.initBoard();
   }
 
   /**
@@ -43,29 +47,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public List<List<ICell>> getBoard() {
-    List<List<ICell>> board = new ArrayList<>();
-
-    for (int row = 0; row < this.sideLength * 2 - 1; row++) {
-      board.add(new ArrayList<>());
-      if (row < this.sideLength) {
-        for (int col = 0; col < this.sideLength + row; col++) {
-          board.get(row).add(null);
-        }
-      }
-      else {
-        for (int col = (this.sideLength * 2) - 2; col > row - this.sideLength; col--) {
-          board.get(row).add(null);
-        }
-      }
-    }
-
-    Map<Point, ReversiTile> tiles = super.getTiles();
-    for (Point tilePoint : tiles.keySet()) {
-      Point theirCoords = this.toTheirCoordinates(tilePoint);
-      board.get(theirCoords.y).set(theirCoords.x, new ToProviderCell(tiles.get(tilePoint)));
-    }
-
-    return board;
+    return this.board;
   }
 
   @Override
@@ -95,7 +77,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
     if (cell == null || playerColor == null) {
       throw new IllegalArgumentException("Cannot give null arguments.");
     }
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
 
     if (!this.stringToColor(playerColor).equals(super.currentPlayerColor())) {
       super.passTurn();
@@ -121,7 +103,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public ICell getUpperLeftCell(ICell cell) {
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
     try {
       return new ToProviderCell(super.getTileAt(ourCoords.x, ourCoords.y - 1));
     }
@@ -132,7 +114,8 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public ICell getUpperRightCell(ICell cell) {
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+
     try {
       return new ToProviderCell(super.getTileAt(ourCoords.x + 1, ourCoords.y - 1));
     }
@@ -143,7 +126,8 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public ICell getRightCell(ICell cell) {
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+
     try {
       return new ToProviderCell(super.getTileAt(ourCoords.x + 1, ourCoords.y));
     }
@@ -154,7 +138,8 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public ICell getLowerRightCell(ICell cell) {
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+
     try {
       return new ToProviderCell(super.getTileAt(ourCoords.x, ourCoords.y + 1));
     }
@@ -165,7 +150,8 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public ICell getLowerLeftCell(ICell cell) {
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+
     try {
       return new ToProviderCell(super.getTileAt(ourCoords.x - 1, ourCoords.y + 1));
     }
@@ -176,7 +162,8 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public ICell getLeftCell(ICell cell) {
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+
     try {
       return new ToProviderCell(super.getTileAt(ourCoords.x - 1, ourCoords.y));
     }
@@ -203,7 +190,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
     int score = 0;
     for (List<ICell> iCells : board) {
       for (ICell iCell : iCells) {
-        if (iCell.getFill().equals(Fill.FillColor.EMPTY)) {
+        if (iCell.getFill().equals(this.stringToFill(playerColor))) {
           score++;
         }
       }
@@ -255,11 +242,19 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
   }
 
   @Override
+  public void moveAt(int x, int y) {
+    super.moveAt(x, y);
+    Color newColor = super.getTileAt(x, y).getTopColor();
+    Point theirCoords = AdapterUtils.toTheirCoordinates(new Point(x, y), this.sideLength);
+    this.updateCells();
+  }
+
+  @Override
   public void makeMove(ICell cell, String playerColor) {
     if (!this.stringToColor(playerColor).equals(super.currentPlayerColor())) {
       throw new IllegalArgumentException("Given player color is not the current player.");
     }
-    Point ourCoords = this.toOurCoordinates(cell);
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
     super.moveAt(ourCoords.x, ourCoords.y);
   }
 
@@ -292,34 +287,29 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
     }
   }
 
-  // converts the given cell's coordinates to the ones used for our model and
-  // returns it as a point
-  private Point toOurCoordinates(ICell cell) {
-    int ourX;
-    if (cell.getY() < this.sideLength) {
-      ourX = cell.getX() - cell.getY();
+  // returns the string associated with the given color
+  private String colorToString(Color color) {
+    if (color.equals(Color.BLACK)) {
+      return "BLACK";
+    }
+    else if (color.equals(Color.WHITE)) {
+      return "WHITE";
     }
     else {
-      ourX = cell.getX() - this.sideLength + 1;
-
+      throw new IllegalArgumentException("Color must be black or white.");
     }
-    int ourY = cell.getY() - this.sideLength + 1;
-    return new Point(ourX, ourY);
   }
 
-  // converts the given point's coordinates to the ones used for their model and
-  // returns it as a point
-  private Point toTheirCoordinates(Point tilePoint) {
-    int theirY = tilePoint.y + this.sideLength - 1;
-    int theirX;
-    if (tilePoint.y > 0) {
-      theirX = tilePoint.x + this.sideLength - 1;
+  private Fill.FillColor stringToFill(String color) {
+    if (color.equalsIgnoreCase("BLACK")) {
+      return Fill.FillColor.BLACK;
+    }
+    else if (color.equalsIgnoreCase("WHITE")) {
+      return Fill.FillColor.WHITE;
     }
     else {
-      theirX = tilePoint.x + theirY;
+      throw new IllegalArgumentException("Color must be black or white");
     }
-
-    return new Point(theirX, theirY);
   }
 
   // adds the given cell to the list if it is not null
@@ -328,5 +318,49 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
       return;
     }
     list.add(cell);
+  }
+
+  // initializes the cells of the board
+  private List<List<ICell>> initBoard() {
+    List<List<ICell>> board = new ArrayList<>();
+
+    for (int row = 0; row < this.sideLength * 2 - 1; row++) {
+      board.add(new ArrayList<>());
+      if (row < this.sideLength) {
+        for (int col = 0; col < this.sideLength + row; col++) {
+          board.get(row).add(null);
+        }
+      }
+      else {
+        for (int col = (this.sideLength * 2) - 2; col > row - this.sideLength; col--) {
+          board.get(row).add(null);
+        }
+      }
+    }
+
+    Map<Point, ReversiTile> tiles = super.getTiles();
+    for (Point tilePoint : tiles.keySet()) {
+      Point theirCoords = AdapterUtils.toTheirCoordinates(tilePoint, this.sideLength);
+      ICell cell = new ToProviderCell(tiles.get(tilePoint));
+      cell.changeX(theirCoords.x);
+      cell.changeY(theirCoords.y);
+      board.get(theirCoords.y).set(theirCoords.x, cell);
+    }
+
+    return board;
+  }
+
+  // checks the tiles of our reversi model and ensures that the cells held in this.board are
+  // updated
+  private void updateCells() {
+    for (Point tilePoint : super.getTiles().keySet()) {
+      Point theirCoords = AdapterUtils.toTheirCoordinates(tilePoint, this.sideLength);
+      ReversiTile tile = super.getTileAt(tilePoint.x, tilePoint.y);
+      if (!tile.hasDisk()) {
+        continue;
+      }
+      Color newColor = tile.getTopColor();
+      this.board.get(theirCoords.y).get(theirCoords.x).setColor(this.colorToString(newColor));
+    }
   }
 }
