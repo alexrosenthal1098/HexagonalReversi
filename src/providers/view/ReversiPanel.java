@@ -59,6 +59,7 @@ public class ReversiPanel extends JPanel {
     if (closest.clicked()) {
       resetCells();
       closest.setClicked(false);
+      return null;
     }
     // makes sure this distance is less than the value of a
     if (dist < a) {

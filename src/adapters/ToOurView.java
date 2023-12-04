@@ -17,7 +17,8 @@ import view.gui.ReversiView;
  * A class that adapts the provider's view to our view interface.
  */
 public class ToOurView extends ReversiGraphicsView implements ReversiView, ViewListener {
-  private final ArrayList<BoardListener> listeners;
+  private final ArrayList<BoardListener> listeners; // a list of listeners to this view
+  private final int sideLength; // the side length of the board, in number of tiles
 
   /**
    * A constructor that takes in the provider's model.
@@ -27,34 +28,8 @@ public class ToOurView extends ReversiGraphicsView implements ReversiView, ViewL
     super(model);
     super.addListener(this);
     this.listeners = new ArrayList<>();
+    this.sideLength = model.getSize();
     super.setVisible(true);
-
-    this.addMouseListener(new MouseListener() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        refresh();
-      }
-
-      @Override
-      public void mousePressed(MouseEvent e) {
-
-      }
-
-      @Override
-      public void mouseReleased(MouseEvent e) {
-
-      }
-
-      @Override
-      public void mouseEntered(MouseEvent e) {
-
-      }
-
-      @Override
-      public void mouseExited(MouseEvent e) {
-
-      }
-    });
   }
 
   @Override
@@ -86,7 +61,8 @@ public class ToOurView extends ReversiGraphicsView implements ReversiView, ViewL
     }
     else {
       for (BoardListener listener : this.listeners) {
-        listener.moveMade(Optional.of(new Point(cell.getX(), cell.getY())));
+        Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+        listener.moveMade(Optional.of(new Point(ourCoords.x, ourCoords.y)));
       }
     }
   }
