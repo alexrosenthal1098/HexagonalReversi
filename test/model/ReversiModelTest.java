@@ -581,7 +581,7 @@ public class ReversiModelTest {
     Assert.assertNotSame(this.model, this.model.copyModel());
   }
 
-  @Test(expected=IllegalStateException.class)
+  @Test(expected = IllegalStateException.class)
   public void testCopyModelHasNotStarted() {
     ReversiModel copy = this.model.copyModel();
     copy.passTurn();

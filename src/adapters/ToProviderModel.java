@@ -1,6 +1,7 @@
 package adapters;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import model.tile.ReversiTile;
 import providers.controller.ModelListener;
 import providers.model.board.Fill;
 import providers.model.board.ICell;
-import util.HexReversiUtils;
 
 /**
  * A class that adapts our model implementation to the providers model interface.
@@ -23,7 +23,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
   // to the cells are passed around, not copies
 
   /**
-   * A constructor that specifies the board's side length in number of tiles
+   * A constructor that specifies the board's side length in number of tiles.
    * @param sideLength Side length in number of tiles.
    */
   public ToProviderModel(int sideLength) {

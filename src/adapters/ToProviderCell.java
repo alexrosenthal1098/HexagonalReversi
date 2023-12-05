@@ -1,8 +1,7 @@
 package adapters;
 
-import java.awt.*;
+import java.awt.Color;
 
-import model.tile.PointyTopHexagon;
 import model.tile.ReversiTile;
 import providers.model.board.Fill;
 import providers.model.board.ICell;
@@ -54,7 +53,7 @@ public class ToProviderCell implements ICell {
       throw new IllegalArgumentException("Given fill color cannot be null.");
     }
     if (!this.ourTile.hasDisk()) {
-      switch(fill) {
+      switch (fill) {
         case BLACK:
           this.ourTile.placeDisk(Color.BLACK, Color.WHITE);
           break;
@@ -66,7 +65,7 @@ public class ToProviderCell implements ICell {
       }
     }
     else {
-      switch(fill) {
+      switch (fill) {
         case BLACK:
           if (this.ourTile.getTopColor().equals(Color.BLACK)) {
             return;

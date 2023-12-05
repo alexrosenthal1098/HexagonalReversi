@@ -1,7 +1,6 @@
 package controller;
 
 import java.awt.Point;
-import java.util.concurrent.TimeUnit;
 
 import model.ModelListener;
 import model.ReversiModel;

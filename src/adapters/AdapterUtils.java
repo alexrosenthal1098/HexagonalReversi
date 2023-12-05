@@ -1,6 +1,6 @@
 package adapters;
 
-import java.awt.*;
+import java.awt.Point;
 
 import providers.model.board.ICell;
 

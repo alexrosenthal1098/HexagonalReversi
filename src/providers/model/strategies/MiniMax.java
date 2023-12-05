@@ -70,7 +70,8 @@ public class MiniMax implements IStrategies {
 
     // making move based on which one is highest
     if (numStrat1 >= numStrat2 && numStrat1 >= numStrat3) {
-      ICell cell = new MaxNumOfCells().strategicMove(model, board, model.oppositePlayerColor(color));
+      ICell cell = new MaxNumOfCells().strategicMove(model, board,
+              model.oppositePlayerColor(color));
       if (model.isValidMove(cell, color)) {
         return cell;
       }
