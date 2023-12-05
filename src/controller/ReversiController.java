@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.Point;
+import java.util.concurrent.TimeUnit;
 
 import model.ModelListener;
 import model.ReversiModel;
@@ -16,6 +17,7 @@ public class ReversiController implements ModelListener, PlayerActionListener {
   private final ReversiModel model;
   private final ReversiPlayer player;
   private final ReversiView view;
+  private boolean gameOver;
 
   /**
    * A constructor for a ReversiController that takes a model to play on, a model's player, and
@@ -31,10 +33,11 @@ public class ReversiController implements ModelListener, PlayerActionListener {
     if (model == null || player == null || view == null) {
       throw new IllegalArgumentException("No arguments can be null.");
     }
-    // initialize the model, player, and view fields
+    // initialize the fields
     this.model = model;
     this.player = player;
     this.view = view;
+    this.gameOver = false;
 
     // register as a player listener using the firstPlayer boolean and as a readOnly listener
     this.model.addListener(this, firstPlayer);
@@ -46,17 +49,33 @@ public class ReversiController implements ModelListener, PlayerActionListener {
 
   @Override
   public void yourTurn() {
+    if (gameOver) {
+      // if the game is over, display that the game is over and
+      // don't prompt the players to make a move.
+      this.errorOccurred("Game over!");
+      return;
+    }
+
+    this.player.makeMove(); // tell the player to make a move
+
+    /*
     try {
       this.player.makeMove(); // tell the player to make a move
     }
     catch (Exception e) {
       // if an error occurred, display the message
-      this.view.showErrorMessage("AI Player failed: " + e.getMessage());
+      this.view.showErrorMessage("Player move failed: " + e.getMessage());
+      System.out.println("Player move failed: " + e.getMessage());
     }
+
+     */
   }
 
   @Override
   public void modelChanged() {
+    if (this.model.isGameOver()) {
+      this.gameOver = true;
+    }
     // when the model changes, deselect the view's current tile and repaint
     this.view.clearSelectedTiles();
     this.view.update();

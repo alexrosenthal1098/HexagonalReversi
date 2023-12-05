@@ -30,7 +30,6 @@ public class TryStrat implements IStrategies {
   public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
 
     //gets the cells that each diffrent type of strtegy would make
-    ICell biggest = null;
     ICell maxCell = maxNumOfCells.strategicMove(model, board, color);
     ICell avoidNeighborsCell = avoidCellsSurroundingCorners.strategicMove(model, board, color);
     ICell cornersCell = goForCorners.strategicMove(model, board, color);
@@ -75,6 +74,7 @@ public class TryStrat implements IStrategies {
     }
 
     //gets the cell that is the upperleft most from the list of cells with max diffrence
+    ICell biggest = maxDiffCells.get(0);
     if (maxDiffCells.size() > 1) {
       for (int i = 0; i < maxDiffCells.size(); i++) {
         if (maxDiffCells.get(i).getX() <= biggest.getX() &&

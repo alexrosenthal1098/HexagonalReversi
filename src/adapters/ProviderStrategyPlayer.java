@@ -14,7 +14,7 @@ import providers.model.strategies.IStrategies;
 /**
  * A reversi player that uses a strategy from the provider.
  */
-public class ProviderStrategyAIPlayer implements ReversiPlayer {
+public class ProviderStrategyPlayer implements ReversiPlayer {
   private final ReversiModel model; // the model that is being played on
   private final IStrategies strategy; // the strategy this model uses
   private final List<PlayerActionListener> listeners; // a list of listeners to this player
@@ -23,7 +23,7 @@ public class ProviderStrategyAIPlayer implements ReversiPlayer {
    * A constructor that takes in a provider strategy.
    * @param strategy A strategy for this player to use.
    */
-  public ProviderStrategyAIPlayer(BothModels model, IStrategies strategy) {
+  public ProviderStrategyPlayer(BothModels model, IStrategies strategy) {
     if (model == null || strategy == null) {
       throw new IllegalArgumentException("Given model or strategy cannot be null.");
     }
@@ -45,13 +45,10 @@ public class ProviderStrategyAIPlayer implements ReversiPlayer {
 
   @Override
   public void makeMove() {
-    System.out.println("Getting move");
     ICell cellToMove = this.strategy.strategicMove(this.model, this.model.getBoard(),
             this.model.getColor());
-    System.out.println(cellToMove);
     if (cellToMove == null) {
       for (PlayerActionListener listener : this.listeners) {
-        System.out.println("pass");
         listener.turnPassed();
       }
 
@@ -59,7 +56,6 @@ public class ProviderStrategyAIPlayer implements ReversiPlayer {
     else {
       Point ourCoordsMove = AdapterUtils.toOurCoordinates(cellToMove, this.model.getSize());
       for (PlayerActionListener listener : this.listeners) {
-        System.out.println("move");
         listener.moveMade(ourCoordsMove);
       }
     }

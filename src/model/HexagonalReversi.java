@@ -150,8 +150,8 @@ public class HexagonalReversi implements ReversiModel {
     // either player 1's color or player 2's color.
     this.currentPlayer = this.otherPlayerColor(); // set the current player to the other player
 
-    this.notifyTurnStarted(); // notify player listeners that their turn started
     this.notifyModelChanged(); // notify read-only listeners that the model changed
+    this.notifyTurnStarted(); // notify player listeners that their turn started
   }
 
   @Override

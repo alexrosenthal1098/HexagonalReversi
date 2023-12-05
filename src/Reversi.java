@@ -1,14 +1,17 @@
 import adapters.BothModels;
-import adapters.ProviderStrategyAIPlayer;
+import adapters.ProviderStrategyPlayer;
 import adapters.ToOurView;
 import adapters.ToProviderModel;
 import controller.ReversiController;
 import player.HumanPlayer;
+import player.ReversiAI;
 import player.ReversiPlayer;
 import providers.model.strategies.AvoidCellsSurroundingCorners;
 import providers.model.strategies.GoForCorners;
 import providers.model.strategies.MaxNumOfCells;
 import providers.model.strategies.MiniMax;
+import providers.model.strategies.TryStrat;
+import strategy.CaptureMaxPieces;
 import view.gui.ReversiFrame;
 import view.gui.ReversiView;
 
@@ -22,61 +25,59 @@ public final class Reversi {
    * @param args Command line inputs.
    */
   public static void main(String[] args) {
-    /*
+
     if (args.length != 2) { // ensure there are 2 command line arguments
       throw new IllegalArgumentException("Two players must be specified.");
     }
-    // initialize the model and declare players
-    ReversiModel model = new HexagonalReversi(3);
-    ReversiPlayer player1;
-    ReversiPlayer player2;
-
-    switch (args[0]) {
-      case "human":
-        player1 = new HumanPlayer();
-        break;
-      case "capture-max":
-        player1 = new ReversiAI(model, new CaptureMaxPieces());
-        break;
-      default:
-        throw new IllegalArgumentException("Unsupported player type \"" + args[0] + "\"");
-    }
-
-    switch (args[1]) {
-      case "human":
-        player2 = new HumanPlayer();
-        break;
-      case "capture-max":
-        player2 = new ReversiAI(model, new CaptureMaxPieces());
-        break;
-      default:
-        throw new IllegalArgumentException("Unsupported player type \"" + args[0] + "\"");
-    }
+    // initialize the model and players
+    BothModels theirModel = new ToProviderModel();
+    ReversiPlayer ourStratPlayer = Reversi.parsePlayer1(args[0], theirModel);
+    ReversiPlayer theirStratPlayer = Reversi.parsePlayer2(args[1], theirModel);
 
     // initialize views and controllers using given player types
-    ReversiView viewPlayer1 = new ReversiFrame(model, "Player 1");
-    ReversiView viewPlayer2 = new ReversiFrame(model, "Player 2");
+    ReversiView ourView = new ReversiFrame(theirModel, "Player 1");
+    ReversiView theirView = new ToOurView(theirModel);
     ReversiController controller1 =
-            new ReversiController(model, player1, viewPlayer1, true);
+            new ReversiController(theirModel, ourStratPlayer, ourView, true);
     ReversiController controller2 =
-            new ReversiController(model, player2, viewPlayer2, false);
+            new ReversiController(theirModel, theirStratPlayer, theirView, false);
 
     // start the game
-    model.startGame();
-
-     */
-
-    BothModels theirModel = new ToProviderModel();
-    ReversiPlayer human1 = new HumanPlayer();
-    ReversiPlayer human2 = new ProviderStrategyAIPlayer(theirModel, new MiniMax());
-
-
-    ReversiView ourViewPlayer1 = new ReversiFrame(theirModel, "Player 1");
-    ReversiView theirViewPlayer2 = new ToOurView(theirModel);
-    ReversiController controller1 =
-            new ReversiController(theirModel, human1, ourViewPlayer1, true);
-    ReversiController controller2 =
-            new ReversiController(theirModel, human2, theirViewPlayer2, false);
     theirModel.startGame();
+  }
+
+
+  // parses the given string representing which strategy/player to use and returns
+  // an instance of the corresponding player from OUR strategies
+  private static ReversiPlayer parsePlayer1(String player, BothModels model) {
+    switch (player) {
+      case "human":
+        return new HumanPlayer();
+      case "capture-max":
+        return new ReversiAI(model, new CaptureMaxPieces());
+      default:
+        throw new IllegalArgumentException("Unsupported player1 type \"" + player + "\"");
+    }
+  }
+
+  // parses the given string representing which strategy/player to use and returns
+  // an instance of the corresponding player from the PROVIDER strategies
+  private static ReversiPlayer parsePlayer2(String player, BothModels model) {
+    switch (player) {
+      case "human":
+        return new HumanPlayer();
+      case "max-cells":
+        return new ProviderStrategyPlayer(model, new MaxNumOfCells());
+      case "corners":
+        return new ProviderStrategyPlayer(model, new GoForCorners());
+      case "avoid-near-corners":
+        return new ProviderStrategyPlayer(model, new AvoidCellsSurroundingCorners());
+      case "minimax":
+        return new ProviderStrategyPlayer(model, new MiniMax());
+      case "try-all":
+        return new ProviderStrategyPlayer(model, new TryStrat());
+      default:
+        throw new IllegalArgumentException("Unsupported player2 type \"" + player + "\"");
+    }
   }
 }
