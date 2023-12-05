@@ -5,6 +5,8 @@ import adapters.ToProviderModel;
 import controller.ReversiController;
 import player.HumanPlayer;
 import player.ReversiPlayer;
+import providers.model.strategies.AvoidCellsSurroundingCorners;
+import providers.model.strategies.GoForCorners;
 import providers.model.strategies.MaxNumOfCells;
 import providers.model.strategies.MiniMax;
 import view.gui.ReversiFrame;
@@ -64,9 +66,9 @@ public final class Reversi {
 
      */
 
-    BothModels theirModel = new ToProviderModel(3);
+    BothModels theirModel = new ToProviderModel();
     ReversiPlayer human1 = new HumanPlayer();
-    ReversiPlayer human2 = new ProviderStrategyAIPlayer(theirModel, new MaxNumOfCells());
+    ReversiPlayer human2 = new ProviderStrategyAIPlayer(theirModel, new MiniMax());
 
 
     ReversiView ourViewPlayer1 = new ReversiFrame(theirModel, "Player 1");

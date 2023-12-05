@@ -24,7 +24,7 @@ public class MaxNumOfCells implements IStrategies {
   @Override
   public ICell strategicMove(ReversiModel model, List<List<ICell>> board, String color) {
     ICell biggest = null;
-    int max = 0;
+    int max = 1;
 
     //gets a the max number of cells that can be flipped by a move
     for (int row = 0; row < board.size(); row++) {

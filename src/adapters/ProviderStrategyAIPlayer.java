@@ -45,10 +45,13 @@ public class ProviderStrategyAIPlayer implements ReversiPlayer {
 
   @Override
   public void makeMove() {
+    System.out.println("Getting move");
     ICell cellToMove = this.strategy.strategicMove(this.model, this.model.getBoard(),
             this.model.getColor());
+    System.out.println(cellToMove);
     if (cellToMove == null) {
       for (PlayerActionListener listener : this.listeners) {
+        System.out.println("pass");
         listener.turnPassed();
       }
 
@@ -56,6 +59,7 @@ public class ProviderStrategyAIPlayer implements ReversiPlayer {
     else {
       Point ourCoordsMove = AdapterUtils.toOurCoordinates(cellToMove, this.model.getSize());
       for (PlayerActionListener listener : this.listeners) {
+        System.out.println("move");
         listener.moveMade(ourCoordsMove);
       }
     }

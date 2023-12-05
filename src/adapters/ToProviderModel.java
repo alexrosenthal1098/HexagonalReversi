@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import model.HexagonalReversi;
+import model.ReversiModel;
 import model.tile.ReversiTile;
 import providers.controller.ModelListener;
 import providers.model.board.Fill;
 import providers.model.board.ICell;
-import providers.model.board.ReversiModel;
 import util.HexReversiUtils;
 
 /**
@@ -79,11 +79,11 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
     }
     Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
 
-    if (!this.stringToColor(playerColor).equals(super.currentPlayerColor())) {
-      super.passTurn();
-      boolean validMove = super.isMovePossible(ourCoords.x, ourCoords.y);
-      super.passTurn();
-      return validMove;
+    ReversiModel modelCopy = super.copyModel();
+    modelCopy.startGame();
+    if (!this.stringToColor(playerColor).equals(modelCopy.currentPlayerColor())) {
+      modelCopy.passTurn();
+      return modelCopy.isMovePossible(ourCoords.x, ourCoords.y);
     }
 
     return super.isMovePossible(ourCoords.x, ourCoords.y);
@@ -174,7 +174,28 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public int howManyCellsAreBeingChangedByMove(ICell cell, String playerColor) {
-    return 2;
+    model.ReversiModel modelCopy = super.copyModel(); // copy the model
+    modelCopy.startGame(); // start the game for the copy
+
+    // if the playerColor string doesn't correspond to the current player of the copy, then
+    // pass the turn to the right player
+    if (!modelCopy.currentPlayerColor().equals(this.stringToColor(playerColor))) {
+      modelCopy.passTurn();
+    }
+
+    // convert their coordinates to ours
+    Point ourCoords = AdapterUtils.toOurCoordinates(cell, this.sideLength);
+
+    // if the move is not possible return 0
+    if (!modelCopy.isMovePossible(ourCoords.x, ourCoords.y)) {
+      return 0;
+    }
+
+    // get the score before and after a move at the given cell is made then return the difference
+    int scoreBefore = modelCopy.getCurrentPlayerScore();
+    modelCopy.moveAt(ourCoords.x, ourCoords.y);
+    int scoreAfter = modelCopy.getOtherPlayerScore();
+    return scoreAfter - scoreBefore;
   }
 
   @Override
@@ -258,17 +279,18 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
 
   @Override
   public void notifyListenerMove(ICell cell) {
-    throw new UnsupportedOperationException("Listeners will automatically be called");
+    throw new UnsupportedOperationException("Listeners will automatically be notified");
   }
 
   @Override
   public void notifyListenerChangePlayer() {
-    throw new UnsupportedOperationException("Listeners will automatically be called");
+    throw new UnsupportedOperationException("Listeners will automatically be notified");
   }
 
   @Override
   public void addListener(ModelListener vl) {
-    throw new UnsupportedOperationException("Only listeners using our controller are supported");
+    throw new UnsupportedOperationException("Only listeners using the original controller" +
+            "are supported");
   }
 
   // returns the color associated with the given string, either black or white
