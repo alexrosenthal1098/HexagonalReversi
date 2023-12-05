@@ -25,10 +25,10 @@ public final class Reversi {
    * @param args Command line inputs.
    */
   public static void main(String[] args) {
-
     if (args.length != 2) { // ensure there are 2 command line arguments
       throw new IllegalArgumentException("Two players must be specified.");
     }
+
     // initialize the model and players
     BothModels theirModel = new ToProviderModel();
     ReversiPlayer ourStratPlayer = Reversi.parsePlayer1(args[0], theirModel);

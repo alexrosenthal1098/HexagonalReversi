@@ -377,6 +377,7 @@ public class ToProviderModel extends HexagonalReversi implements BothModels  {
       Point theirCoords = AdapterUtils.toTheirCoordinates(tilePoint, this.sideLength);
       ReversiTile tile = super.getTileAt(tilePoint.x, tilePoint.y);
       if (!tile.hasDisk()) {
+        this.board.get(theirCoords.y).get(theirCoords.x).changeFill(Fill.FillColor.EMPTY);
         continue;
       }
       Color newColor = tile.getTopColor();

@@ -56,9 +56,6 @@ public class ReversiController implements ModelListener, PlayerActionListener {
       return;
     }
 
-    this.player.makeMove(); // tell the player to make a move
-
-    /*
     try {
       this.player.makeMove(); // tell the player to make a move
     }
@@ -67,8 +64,6 @@ public class ReversiController implements ModelListener, PlayerActionListener {
       this.view.showErrorMessage("Player move failed: " + e.getMessage());
       System.out.println("Player move failed: " + e.getMessage());
     }
-
-     */
   }
 
   @Override
