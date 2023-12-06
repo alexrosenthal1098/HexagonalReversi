@@ -1,9 +1,9 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="HexagonalReversi:jar">
+  <artifact type="jar" build-on-make="true" name="HexagonalReversi:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/HexagonalReversi_jar</output-path>
     <root id="archive" name="HexagonalReversi.jar">
       <element id="module-output" name="HexagonalReversi" />
-      <element id="archive" name="HexagonalReversi" />
+      <element id="archive" name="HexagonalReversi.jar" />
     </root>
   </artifact>
 </component>

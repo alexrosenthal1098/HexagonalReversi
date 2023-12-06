@@ -16,3 +16,16 @@ not affected by this, because either player can move on said tile and override t
 
 Overall, every feature of the assignment is successfully integrated, with a few bugs present
 in the provider's AI strategies.
+
+To run the program, it takes in 2 arguments. The first specifies our strategy, the second specifies
+the provider's strategy.
+Our strategies:
+ "human"
+ "capture-max"
+Provider strategies:
+ "human"
+ "max-cells"
+ "corners"
+ "avoid-near-corners"
+ "minimax"
+ "try-all"
