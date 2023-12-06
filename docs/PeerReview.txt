@@ -1,0 +1,63 @@
+Design Critique:
+The design of the Reversi game implementation appears to follow a clear separation of functions,
+with distinct components for the model, view, controller, and player-related functionality.
+However, many of the interfaces are unnecessarily long and feature redundant or inflexible methods.
+For example, ReadonlyReversiModel contains a method getCellsSurrounding along with 6 methods for
+each direction around a hexagon (getUpperLeftCell, getUpperRightCell, getRightCell, etc.). These
+additional 6 methods pose a challenge to anyone who attempts to create a Reversi model that does
+not use hexagons. The design of the ICell class is also closely tied to specific cell
+implementations because of methods like getA, which returns the edge length of a cell. This method
+does not take into consideration cells that have varying edge lengths. Overall, the design of the
+program serves its purpose of segregating class functions and reducing coupling, but there is
+room for improvement regarding defining more flexible methods that are not closely tied to any one
+implementation.
+
+Implementation Critique:
+The program does fit the requirements of the assignments we’ve been given, but it certainly could
+have been done in a more concise way. Helper methods were not used  effectively, which led to long
+and complicated methods. This can be seen in the paintComponent method of ReversiPanel, along with
+the strategicMove method in all of the strategy implementations. Taking the overall logic of a
+strategy and breaking it into multiple pieces using helper methods would greatly improve readability
+and would surely make it easier to implement these strategies. Additionally, the ReversiGraphicsView
+class left two methods, setBoard and showErrorMessage, empty. It is ok for methods to be left
+unimplemented if you plan on implementing them later, but since this is the final assignment, these
+methods should have been implemented or removed from the interface. While the code is functional,
+the logic used in the methods are extremely difficult to understand. A final, very important, issue
+to mention is that the implementation of the view requires that the model return a mutable, original
+board, not a copy. The view directly mutates cells that are returned by the model in order to
+determine which cells have been clicked. This implementation of the view will not work properly
+unless the model’s implementation breaks its own encapsulation by returning internal data (cells).
+
+Documentation Critique:
+The writers of the code did a good job of documenting what purpose larger sections of code had
+within methods, like for loops and conditional chains, but the documentation for classes and public
+methods are extremely inarticulate. The majority of javadoc summaries are unclear and do not provide
+additional information besides what is easily understood from the name of the method or class.
+Multiple methods do not include any javadoc at all, like notifyListenerMove of ReversiModel and
+getSize of ReadonlyReversiModel. This lack of documenting is especially dangerous regarding the
+implementation of the board, which is a 2D list of cells. It is not explained how this data is
+organized or in what order the cells come in. There are also classes where javadoc is copied and
+pasted between them, like in MaxNumOfCells, MiniMax, and TryStrat. As for implemented methods,
+additional comments for specific lines, instead of one comment describing the general logic
+performed by a block of code, would make them much easier to understand. The writer’s of the code
+may have known exactly how their code worked and what purpose each aspect of the design served,
+but the documentation was lazy and made it difficult to understand the program.
+
+
+Limitations:
+The lack of detailed documentation for classes, methods, and specific implementation logic in the
+code makes the program difficult to use and extend. However, it would not take too much time to add
+additional comments and clean up the documentation. In terms of design, the classes and interfaces
+have clear roles and fit the MVC structure, but its flexibility could be improved by changing or
+removing methods that are too closely tied to the hexagonal implementation of Reversi. The most
+glaring code limitation is the design of the players. There does not seem to be a way to reconcile
+the idea of having both a human and machine player because the controller can only listen to events
+from the view and not from the players. This would make it extremely difficult for one controller
+class to properly handle both a human player, who’s moves are propagated through view events, and a
+machine player, who’s moves are returned directly by a function. This could be solved by allowing
+the controller to register themselves as a listener to the player, and the player as a listener for
+the view.
+
+When we first received our provider's code, there were concrete instantiations of a cell class in
+both view and strategy classes. Because of this, we had to ask our provider's to refactor their
+code to not be so closely coupled to the Cell class.

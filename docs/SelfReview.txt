@@ -1,0 +1,14 @@
+There are two aspects of our design in particular that we wish we had done differently. The first
+is that our ReversiTile interface was imported by classes outside the model package (the view).
+This does not make the code inherently wrong, but it doesn't perfectly follow the principles of the
+MVC design. This could've been fixed by changing the return types of methods in the model that
+expose ReversiTile. Specifically, getTileAt should be replaced with something like isDiskAt and
+getColorAt, and the getTiles method should be replaced with a map of Point to TileEnum, which could
+be either EMPTY or NOTEMPTY (there could be other fixes for this, that's just one idea).
+The second aspect is the model listeners. Instead of having two methods to add a listener, it would
+have been easier to old have one method that took in arguments to specify which events the listener
+would want to receive.
+
+Our experience with our provider's was amicable and reasonably efficient. There was some confusion
+over why we asked them to change their code, but once we further explained how parts of their code
+was too coupled, they fixed it and sent it back in a timely manner.
